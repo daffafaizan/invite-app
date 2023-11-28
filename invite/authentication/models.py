@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 
-from user_profile import PencariRegu
+from user_profile.models import ProfileDetails
 
 class TautanMediaSosial(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -11,23 +11,6 @@ class TautanMediaSosial(models.Model):
     twitter = models.CharField(max_length=250, blank=True)
     linkedin = models.CharField(max_length=250, blank=True)
     github = models.CharField(max_length=250, blank=True)
-
-class ProfileDetails(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    jumlah_upvote = models.PositiveIntegerField(default=0)
-    jumlah_downvote = models.PositiveIntegerField(default=0)
-
-class UlasanProfil(models.Model):
-    # id --> auto generated
-    pengulas = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=False, null=False)
-    diulas = models.OneToOneField(PencariRegu, on_delete=models.SET_NULL, blank=False, null=True) # Blank = False so form field should never be null, but db may contain null
-
-    pengulas = models.ForeignKey(PencariRegu, on_delete=models.CASCADE, related_name='pengulas', blank=False, null=False)
-    diulas = models.ForeignKey(PencariRegu, on_delete=models.SET_NULL, related_name='diulas', blank=False, null=True) # if NULL, then diulas is an Unknown User
-
-    rating = models.PositiveIntegerField(default=0)
-    deskripsi_kerja_setim = models.TextField() # NOTE user mengisi lomba apa yang pernah diikuti bersama user ini
-    ulasan = models.TextField()
     
 class RegisteredUser(models.Model):
     def default_profile_details(self):

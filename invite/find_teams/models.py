@@ -9,7 +9,7 @@ class Lamaran(models.Model):
         ('Denied', 'Denied'),
     ]
 
-    lamaran_id = models.CharField(max_length=255, primary_key=True)
+    # TODO reconsider ini fields2 nya keep apa ngga, soalnya di pengirim kan udah ada nama, univ dkk
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     nama = models.CharField(max_length=255)
     universitas = models.CharField(max_length=255)
