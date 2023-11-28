@@ -3,12 +3,15 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
 from authentication.models import RegisteredUser
-from .models import PencariRegu
 
-class ProfileDetails(models.Model):
+class PencariRegu(models.Model):
     user = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
-    jumlah_upvote = models.PositiveIntegerField(default=0)
-    jumlah_downvote = models.PositiveIntegerField(default=0)
+    
+    # # TODO admin 
+    # dihapus_oleh = models.OneToOneField(Admin)
+
+class KetuaRegu(models.Model):
+    user = models.OneToOneField(PencariRegu, on_delete=models.CASCADE)
 
 class UlasanProfil(models.Model):
     pengulas = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=False, null=False)
@@ -20,15 +23,6 @@ class UlasanProfil(models.Model):
     rating = models.PositiveIntegerField(default=0)
     deskripsi_kerja_setim = models.TextField() # NOTE user mengisi lomba apa yang pernah diikuti bersama user ini
     ulasan = models.TextField()
-
-class PencariRegu(models.Model):
-    user = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
-    
-    # # TODO admin 
-    # dihapus_oleh = models.OneToOneField(Admin)
-
-class KetuaRegu(models.Model):
-    user = models.OneToOneField(PencariRegu, on_delete=models.CASCADE)
 
 # # TODO admin
 # class InviteAdmin(AbstractUser):

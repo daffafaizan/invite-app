@@ -2,9 +2,8 @@ from typing import List
 from django.db import models
 import datetime
 
-from user_profile.models import KetuaRegu, PencariRegu, Admin
+from user_profile.models import KetuaRegu, PencariRegu
 from django.db import models
-from .models import LowonganRegu
 
 def get_n_days_future(n=180):
     # Default is 6 months
@@ -12,7 +11,6 @@ def get_n_days_future(n=180):
     return datetime.datetime.now() + datetime.timedelta(days=n)
 
 class TautanMediaSosialLowongan(models.Model):
-    lowongan = models.OneToOneField(LowonganRegu, on_delete=models.CASCADE)
     website = models.CharField(max_length=250, blank=True) # blank=True null=False, avoid redundant NULL and "" default values
     instagram = models.CharField(max_length=250, blank=True)
     twitter = models.CharField(max_length=250, blank=True)
@@ -39,7 +37,7 @@ class LowonganRegu(models.Model):
     total_anggota_dibutuhkan = models.PositiveIntegerField(default=0)
     
     tautan_medsos_regu = models.OneToOneField(TautanMediaSosialLowongan, on_delete=models.SET_NULL, blank=True, null=True)
-    dihapusOleh = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True) # TODO admin
+    # dihapusOleh = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True) # TODO admin
     objects = models.Manager()
 
 class LowonganManager(models.Manager):
