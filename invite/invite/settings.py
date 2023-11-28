@@ -43,7 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core'
+
+    # django applications
+    'core',
+    'authentication',
+    'find_members',
+    'find_teams',
+    'user_profile'
 ]
 
 MIDDLEWARE = [

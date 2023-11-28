@@ -1,3 +1,6 @@
-from django.db import models
+from django.db import models, models.Model as Model
 
-# Create your models here.
+class RegisteredUser(Model):
+    email = models.EmailField(primary_key=True, max_length=250)
+    password = 
+    
