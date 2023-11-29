@@ -1,3 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
-# Create your views here.
+from authentication.models import RegisteredUser
+from invite.find_teams.forms import LamaranForm
+from find_members.models import LowonganRegu
+
+def show_vacancies(request):
+    return render(request, "vacancies.html")
+
+def show_vacancy_details(request, lowongan_id):
+    return render(request, "vacancy.html")
+
+def apply_vacancy(request, lowongan_id):
+    current_user = request.COOKIES.get("username")
+    vacancy = get_object_or_404(LowonganRegu, id=lowongan_id)
+
+    if request.method == "POST":
+        form = LamaranForm(request.POST)
+        if form.is_valid():
+            lamaran = form.save(commit=False)
+            lamaran.status = "Pending"
+            lamaran.pengirim = RegisteredUser.objects.get(user=current_user)
+            lamaran.penerima = vacancy.ketua
+            lamaran.lowongan = vacancy
+            lamaran.save()
+
+            return render(request, "application_success.html", {'lamaran': lamaran})
+        
+    else:
+        form = LamaranForm()
+
+    return render(request, "lowongan.html", {'form': form})
