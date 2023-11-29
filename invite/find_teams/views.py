@@ -3,7 +3,6 @@ from django.shortcuts import render, get_object_or_404
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
-from find_teams.models import Lamaran
 
 def show_vacancies(request):
     # TODO
@@ -33,9 +32,3 @@ def apply_vacancy(request, lowongan_id):
         form = LamaranForm()
 
     return render(request, "vacancy.html", {'form': form})
-
-def delete_application(request, application_id):
-    lamaran = Lamaran.objects.get(id=application_id)
-    lamaran.delete()
-
-    return render(request, "vacancies.html")
