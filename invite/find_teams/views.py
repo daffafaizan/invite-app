@@ -5,9 +5,11 @@ from invite.find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
 
 def show_vacancies(request):
+    # TODO
     return render(request, "vacancies.html")
 
 def show_vacancy_details(request, lowongan_id):
+    # TODO
     return render(request, "vacancy.html")
 
 def apply_vacancy(request, lowongan_id):
@@ -29,4 +31,4 @@ def apply_vacancy(request, lowongan_id):
     else:
         form = LamaranForm()
 
-    return render(request, "lowongan.html", {'form': form})
+    return render(request, "vacancy.html", {'form': form})
