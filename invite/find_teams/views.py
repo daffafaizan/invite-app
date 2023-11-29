@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 
 from authentication.models import RegisteredUser
-from invite.find_teams.forms import LamaranForm
+from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
 
 def show_vacancies(request):

@@ -16,9 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from invite import find_teams
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('vacancy/', include(find_teams.urls))
+    path('vacancy/', include("find_teams.urls"))
 ]
