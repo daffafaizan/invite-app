@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from user_profile.models import PencariRegu, KetuaRegu
 from find_members.models import LowonganRegu
@@ -8,6 +9,8 @@ class Lamaran(models.Model):
         ('Pending', 'Pending'),
         ('Denied', 'Denied'),
     ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
 
     pengirim = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=True, null=False)
     penerima = models.OneToOneField(KetuaRegu, on_delete=models.CASCADE, blank=True)
