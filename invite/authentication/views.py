@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import request, JsonResponse, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from authentication.models import RegisteredUser
 from django.contrib.auth.decorators import login_required
 
 def register(request):
@@ -11,7 +11,7 @@ def register(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         
-        if User.objects.get(username=username).exists():
+        if RegisteredUser.objects.get(username=username).exists():
             context = {
                 "status": "error",
                 "status_code": 409,
@@ -20,7 +20,7 @@ def register(request):
             return render(request, "authentication/register.html", context)
 
         # Else, create user
-        user = User.objects.create_user(username=username, password=password)
+        user = RegisteredUser.objects.create_user(username=username, password=password)
 
         if user is not None:
             user.save()
