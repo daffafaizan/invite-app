@@ -6,25 +6,17 @@ from authentication.models import RegisteredUser
 
 class PencariRegu(models.Model):
     user = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
-    
-    # # TODO admin 
-    # dihapus_oleh = models.OneToOneField(Admin)
 
 class KetuaRegu(models.Model):
     user = models.OneToOneField(PencariRegu, on_delete=models.CASCADE)
 
 class UlasanProfil(models.Model):
-    pengulas = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=False, null=False)
-    diulas = models.OneToOneField(PencariRegu, on_delete=models.SET_NULL, blank=False, null=True) # Blank = False so form field should never be null, but db may contain null
-
-    pengulas = models.ForeignKey(PencariRegu, on_delete=models.CASCADE, related_name='pengulas', blank=False, null=False)
-    diulas = models.ForeignKey(PencariRegu, on_delete=models.SET_NULL, related_name='diulas', blank=False, null=True) # if NULL, then diulas is an Unknown User
+    pengulas = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=False, null=False, related_name='pengulas')
+    diulas = models.OneToOneField(PencariRegu, on_delete=models.SET_NULL, blank=False, null=True, related_name='diulas') # Blank = False so form field should never be null, but db may contain null
 
     rating = models.PositiveIntegerField(default=0)
     deskripsi_kerja_setim = models.TextField() # NOTE user mengisi lomba apa yang pernah diikuti bersama user ini
     ulasan = models.TextField()
 
-# # TODO admin
-# class InviteAdmin(AbstractUser):
-#     pengguna_dihapus = ArrayField(PencariRegu, blank=True, null=True) # Don't use arrayfield, use foreign key instead
-    # lowongan_dihapus = ArrayField(Lowongan, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

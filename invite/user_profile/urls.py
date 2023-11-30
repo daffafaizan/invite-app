@@ -1,8 +1,9 @@
 from django.urls import path
-from user_profile.views import delete_application
+from user_profile.views import show_my_applications, my_profile
 
 app_name = "user_profile"
 
 urlpatterns = [
-    path('my-applications/<int:application_id>/delete', delete_application, name='delete_application'),
+    path('me', my_profile, name='my_profile'),
+    path('my-applications/', show_my_applications, name='show_my_applications'),
 ]
