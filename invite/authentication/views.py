@@ -13,6 +13,7 @@ from .forms import RegisteredUserCreationForm, RegisteredUserLoginForm
 
 logger = logging.getLogger('app_api') # from settings.py
 
+# NOTE reference: https://learndjango.com/tutorials/django-custom-user-model
 class RegisterView(CreateView):
     form_class = RegisteredUserCreationForm
     success_url = reverse_lazy("login")
