@@ -1,15 +1,56 @@
-from django.shortcuts import render
+import logging
+from django.conf import settings
 
-from django.contrib.auth.models import User
+from django.shortcuts import render
+from django.views.generic.detail import DetailView
+
 from find_teams.models import Lamaran
 from user_profile.models import PencariRegu
 from authentication.models import RegisteredUser
+from django.contrib.auth.decorators import login_required
 
-def my_profile(request):
-    pass
+logger = logging.getLogger("app_api")
+
+class MyProfileDetailView(DetailView):
+    login_required = True
+    
+    model = RegisteredUser
+    template_name = "my_profile.html"
+
+    def get(self, request):
+        # If showing my profile, auto-retrieve my user id from cookies
+        registered_user = RegisteredUser.objects.get(username=request.COOKIES.get("username"))
+
+        
+        context = {
+            "registered_user": registered_user
+        }
+
+        logger.info("Showing %s's profile" % registered_user.get_username())
+        return render(request, self.template_name, context)
+
+class ProfileDetailView(DetailView):
+    login_required = True
+
+    model = RegisteredUser
+    template_name = "profile.html"
+
+    def get(self, request):
+        # If showing other's profile, retrieve user id from url
+        username_path = self.kwargs["username"]
+        registered_user = RegisteredUser.objects.get(username=username_path)
+        
+
+        context = {
+            "registered_user": registered_user
+        }
+
+        logger.info("Showing %s's profile" % registered_user.get_username())
+        return render(request, self.template_name, context)
+
 
 def show_my_applications(request):
-    user = User.objects.get(username=request.COOKIES.get("username"))
+    user = RegisteredUser.objects.get(username=request.COOKIES.get("username"))
     registered_user = RegisteredUser.objects.get(user=user)
     pencari_regu = PencariRegu.objects.get(user=registered_user)
 

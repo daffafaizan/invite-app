@@ -1,9 +1,10 @@
 from django.urls import path
-from user_profile.views import show_my_applications, my_profile
+from . import views #import show_my_applications, MyProfileDetailView, ProfileDetailView
 
 app_name = "user_profile"
 
 urlpatterns = [
-    path('me', my_profile, name='my_profile'),
-    path('my-applications/', show_my_applications, name='show_my_applications'),
+    path('me/', views.MyProfileDetailView.as_view(), name='my_profile'),
+    path('<str:username>/', views.ProfileDetailView.as_view(), name='profile'),
+    path('my-applications/', views.show_my_applications, name='show_my_applications'),
 ]
