@@ -5,6 +5,9 @@ from find_teams.models import Lamaran
 from user_profile.models import PencariRegu
 from authentication.models import RegisteredUser
 
+def my_profile(request):
+    pass
+
 def show_my_applications(request):
     user = User.objects.get(username=request.COOKIES.get("username"))
     registered_user = RegisteredUser.objects.get(user=user)
