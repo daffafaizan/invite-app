@@ -101,7 +101,7 @@ class LoginView(FormView):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        logger.info("LOGGED OUT of %d"%request.user.get_username())
+        logger.info("LOGGED OUT of %s"%request.user.get_username())
         return redirect(reverse("core:home"))
     
 

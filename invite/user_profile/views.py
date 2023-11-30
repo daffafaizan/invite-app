@@ -13,9 +13,9 @@ logger = logging.getLogger("app_api")
 
 class MyProfileDetailView(DetailView):
     login_required = True
-    
+
     model = RegisteredUser
-    template_name = "my_profile.html"
+    template_name = "user_profile/my_profile.html"
 
     def get(self, request):
         # If showing my profile, auto-retrieve my user id from cookies
@@ -33,12 +33,13 @@ class ProfileDetailView(DetailView):
     login_required = True
 
     model = RegisteredUser
-    template_name = "profile.html"
+    template_name = "user_profile/profile.html"
 
-    def get(self, request):
-        # If showing other's profile, retrieve user id from url
-        username_path = self.kwargs["username"]
-        registered_user = RegisteredUser.objects.get(username=username_path)
+    def get(self, request, username):
+        # If showing other's profile, retrieve user id url params        
+        logger.info("Uname path:", username)
+        
+        registered_user = RegisteredUser.objects.get(username=username)
         
 
         context = {
