@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Home</title>
+{% endblock meta %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        Hi {{ user.username }}!
+        <p><a href="{% url 'authentication:logout' %}"></a></p>
+        <button>
+            <a href="{% url 'authentication:logout' %}">Log Out</a>
+        </button>
+    {% else %}
+        <p>You are not logged in</p>
+        <a href="{% url 'authentication:login' %}">Log In</a> |
+        <a href="{% url 'authentication:register' %}">Sign Up</a>
+    {% endif %}
+{% endblock content %}

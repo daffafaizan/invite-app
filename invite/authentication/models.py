@@ -1,5 +1,8 @@
+# authentication/models.py
+
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
 class TautanMediaSosial(models.Model):
@@ -9,7 +12,8 @@ class TautanMediaSosial(models.Model):
     linkedin = models.CharField(max_length=250, blank=True)
     github = models.CharField(max_length=250, blank=True)
     
-class RegisteredUser(models.Model):
+# Extend the default User model, don't use OneToOne relation
+class RegisteredUser(AbstractUser):
     def default_profile_details(self):
         return ProfileDetails.objects.create()
     
@@ -17,8 +21,13 @@ class RegisteredUser(models.Model):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
         return f'user_{self.user.username}/{filename}'
 
+    def __str__(self) -> str:
+        return self.username
+
     # User object contains username/email and password, also first_name and last_name
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     middle_name = models.CharField(max_length=30, blank=True, null=True)
 
     universitas = models.CharField(max_length=100, blank=True, null=True) 
@@ -27,9 +36,11 @@ class RegisteredUser(models.Model):
     
     foto_profil = models.ImageField(upload_to=user_directory_path) # FOR LATER USAGE see https://stackoverflow.com/questions/64592126/how-get-image-from-images-model-to-home-page-in-django
     tautan_media_sosial = models.OneToOneField(TautanMediaSosial, on_delete=models.SET_NULL, blank=True, null=True)
-    tautan_portfoilo = models.CharField(max_length=250, blank=True, null=True)
+    tautan_portfolio = models.CharField(max_length=250, blank=True, null=True)
 
 class ProfileDetails(models.Model):
-    user = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
     jumlah_upvote = models.PositiveIntegerField(default=0)
     jumlah_downvote = models.PositiveIntegerField(default=0)

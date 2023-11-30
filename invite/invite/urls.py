@@ -19,5 +19,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('vacancy/', include("find_teams.urls"))
+    path("", include("core.urls")),
+    path("accounts/", include("authentication.urls")),
+    path("accounts/", include("django.contrib.auth.urls")), # For unhandles cases by authentication.urls
+    path("profile/", include("user_profile.urls")),
+    path("vacancy/", include("find_teams.urls")),
+    path("recruit/", include("find_members.urls")),
 ]
