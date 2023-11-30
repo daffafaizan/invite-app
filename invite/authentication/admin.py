@@ -12,7 +12,6 @@ class RegisteredUserAdmin(UserAdmin):
                     "username", 
                     "first_name",
                     "last_name",
-                    "universitas"
                     ]
 
 admin.site.register(RegisteredUser, RegisteredUserAdmin)

@@ -10,6 +10,7 @@ REGISTERED_USER_FIELDS = (
             "last_name",
             "universitas",
             "jurusan",
+            "keahlian",
             )
 
 class RegisteredUserCreationForm(UserCreationForm):

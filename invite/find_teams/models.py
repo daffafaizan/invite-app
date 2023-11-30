@@ -9,7 +9,10 @@ class Lamaran(models.Model):
         ('Denied', 'Denied'),
     ]
 
-    # TODO reconsider ini fields2 nya keep apa ngga, soalnya di pengirim kan udah ada nama, univ dkk
+    pengirim = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=True, null=False)
+    penerima = models.OneToOneField(KetuaRegu, on_delete=models.CASCADE, blank=True)
+    lowongan = models.OneToOneField(LowonganRegu, on_delete=models.CASCADE, blank=True)
+
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     nama = models.CharField(max_length=255)
     universitas = models.CharField(max_length=255)
@@ -17,6 +20,3 @@ class Lamaran(models.Model):
     keahlian = models.CharField(max_length=255)
     cover_letter = models.TextField(blank=True)
     tautan_portofolio = models.CharField(max_length=255)
-    pengirim = models.ForeignKey(PencariRegu, on_delete=models.CASCADE, blank=True)
-    penerima = models.ForeignKey(KetuaRegu, on_delete=models.CASCADE, blank=True)
-    lowongan = models.ForeignKey(LowonganRegu, on_delete=models.CASCADE, blank=True)
