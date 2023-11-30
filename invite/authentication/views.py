@@ -7,6 +7,7 @@ from authentication.models import RegisteredUser
 from django.contrib.auth.decorators import login_required
 
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic.edit import CreateView, FormView
 from .forms import RegisteredUserCreationForm, RegisteredUserLoginForm
 
@@ -27,6 +28,7 @@ class LoginView(FormView):
         message = ''
         context = {
             "form": form,
+            "status_code": 200,
             "message": message
         }
 
@@ -49,104 +51,16 @@ class LoginView(FormView):
         message = "Login failed!"
         context = {
             "form": form,
+            "status_code": 500,
             "message": message,
         }
 
         logger.error("LOGIN FAILED")
         return render(request, self.template_name, context)
 
-def register(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        
-        if RegisteredUser.objects.get(username=username).exists():
-            context = {
-                "status": "error",
-                "status_code": 409,
-                "message": "Username already exists"
-            }
-            return render(request, "authentication/register.html", context)
-
-        # Else, create user
-        user = RegisteredUser.objects.create_user(username=username, password=password)
-
-        if user is not None:
-            user.save()
-
-            context = {
-                "status": "success",
-                "status_code": 201,
-                "message": "User created"
-            }
-        else:
-            context = {
-                "status": "error",
-                "status_code": 500,
-                "message": "Unknown error while creating user"
-            }
-
-        return render(
-            request,
-            "authentication/register.html",
-            context
-        )
-
-
-def login_user(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(request=request, username=username, password=password)
-
-        if user is not None:
-            if user.is_active: # Delete flag for users
-                login(request, user)
-
-                # Redirect to index page
-                response = HttpResponseRedirect(reverse("core:index"))
-                
-                response.set_cookie(
-                    "username",
-                    username
-                )
-
-                response.set_cookie(
-                    "last_login",
-                    str(datetime.datetime.now())
-                )
-
-                return response
-        else:
-            context = {
-                "status": "error",
-                "status_code": 404,
-                "message": "User does not exist."
-                }
-        
-            return render(
-                request,
-                "authentication/login.html",
-                context
-            )
-    
-    return render(request, "authentication/login.html", {
-        "status": "error",
-        "status_code": 405,
-        "message": "Method not allowed"
-    })
-        
-def logout_user(request):
-    logout(request)
-
-    response = HttpResponseRedirect(
-        reverse("core:home")
-    )
-
-    response.delete_cookie("username")
-    response.delete_cookie("last_login")
-
-    return response
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect(reverse("core:home"))
     
 

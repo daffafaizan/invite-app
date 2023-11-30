@@ -6,7 +6,7 @@ app_name = "authentication"
 urlpatterns = [
     path("register/", views.RegisterView.as_view(), name="register"),
     path("login/", views.LoginView.as_view(), name="login"),
-    path("logout/", views.logout_user, name="logout"),
+    path("logout/", views.LogoutView.as_view(), name="logout"),
 ]
 
 # Default auth URL config
