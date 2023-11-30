@@ -1,15 +1,18 @@
 import datetime, logging
-from django.forms.models import BaseModelForm
-from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
 from django.http import request, JsonResponse, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
-from authentication.models import RegisteredUser
-from django.contrib.auth.decorators import login_required
-
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView, FormView
+from django.forms.models import BaseModelForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from authentication.models import RegisteredUser
 from .forms import RegisteredUserCreationForm, RegisteredUserLoginForm
 from .models import TautanMediaSosial, ProfileDetails, RegisteredUser
 
@@ -27,22 +30,7 @@ class RegisterView(CreateView):
     def post(self, request):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
-            registered_user = form.save(commit=False)
-
-            # pd = ProfileDetails.objects.create()
-            # tms = TautanMediaSosial.objects.create()
-            
-            # form.instance.profile_details = pd
-            # form.instance.tautan_media_sosial = tms
-            
-            # # Save all 3 objects
-            # logger.info("pd", pd)
-            # logger.info("tms", tms)
-
-            # pd.save()
-            # tms.save()
-
-            registered_user.save()
+            form.save()
             logger.info("REGISTERED user", form.cleaned_data["username"][0])
 
             return redirect(self.success_url)
@@ -58,7 +46,14 @@ class RegisterView(CreateView):
             logger.error(form.errors)
             return render(request, self.template_name, context)
 
-class LoginView(FormView):
+# TODO current form is still sent in plaintext, use LoginView in the future
+# https://docs.djangoproject.com/en/4.2/topics/auth/default/#django.contrib.auth.views.LoginView
+class LoginViewAuth(LoginView):
+    template_name = "authentication/login.html"
+    next_page = settings.LOGIN_REDIRECT_URL
+
+
+class LoginViewOld(FormView):
     form_class = RegisteredUserLoginForm #
     success_url = reverse_lazy("core:home")
     template_name = "authentication/login.html"
@@ -81,12 +76,21 @@ class LoginView(FormView):
                 username=form.cleaned_data["username"],
                 password=form.cleaned_data["password"]
             )
+
             
-            logger.info("LOGGED IN AS", user.get_username())
 
             if user is not None:
                 login(request, user)
-                return redirect(self.success_url)
+
+                # Set cookies
+                registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username"])
+
+                logger.info("LOGGED IN AS", user.get_username())
+
+                response = HttpResponseRedirect(self.success_url)
+                response.set_cookie("last_login", datetime.datetime.now())
+                response.set_cookie("user_id", registered_user.id)
+                return response
             
         message = "Login failed!"
         context = {
@@ -98,10 +102,15 @@ class LoginView(FormView):
         logger.error("LOGIN FAILED")
         return render(request, self.template_name, context)
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         logger.info("LOGGED OUT of %s"%request.user.get_username())
-        return redirect(reverse("core:home"))
+
+        response = HttpResponseRedirect(reverse("core:home"))
+        response.delete_cookie("last_login")
+        response.delete_cookie("user_id")
+
+        return response
     
 
