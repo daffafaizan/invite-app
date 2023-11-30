@@ -1,6 +1,6 @@
 # authentication/forms.py
-
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from .models import RegisteredUser
 
 REGISTERED_USER_FIELDS = (
@@ -10,16 +10,16 @@ REGISTERED_USER_FIELDS = (
             "last_name",
             "universitas",
             "jurusan",
-            "keahlian",
-            "foto_profil",
-            "tautan_media_sosial",
-            "tautan_portfolio"
             )
 
 class RegisteredUserCreationForm(UserCreationForm):
     class Meta:
         model = RegisteredUser
         fields = REGISTERED_USER_FIELDS
+
+class RegisteredUserLoginForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(max_length=150, widget=forms.PasswordInput)
 
 class RegisteredUserChangeForm(UserChangeForm):
     class Meta:

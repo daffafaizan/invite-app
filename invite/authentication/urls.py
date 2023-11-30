@@ -1,12 +1,12 @@
 from django.urls import path
 from . import views
 
-app_name = "accounts"
+app_name = "authentication"
 
 urlpatterns = [
-    path("register/", views.register, name="register"),
-    path("login/", views.login_user, name="login_user"),
-    path("logout/", views.logout_user, name="logout_user"),
+    path("register/", views.RegisterView.as_view(), name="register"),
+    path("login/", views.LoginView.as_view(), name="login"),
+    path("logout/", views.logout_user, name="logout"),
 ]
 
 # Default auth URL config
