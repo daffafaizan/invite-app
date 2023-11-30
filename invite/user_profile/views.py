@@ -20,9 +20,3 @@ def show_my_applications(request):
     }
 
     return render(request, "my_applications.html", context)
-
-def delete_application(request, application_id):
-    lamaran = Lamaran.objects.get(id=application_id)
-    lamaran.delete()
-
-    return render(request, "vacancies.html")
