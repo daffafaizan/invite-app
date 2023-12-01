@@ -7,51 +7,64 @@ from django.views.generic.detail import DetailView
 from find_teams.models import Lamaran
 from user_profile.models import PencariRegu
 from authentication.models import RegisteredUser
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 logger = logging.getLogger("app_api")
 
-class MyProfileDetailView(DetailView):
-    login_required = True
-
+class MyProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
     template_name = "user_profile/my_profile.html"
 
     def get(self, request):
         # If showing my profile, auto-retrieve my user id from cookies
-        registered_user = RegisteredUser.objects.get(username=request.COOKIES.get("username"))
+        registered_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
         
         context = {
             "registered_user": registered_user
         }
 
-        logger.info("Showing %s's profile" % registered_user.get_username())
+        logger.info(f"Showing {registered_user.get_username()}'s profile")
+        logger.info(f"Registered user: {registered_user}\n")
+
         return render(request, self.template_name, context)
 
-class ProfileDetailView(DetailView):
-    login_required = True
-
+class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
     template_name = "user_profile/profile.html"
 
-    def get(self, request, username):
+    def get(self, request, user_id):
         # If showing other's profile, retrieve user id url params        
-        logger.info("Uname path:", username)
+        logger.info("Uname path:", user_id)
         
-        registered_user = RegisteredUser.objects.get(username=username)
-        
+        registered_user = RegisteredUser.objects \
+            .filter(id=user_id) \
+            .only(
+                "username", 
+                "first_name", 
+                "last_name", 
+                "universitas", 
+                "jurusan", 
+                "keahlian", 
+                "tautan_portfolio", 
+                "tautan_media_sosial", 
+                "profile_details", 
+                "foto_profil"
+            ).get()
 
         context = {
             "registered_user": registered_user
         }
 
-        logger.info("Showing %s's profile" % registered_user.get_username())
+        logger.info(f"Showing {registered_user.get_username()}'s profile")
+        logger.info(f"Registered user: {registered_user}\n")
+
         return render(request, self.template_name, context)
 
 
 def show_my_applications(request):
-    user = RegisteredUser.objects.get(username=request.COOKIES.get("username"))
+    user = RegisteredUser.objects.get(username=request.COOKIES.get("user_id"))
     registered_user = RegisteredUser.objects.get(user=user)
     pencari_regu = PencariRegu.objects.get(user=registered_user)
 
