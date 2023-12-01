@@ -1,5 +1,6 @@
 from django.shortcuts import render
-
+from django.http import HttpResponse
+from django.core import serializers
 from django.contrib.auth.models import User
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
@@ -17,6 +18,19 @@ def show_vacancies(request):
 def show_vacancy_details(request, lowongan_id):
     # TODO
     return render(request, "vacancy.html")
+
+def vacancy_json(request):
+    lowongan_list = LowonganRegu.objects.all()
+
+    response = {
+        "status": "success",
+        "status_code": 200,
+        "data": {
+            "lowongan_list": lowongan_list,
+        },
+    }
+
+    return HttpResponse(serializers.serialize("json", response), content_type="application/json")
 
 def apply_vacancy(request, lowongan_id):
     current_user = User.objects.get(username=request.COOKIES.get("username"))

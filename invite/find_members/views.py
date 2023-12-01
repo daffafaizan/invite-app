@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from .forms import LowonganForm
-from .models import TautanMediaSosialLowongan
+from .models import *
+from user_profile.models import KetuaRegu
 
-def create_lowongan(request):
+def create_vacancy(request):
 
     form = LowonganForm()
 
@@ -12,7 +14,8 @@ def create_lowongan(request):
         if form.is_valid():
             model_instance = form.save(commit=False)
 
-            model_instance.ketua = request.user
+            current_user = User.objects.get(username=request.COOKIES.get("username"))
+            model_instance.ketua = KetuaRegu.objects.get(user=current_user)
 
             model_instance.nama_regu = request.POST.get('nama_regu')
             model_instance.deskripsi_lowongan_regu = request.POST.get('deskripsi_lowongan_regu')
@@ -45,4 +48,4 @@ def create_lowongan(request):
     }
 
     # if unsuccesful, reload form and display inputted values
-    return render(request, 'create_lowongan.html', context)
+    return render(request, 'create_vacancy.html', context)
