@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from user_profile.models import KetuaRegu, RegisteredUser
 from .forms import LowonganForm
 from .models import *
-from user_profile.models import KetuaRegu
 
+@login_required(login_url='/accounts/login/')
 def create_vacancy(request):
 
     form = LowonganForm()
@@ -12,22 +14,24 @@ def create_vacancy(request):
         form = LowonganForm(request.POST)
         
         if form.is_valid():
-            model_instance = form.save(commit=False)
+            lowongan = form.save(commit=False)
 
-            current_user = User.objects.get(username=request.COOKIES.get("username"))
-            model_instance.ketua = KetuaRegu.objects.get(user=current_user)
+            current_user = request.user
+            current_pencari_regu = PencariRegu.objects.get(registered_user=current_user)
+            ketua_regu = KetuaRegu(pencari_regu=current_pencari_regu)
+            lowongan.ketua_regu = ketua_regu
 
-            model_instance.nama_regu = request.POST.get('nama_regu')
-            model_instance.deskripsi_lowongan_regu = request.POST.get('deskripsi_lowongan_regu')
-            model_instance.foto_lowongan_regu = request.foto_lowongan_regu 
+            lowongan.nama_regu = request.POST.get('nama_regu')
+            lowongan.deskripsi_lowongan_regu = request.POST.get('deskripsi_lowongan_regu')
+            lowongan.foto_lowongan_regu = request.foto_lowongan_regu 
 
-            model_instance.nama_lomba = request.nama_lomba
-            model_instance.bidang_lomba = request.bidang_lomba
-            model_instance.tanggal_lomba = request.tanggal_lomba 
-            model_instance.expiry = request.expiry 
+            lowongan.nama_lomba = request.nama_lomba
+            lowongan.bidang_lomba = request.bidang_lomba
+            lowongan.tanggal_lomba = request.tanggal_lomba 
+            lowongan.expiry = request.expiry 
             
-            model_instance.jumlah_anggota_sekarang = request.POST.get('jumlah_anggota_sekarang')
-            model_instance.total_anggota_dibutuhkan = request.POST.get('total_anggota_dibutuhkan')
+            lowongan.jumlah_anggota_sekarang = request.POST.get('jumlah_anggota_sekarang')
+            lowongan.total_anggota_dibutuhkan = request.POST.get('total_anggota_dibutuhkan')
             
             tautan_medsos_regu = TautanMediaSosialLowongan(
                 website = request.POST.get('website'),
@@ -36,9 +40,9 @@ def create_vacancy(request):
                 linkedin = request.POST.get('linkedin'), 
                 github = request.POST.get('github'),
             )
-            model_instance.tautan_medsos_regu = tautan_medsos_regu
+            lowongan.tautan_medsos_regu = tautan_medsos_regu
 
-            model_instance.save()
+            lowongan.save()
 
             # if succesful, return to melihat daftar lowongan and show created lowongan on top 
             return redirect('find_teams:apply')

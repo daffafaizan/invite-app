@@ -1,11 +1,13 @@
 # authentication/models.py
-import datetime
+import datetime, uuid
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
 class TautanMediaSosial(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+ 
     website = models.CharField(max_length=250, blank=True) # blank=True null=False, avoid redundant NULL and "" default values
     instagram = models.CharField(max_length=250, blank=True)
     twitter = models.CharField(max_length=250, blank=True)
@@ -13,6 +15,8 @@ class TautanMediaSosial(models.Model):
     github = models.CharField(max_length=250, blank=True)
 
 class ProfileDetails(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+    
     jumlah_upvote = models.PositiveIntegerField(default=0)
     jumlah_downvote = models.PositiveIntegerField(default=0)
 
@@ -41,8 +45,10 @@ class RegisteredUser(AbstractUser):
     def __str__(self) -> str:
         return self.username
 
-    middle_name = models.CharField(max_length=30, blank=True)
+    # NOTE MODEL FIELDS
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
 
+    middle_name = models.CharField(max_length=30, blank=True)
     universitas = models.CharField(max_length=100, blank=True) 
     jurusan = models.CharField(max_length=100, blank=True)
     keahlian = ArrayField(models.CharField(max_length=30, blank=True), blank=True, null=True)

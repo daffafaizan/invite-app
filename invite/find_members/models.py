@@ -1,4 +1,5 @@
 from typing import List
+import uuid
 from django.db import models
 import datetime
 
@@ -10,6 +11,8 @@ def get_n_days_future(n=180):
     return datetime.datetime.now() + datetime.timedelta(days=n)
 
 class TautanMediaSosialLowongan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+
     website = models.CharField(max_length=250, blank=True) # blank=True null=False, avoid redundant NULL and "" default values
     instagram = models.CharField(max_length=250, blank=True)
     twitter = models.CharField(max_length=250, blank=True)
@@ -20,6 +23,8 @@ class LowonganRegu(models.Model):
     def vacancy_directory_path(self, filename):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
         return f'lowongan_{self.pk}/{filename}'
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     
     ketua = models.OneToOneField(KetuaRegu, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
