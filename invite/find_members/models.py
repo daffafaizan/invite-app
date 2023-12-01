@@ -27,7 +27,7 @@ class LowonganRegu(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     
-    ketua = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
+    ketua = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
     nama_regu = models.CharField(max_length=255, blank=False, null=False) # non-null
