@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
-from django.contrib.auth.models import User
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
@@ -19,7 +18,7 @@ def show_vacancy_details(request, lowongan_id):
     return render(request, "vacancy.html")
 
 def apply_vacancy(request, lowongan_id):
-    current_user = User.objects.get(username=request.COOKIES.get("username"))
+    current_user = RegisteredUser.objects.get(username=request.COOKIES.get("username"))
     vacancy = LowonganRegu.objects.get(id=lowongan_id)
 
     if request.method == "POST":
