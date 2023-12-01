@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 
-from invite.user_profile.models import UlasanProfil
+from user_profile.models import UlasanProfil
 from find_teams.models import Lamaran
 from authentication.models import RegisteredUser
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -91,7 +91,7 @@ def review_profile(request, profile_id):
         pengulas = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
         UlasanProfil.objects.create(diulas=diulas, pengulas=pengulas, rating=rating, deskripsi_kerja_setim=deskripsi_kerja_setim, ulasan=ulasan)
         
-        return redirect('user_profile:show_profile', profile_id=profile_id)
+        return redirect('user_profile:profile', profile_id=profile_id)
 
 def show_my_applications(request):
     user = RegisteredUser.objects.get(username=request.COOKIES.get("user_id"))
