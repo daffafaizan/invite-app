@@ -23,15 +23,13 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
         if not registered_user:
             context = {
                 "status": "User not found",
-                "status_code": 404,
             }
 
             logger.info("User not found")
-            return render(request, self.template_name, context)
+            return render(request, self.template_name, context, status=404)
         
         context = {
-            "status": "success",
-            "status_code": 200,
+            "status": "Success fetching my profile",
             "data": {
                 "registered_user": registered_user
             }
@@ -40,7 +38,7 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
         logger.info(f"Showing {registered_user.get_username()}'s profile")
         logger.info(f"Registered user: {registered_user}\n")
 
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context, status=200)
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
@@ -53,10 +51,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         registered_user = RegisteredUser.objects.get(id=user_id)
         
         if not registered_user:
-            context = {
-                
-            }
-            return render(request, self.template_name, context)
+            return render(request, self.template_name, status=404)
+        
         filtered_user = {
             "id": registered_user.id,
             "username": registered_user.username,
@@ -73,8 +69,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         # Return certain fields only
         context = {
-            "status": "success",
-            "status_code": 200,
+            "status": "Success fetching user profile",
             "data": {
                 "registered_user": filtered_user
             }
@@ -83,7 +78,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         logger.info(f"Showing {registered_user.get_username()}'s profile")
         logger.info(f"Registered user: {registered_user}\n")
 
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context, status=200)
 
 
 def show_my_applications(request):
@@ -93,24 +88,31 @@ def show_my_applications(request):
 
     daftar_lamaran = Lamaran.objects.filter(pengirim=pencari_regu)
 
+    if not daftar_lamaran:
+        logger.info("Tidak ada lamaran ditemukan")
+        return render(request, "my_applications.html", status=404)
+
     context = {
         "status": "success",
-        "status_code": 200,
         "data": {
             "daftar_lamaran": daftar_lamaran
         }
     }
 
-    return render(request, "my_applications.html", context)
+    return render(request, "my_applications.html", context, status=200)
 
 def delete_application(request, application_id):
     lamaran = Lamaran.objects.get(id=application_id)
+    
+    if not lamaran:
+        logger.info("Lamaran tidak ditemukan")
+        return render(request, "vacancies.html", status=404)
+    
     lamaran.delete()
 
     context = {
         "status": "success",
-        "status_code": 204,
         "message": "Lamaran berhasil dihapus"
     }
 
-    return render(request, "vacancies.html", context)
+    return render(request, "vacancies.html", context, status=204)

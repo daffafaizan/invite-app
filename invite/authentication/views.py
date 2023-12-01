@@ -33,20 +33,22 @@ class RegisterView(CreateView):
             form.save()
             logger.info("REGISTERED user", form.cleaned_data["username"][0])
 
-            return HttpResponseRedirect(self.success_url)
+            res = HttpResponseRedirect(self.success_url)
+            res.status_code(200)
+
+            return res
         else:
             message = "Login failed!"
 
             context = {
                 "status": message,
                 "form": form,
-                "status_code": 500,
             }
 
             logger.error("FAILED, Form invalid")
             logger.error(form.errors)
 
-            return render(request, self.template_name, context)
+            return render(request, self.template_name, context, status=500)
 
 # TODO current form is still sent in plaintext, use LoginView in the future
 # https://docs.djangoproject.com/en/4.2/topics/auth/default/#django.contrib.auth.views.LoginView
@@ -63,13 +65,11 @@ class LoginViewOld(FormView):
     def get(self, request):
         form = self.form_class
         context = {
-            "status": "Grabbing form",
-            "status_code": 200,
-            "message": message,
+            "status": "Fetching form",
             "form": form,
         }
 
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context, status=200)
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -87,31 +87,32 @@ class LoginViewOld(FormView):
 
                 logger.info("LOGGED IN AS", user.get_username())
 
-                response = HttpResponseRedirect(self.success_url)
-                response.set_cookie("last_login", datetime.datetime.now())
-                response.set_cookie("user_id", registered_user.id)
+                res = HttpResponseRedirect(self.success_url)
+                res.status_code(200)
 
-                return response
+                res.set_cookie("last_login", datetime.datetime.now())
+                res.set_cookie("user_id", registered_user.id)
+
+                return res
             
-        message = "Login failed!"
         context = {
+            "status": "Login failed!",
             "form": form,
-            "status": message,
-            "status_code": 500,
         }
 
         logger.error("LOGIN FAILED")
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context, status=500)
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         logger.info("LOGGED OUT of %s"%request.user.get_username())
 
-        response = HttpResponseRedirect(reverse("core:home"))
-        response.delete_cookie("last_login")
-        response.delete_cookie("user_id")
+        res = HttpResponseRedirect(reverse("core:home"))
+        res.status_code = 200
+        res.delete_cookie("last_login")
+        res.delete_cookie("user_id")
 
-        return response
+        return res
     
 
