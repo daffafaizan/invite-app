@@ -1,8 +1,9 @@
 from django.urls import path
-from . import views
+from find_members.views import *
 
-app_name = "recruit"
+app_name = 'find_members'
 
 urlpatterns = [
-    path("create", views.create_lowongan, name="create"),
+    path('create/', create_lowongan, name='create_lowongan'),
+    
 ]
