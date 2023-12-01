@@ -1,6 +1,8 @@
+import datetime
 from typing import List
 import uuid
 from django.db import models
+from authentication.models import RegisteredUser
 import datetime
 from django.db import models
 from authentication.models import * 
