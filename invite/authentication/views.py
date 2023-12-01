@@ -31,12 +31,9 @@ class RegisterView(CreateView):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            logger.info("REGISTERED user", form.cleaned_data["username"][0])
+            logger.info(f"REGISTERED user {form.cleaned_data["username"][0]}")
 
-            res = HttpResponseRedirect(self.success_url)
-            res.status_code(200)
-
-            return res
+            return redirect(self.success_url)
         else:
             message = "Login failed!"
 
@@ -85,31 +82,29 @@ class LoginViewOld(FormView):
                 # Set cookies
                 registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username"])
 
-                logger.info("LOGGED IN AS", user.get_username())
+                logger.info(f"LOGGED IN AS {user.get_username()}")
 
-                res = HttpResponseRedirect(self.success_url)
-                res.status_code(200)
+                res = redirect(reverse("core:home"))
 
                 res.set_cookie("last_login", datetime.datetime.now())
                 res.set_cookie("user_id", registered_user.id)
 
                 return res
-            
-        context = {
-            "status": "Login failed!",
-            "form": form,
-        }
+        else:
+            context = {
+                "status": "Login failed!",
+                "form": form,
+            }
 
-        logger.error("LOGIN FAILED")
-        return render(request, self.template_name, context, status=500)
+            logger.error("LOGIN FAILED")
+            return render(request, self.template_name, context, status=500)
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
-        logout(request)
         logger.info("LOGGED OUT of %s"%request.user.get_username())
+        logout(request)
 
-        res = HttpResponseRedirect(reverse("core:home"))
-        res.status_code = 200
+        res = redirect(reverse("core:home"))
         res.delete_cookie("last_login")
         res.delete_cookie("user_id")
 
