@@ -33,17 +33,19 @@ class RegisterView(CreateView):
             form.save()
             logger.info("REGISTERED user", form.cleaned_data["username"][0])
 
-            return redirect(self.success_url)
+            return HttpResponseRedirect(self.success_url)
         else:
             message = "Login failed!"
+
             context = {
+                "status": message,
                 "form": form,
                 "status_code": 500,
-                "message": message,
             }
 
             logger.error("FAILED, Form invalid")
             logger.error(form.errors)
+
             return render(request, self.template_name, context)
 
 # TODO current form is still sent in plaintext, use LoginView in the future
@@ -60,11 +62,11 @@ class LoginViewOld(FormView):
 
     def get(self, request):
         form = self.form_class
-        message = ''
         context = {
-            "form": form,
+            "status": "Grabbing form",
             "status_code": 200,
-            "message": message
+            "message": message,
+            "form": form,
         }
 
         return render(request, self.template_name, context)
@@ -77,8 +79,6 @@ class LoginViewOld(FormView):
                 password=form.cleaned_data["password"]
             )
 
-            
-
             if user is not None:
                 login(request, user)
 
@@ -90,13 +90,14 @@ class LoginViewOld(FormView):
                 response = HttpResponseRedirect(self.success_url)
                 response.set_cookie("last_login", datetime.datetime.now())
                 response.set_cookie("user_id", registered_user.id)
+
                 return response
             
         message = "Login failed!"
         context = {
             "form": form,
+            "status": message,
             "status_code": 500,
-            "message": message,
         }
 
         logger.error("LOGIN FAILED")

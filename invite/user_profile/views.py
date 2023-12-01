@@ -20,6 +20,14 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
         # If showing my profile, auto-retrieve my user id from cookies
         registered_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
+        if not registered_user:
+            context = {
+                "status": "User not found",
+                "status_code": 404,
+            }
+
+            logger.info("User not found")
+            return render(request, self.template_name, context)
         
         context = {
             "status": "success",
