@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # tailwind
+    'crispy_forms',
+    'crispy_'
+
     # django applications
     'core',
     'authentication',
@@ -138,6 +142,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CUSTOM FIELDS
+
+# Tailwind
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 # Path to Extended user model
 AUTH_USER_MODEL = "authentication.RegisteredUser"
