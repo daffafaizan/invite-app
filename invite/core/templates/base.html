@@ -33,9 +33,11 @@
 
         {% block meta %} {% endblock meta %}
     </head>
-    <body class="min-h-screen p-8">
+    <body>
         {% include 'navbar.html' %} 
-        {% block content %} {% endblock content %}
+        <div class="min-h-screen flex flex-col justify-center items-center p-2 md:p-8">
+            {% block content %} {% endblock content %}
+        </div>
     </body>
     {% include 'footer.html' %}
 </html>
