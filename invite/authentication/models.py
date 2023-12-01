@@ -6,6 +6,14 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
 class TautanMediaSosial(models.Model):
+    def __str__(self) -> str:
+        res = "\nWebsites:\n"
+
+        for link in (self.website, self.instagram, self.twitter, self.linkedin, self.github):
+            res += f"{link}\n"
+        
+        return res
+            
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
  
     website = models.CharField(max_length=250, blank=True) # blank=True null=False, avoid redundant NULL and "" default values
@@ -15,6 +23,12 @@ class TautanMediaSosial(models.Model):
     github = models.CharField(max_length=250, blank=True)
 
 class ProfileDetails(models.Model):
+    def __str__(self) -> str:
+        res = "\nProfile details:\n"
+        res += f"Upvote: {self.jumlah_upvote}\n"
+        res += f"Downvote: {self.jumlah_downvote}\n"
+        return res
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     
     jumlah_upvote = models.PositiveIntegerField(default=0)

@@ -3,7 +3,6 @@ import uuid
 from django.db import models
 import datetime
 
-from user_profile.models import KetuaRegu, PencariRegu
 from django.db import models
 
 def get_n_days_future(n=180):
