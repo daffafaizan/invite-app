@@ -5,21 +5,11 @@ from django.contrib.postgres.fields import ArrayField
 
 from authentication.models import RegisteredUser
 
-class PencariRegu(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
-
-    registered_user = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
-
-class KetuaRegu(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
-    
-    pencari_regu = models.OneToOneField(PencariRegu, on_delete=models.CASCADE)
-
 class UlasanProfil(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
 
-    pengulas = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=False, null=False, related_name='pengulas')
-    diulas = models.OneToOneField(PencariRegu, on_delete=models.SET_NULL, blank=False, null=True, related_name='diulas') # Blank = False so form field should never be null, but db may contain null
+    pengulas = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE, blank=False, null=False, related_name='pengulas')
+    diulas = models.OneToOneField(RegisteredUser, on_delete=models.SET_NULL, blank=False, null=True, related_name='diulas') # Blank = False so form field should never be null, but db may contain null
 
     rating = models.PositiveIntegerField(default=0)
     deskripsi_kerja_setim = models.TextField() # NOTE user mengisi lomba apa yang pernah diikuti bersama user ini
