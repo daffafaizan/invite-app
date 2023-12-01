@@ -22,7 +22,11 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
 
         
         context = {
-            "registered_user": registered_user
+            "status": "success",
+            "status_code": 200,
+            "data": {
+                "registered_user": registered_user
+            }
         }
 
         logger.info(f"Showing {registered_user.get_username()}'s profile")
@@ -36,25 +40,36 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
     def get(self, request, user_id):
         # If showing other's profile, retrieve user id url params        
-        logger.info("Uname path:", user_id)
+        logger.info(f"id from path: %s"%str(user_id))
         
-        registered_user = RegisteredUser.objects \
-            .filter(id=user_id) \
-            .only(
-                "username", 
-                "first_name", 
-                "last_name", 
-                "universitas", 
-                "jurusan", 
-                "keahlian", 
-                "tautan_portfolio", 
-                "tautan_media_sosial", 
-                "profile_details", 
-                "foto_profil"
-            ).get()
+        registered_user = RegisteredUser.objects.get(id=user_id)
+        
+        if not registered_user:
+            context = {
+                
+            }
+            return render(request, self.template_name, context)
+        filtered_user = {
+            "id": registered_user.id,
+            "username": registered_user.username,
+            "first_name": registered_user.first_name,
+            "last_name": registered_user.last_name,
+            "universitas": registered_user.universitas,
+            "jurusan": registered_user.jurusan,
+            "keahlian": registered_user.keahlian,
+            "tautan_portfolio": registered_user.tautan_portfolio,
+            "tautan_media_sosial": registered_user.tautan_media_sosial,
+            "profile_details": registered_user.profile_details,
+            "foto_profil": registered_user.foto_profil,
+        }
 
+        # Return certain fields only
         context = {
-            "registered_user": registered_user
+            "status": "success",
+            "status_code": 200,
+            "data": {
+                "registered_user": filtered_user
+            }
         }
 
         logger.info(f"Showing {registered_user.get_username()}'s profile")
@@ -71,7 +86,11 @@ def show_my_applications(request):
     daftar_lamaran = Lamaran.objects.filter(pengirim=pencari_regu)
 
     context = {
-        "daftar_lamaran": daftar_lamaran
+        "status": "success",
+        "status_code": 200,
+        "data": {
+            "daftar_lamaran": daftar_lamaran
+        }
     }
 
     return render(request, "my_applications.html", context)
@@ -80,4 +99,10 @@ def delete_application(request, application_id):
     lamaran = Lamaran.objects.get(id=application_id)
     lamaran.delete()
 
-    return render(request, "vacancies.html")
+    context = {
+        "status": "success",
+        "status_code": 204,
+        "message": "Lamaran berhasil dihapus"
+    }
+
+    return render(request, "vacancies.html", context)
