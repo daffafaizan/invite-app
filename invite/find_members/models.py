@@ -1,16 +1,17 @@
 from typing import List
+import uuid
 from django.db import models
 import datetime
 
-from user_profile.models import KetuaRegu, PencariRegu
 from django.db import models
 
 def get_n_days_future(n=180):
     # Default is 6 months
-
     return datetime.datetime.now() + datetime.timedelta(days=n)
 
 class TautanMediaSosialLowongan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+
     website = models.CharField(max_length=250, blank=True) # blank=True null=False, avoid redundant NULL and "" default values
     instagram = models.CharField(max_length=250, blank=True)
     twitter = models.CharField(max_length=250, blank=True)
@@ -22,7 +23,10 @@ class LowonganRegu(models.Model):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
         return f'lowongan_{self.pk}/{filename}'
     
-    ketua = models.ForeignKey(KetuaRegu, on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+    
+    ketua = models.OneToOneField(KetuaRegu, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
 
     nama_regu = models.CharField(max_length=255, blank=False, null=False) # non-null
     deskripsi_lowongan_regu = models.TextField()
@@ -37,7 +41,6 @@ class LowonganRegu(models.Model):
     total_anggota_dibutuhkan = models.PositiveIntegerField(default=0)
     
     tautan_medsos_regu = models.OneToOneField(TautanMediaSosialLowongan, on_delete=models.SET_NULL, blank=True, null=True)
-    # dihapusOleh = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True) # TODO admin
     objects = models.Manager()
 
 class LowonganManager(models.Manager):

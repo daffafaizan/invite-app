@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block meta %}
+<title>Post Detail</title>
+{% endblock meta %}
+
+{% block content %}
+<main>
+	<h1>My Profile</h1>
+    <p>
+        Created at: {{ data.registered_user.created_at }}
+    </p>
+    <p>
+        Username: {{ data.registered_user.username }}
+    </p>
+    <p>
+        Name: {{ data.registered_user.first_name }} {{ data.registered_user.last_name }}
+    </p>
+    <p>
+        University: {{ data.registered_user.universitas }}
+    </p>
+    <p>
+        Jurusan: {{ data.registered_user.jurusan }}
+    </p>
+    <p>
+        Tautan Media Sosial: {{ data.registered_user.tautan_media_sosial }}
+    </p>
+    <p>
+        Profile Details: {{ data.registered_user.profile_details }}
+    </p>
+    <p>
+        Profile Picture: {{ data.registered_user.profile_picture }}
+    </p>
+
+
+</main>
+
+{% endblock content %}

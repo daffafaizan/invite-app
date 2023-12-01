@@ -1,7 +1,12 @@
 from django.urls import path
-from user_profile.views import review_profile
+from . import views
 
-app_name = "user_profile"
+app_name = "profile"
+
 urlpatterns = [
-    path('<int:profile_id>/review/create/', review_profile, name='review_profile'),
+    path('me/', views.MyProfileDetailView.as_view(), name='me'),
+    path('<str:user_id>/', views.ProfileDetailView.as_view(), name='profile'),
+    path('<str:user_id>/review/create/', views.review_profile, name='review_profile'),
+    path('my-applications/', views.show_my_applications, name='show_my_applications'),
+    path('my-applications/<int:application_id>/delete', views.delete_application, name='delete_application'),
 ]
