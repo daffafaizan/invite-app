@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from user_profile.models import KetuaRegu, RegisteredUser
 from .forms import LowonganForm
 from .models import *
 
@@ -16,10 +15,7 @@ def create_vacancy(request):
         if form.is_valid():
             lowongan = form.save(commit=False)
 
-            current_user = request.user
-            current_pencari_regu = PencariRegu.objects.get(registered_user=current_user)
-            ketua_regu = KetuaRegu(pencari_regu=current_pencari_regu)
-            lowongan.ketua_regu = ketua_regu
+            lowongan.ketua = request.user
 
             lowongan.nama_regu = request.POST.get('nama_regu')
             lowongan.deskripsi_lowongan_regu = request.POST.get('deskripsi_lowongan_regu')
