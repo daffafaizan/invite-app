@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.views.generic.detail import DetailView
 
 from find_teams.models import Lamaran
-from user_profile.models import PencariRegu
 from authentication.models import RegisteredUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -84,9 +83,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 def show_my_applications(request):
     user = RegisteredUser.objects.get(username=request.COOKIES.get("user_id"))
     registered_user = RegisteredUser.objects.get(user=user)
-    pencari_regu = PencariRegu.objects.get(user=registered_user)
-
-    daftar_lamaran = Lamaran.objects.filter(pengirim=pencari_regu)
+    daftar_lamaran = Lamaran.objects.filter(pengirim=registered_user)
 
     if not daftar_lamaran:
         logger.info("Tidak ada lamaran ditemukan")
