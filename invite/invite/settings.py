@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     # tailwind
     'crispy_forms',
-    'crispy_'
+    'crispy_tailwind',
 
     # django applications
     'core',
