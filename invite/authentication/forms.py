@@ -2,6 +2,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from .models import RegisteredUser
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Submit, ButtonHolder
 
 REGISTERED_USER_FIELDS = (
             "username", 
@@ -71,6 +73,25 @@ class RegisteredUserCreationForm(UserCreationForm):
     class Meta:
         model = RegisteredUser
         fields = REGISTERED_USER_FIELDS
+    def __init__(self, *args, **kwargs):
+        super(RegisteredUserCreationForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+
+        self.helper.layout = Layout(
+            Field('username', css_class='form-input h-8 w-32 mb-4 bg-black', placeholder='Username'),
+            Field('first_name', css_class='form-input h-8 w-32 mb-4', placeholder='Nama Depan'),
+            Field('middle_name', css_class='form-input h-8 w-32 mb-4', placeholder='Nama Tengah'),
+            Field('last_name', css_class='form-input h-8 w-32 mb-4', placeholder='Nama Belakang'),
+            Field('universitas', css_class='form-input h-8 w-32 mb-4', placeholder='Universitas'),
+            Field('jurusan', css_class='form-input h-8 w-32 mb-4', placeholder='Jurusan'),
+            Field('keahlian', css_class='form-input h-8 w-32 mb-4', placeholder='Keahlian'),
+            Field('password1', css_class='form-input h-8 w-32 mb-4', placeholder='Password'),
+            Field('password2', css_class='form-input h-8 w-32 mb-4', placeholder='Password Confirmation'),
+            ButtonHolder(
+                Submit('submit', 'Sign Up', css_class='your-custom-submit-button-class')
+            )
+        )
 
 class RegisteredUserLoginFormNew(AuthenticationForm):
     pass
