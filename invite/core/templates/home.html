@@ -9,7 +9,10 @@
     {% if user.is_authenticated %}
         Hi {{ user.username }}!
         <p><a href="{% url 'authentication:logout' %}"></a></p>
-        <button>
+        <button style="text-decoration: underline;">
+            <a href="{% url 'profile:me' %}">My Profile</a>
+        </button>
+        <button style="text-decoration: underline;">
             <a href="{% url 'authentication:logout' %}">Log Out</a>
         </button>
     {% else %}

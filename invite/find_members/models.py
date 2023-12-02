@@ -1,10 +1,11 @@
+import datetime
 from typing import List
 import uuid
 from django.db import models
+from authentication.models import RegisteredUser
 import datetime
-
-from user_profile.models import KetuaRegu, PencariRegu
 from django.db import models
+from authentication.models import * 
 
 def get_n_days_future(n=180):
     # Default is 6 months
@@ -26,7 +27,7 @@ class LowonganRegu(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     
-    ketua = models.OneToOneField(KetuaRegu, on_delete=models.CASCADE)
+    ketua = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
     nama_regu = models.CharField(max_length=255, blank=False, null=False) # non-null

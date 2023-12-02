@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.views.generic.detail import DetailView
 
 from find_teams.models import Lamaran
-from user_profile.models import PencariRegu
 from authentication.models import RegisteredUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -20,15 +19,25 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
         # If showing my profile, auto-retrieve my user id from cookies
         registered_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
+        if not registered_user:
+            context = {
+                "status": "User not found",
+            }
+
+            logger.info("User not found")
+            return render(request, self.template_name, context, status=404)
         
         context = {
-            "registered_user": registered_user
+            "status": "Success fetching my profile",
+            "data": {
+                "registered_user": registered_user
+            }
         }
 
         logger.info(f"Showing {registered_user.get_username()}'s profile")
         logger.info(f"Registered user: {registered_user}\n")
 
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context, status=200)
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
@@ -36,48 +45,71 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
     def get(self, request, user_id):
         # If showing other's profile, retrieve user id url params        
-        logger.info("Uname path:", user_id)
+        logger.info(f"id from path: %s"%str(user_id))
         
-        registered_user = RegisteredUser.objects \
-            .filter(id=user_id) \
-            .only(
-                "username", 
-                "first_name", 
-                "last_name", 
-                "universitas", 
-                "jurusan", 
-                "keahlian", 
-                "tautan_portfolio", 
-                "tautan_media_sosial", 
-                "profile_details", 
-                "foto_profil"
-            ).get()
+        registered_user = RegisteredUser.objects.get(id=user_id)
+        
+        if not registered_user:
+            return render(request, self.template_name, status=404)
+        
+        filtered_user = {
+            "id": registered_user.id,
+            "username": registered_user.username,
+            "first_name": registered_user.first_name,
+            "last_name": registered_user.last_name,
+            "universitas": registered_user.universitas,
+            "jurusan": registered_user.jurusan,
+            "keahlian": registered_user.keahlian,
+            "tautan_portfolio": registered_user.tautan_portfolio,
+            "tautan_media_sosial": registered_user.tautan_media_sosial,
+            "profile_details": registered_user.profile_details,
+            "foto_profil": registered_user.foto_profil,
+        }
 
+        # Return certain fields only
         context = {
-            "registered_user": registered_user
+            "status": "Success fetching user profile",
+            "data": {
+                "registered_user": filtered_user
+            }
         }
 
         logger.info(f"Showing {registered_user.get_username()}'s profile")
         logger.info(f"Registered user: {registered_user}\n")
 
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context, status=200)
 
 
 def show_my_applications(request):
     user = RegisteredUser.objects.get(username=request.COOKIES.get("user_id"))
     registered_user = RegisteredUser.objects.get(user=user)
-    pencari_regu = PencariRegu.objects.get(user=registered_user)
+    daftar_lamaran = Lamaran.objects.filter(pengirim=registered_user)
 
-    daftar_lamaran = Lamaran.objects.filter(pengirim=pencari_regu)
+    if not daftar_lamaran:
+        logger.info("Tidak ada lamaran ditemukan")
+        return render(request, "my_applications.html", status=404)
 
     context = {
-        "daftar_lamaran": daftar_lamaran
+        "status": "success",
+        "data": {
+            "daftar_lamaran": daftar_lamaran
+        }
     }
 
-    return render(request, "my_applications.html", context)
+    return render(request, "my_applications.html", context, status=200)
 
 def delete_application(request, application_id):
     lamaran = Lamaran.objects.get(id=application_id)
+    
+    if not lamaran:
+        logger.info("Lamaran tidak ditemukan")
+        return render(request, "vacancies.html", status=404)
+    
     lamaran.delete()
 
-    return render(request, "vacancies.html")
+    context = {
+        "status": "success",
+        "message": "Lamaran berhasil dihapus"
+    }
+
+    return render(request, "vacancies.html", context, status=204)

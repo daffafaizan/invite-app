@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from user_profile.models import PencariRegu, KetuaRegu
+from authentication.models import RegisteredUser
 from find_members.models import LowonganRegu
 
 class Lamaran(models.Model):
@@ -12,8 +12,8 @@ class Lamaran(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
 
-    pengirim = models.OneToOneField(PencariRegu, on_delete=models.CASCADE, blank=True, null=False)
-    penerima = models.OneToOneField(KetuaRegu, on_delete=models.CASCADE, blank=True)
+    pengirim = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE, blank=True, null=False, related_name='%(class)s_pengirim')
+    penerima = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE, blank=True, related_name='%(class)s_penerima')
     lowongan = models.OneToOneField(LowonganRegu, on_delete=models.CASCADE, blank=True)
 
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
