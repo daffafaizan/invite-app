@@ -5,7 +5,7 @@
 {% block content %}
   <div class="flex flex-grow flex-col items-center">
     <div class="flex w-full md:w-2/5 p-4 underline decoration-emerald-900 underline-offset-[9px]">
-      <h1 class="text-2xl">My Applications</h1>
+      <h1 class="text-2xl text-emerald-900">My Applications</h1>
     </div>
     <div class="flex flex-col flex-grow w-full md:w-2/5 p-4 gap-4">
       {% if data.daftar_lamaran %}
@@ -16,11 +16,11 @@
             class="py-1 px-3 mr-auto rounded-2xl tracking-wide text-white">
               {{ lamaran.status }}
             </span>
-            <span class="ml-auto">
+            <span class="ml-auto text-emerald-900">
               {{ lamaran.lowongan.nama_regu }}
             </span>
           </div>
-          <span class="">
+          <span class="text-emerald-900">
             <strong>Penerima:</strong> {{ lamaran.penerima }}
           </span>
         </div>
