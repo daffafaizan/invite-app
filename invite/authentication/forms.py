@@ -14,60 +14,6 @@ REGISTERED_USER_FIELDS = (
             )
 
 class RegisteredUserCreationForm(UserCreationForm):
-    username = forms.CharField(
-        min_length=2,
-        max_length=20,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
-    )
-    first_name = forms.CharField(
-        min_length=2,
-        max_length=20,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nama Depan'}),
-    )
-    middle_name = forms.CharField(
-        min_length=2,
-        max_length=20,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nama Tengah'}),
-    )
-    last_name = forms.CharField(
-        min_length=2,
-        max_length=20,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nama Belakang'}),
-    )
-    universitas = forms.CharField(
-        min_length=2,
-        max_length=40,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Universitas'}),
-    )
-    jurusan = forms.CharField(
-        min_length=2,
-        max_length=30,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Jurusan'}),
-    )
-    keahlian = forms.CharField(
-        min_length=2,
-        max_length=30,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Keahlian'}),
-    )
-    password1 = forms.CharField(
-        min_length=8,
-        max_length=26,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
-    )
-    password2 = forms.CharField(
-        min_length=8,
-        max_length=26,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Password Confirmation'}),
-    )
     class Meta:
         model = RegisteredUser
         fields = REGISTERED_USER_FIELDS

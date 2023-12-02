@@ -8,66 +8,43 @@
   <span class="text-3xl mb-8 md:text-4xl md:mb-10">Register</span>
   <form method="post">
     {% csrf_token %}
-    <div class="flex flex-row gap-4">
-      <div class="flex flex-col justify-center gap-2">
-        <div class="p-2 border-b-2">
-          {{ form.first_name }}
-          {% for error in form.first_name.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="p-2 border-b-2">
-          {{ form.middle_name }}
-          {% for error in form.middle_name.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="p-2 border-b-2">
-          {{ form.last_name }}
-          {% for error in form.last_name.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="p-2 border-b-2">
-          {{ form.universitas }}
-          {% for error in form.universitas.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="p-2 border-b-2">
-          {{ form.jurusan }}
-          {% for error in form.jurusan.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="p-2 border-b-2">
-          {{ form.keahlian }}
-          {% for error in form.keahlian.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="flex flex-col justify-center gap-2">
-        <div class="p-2 border-b-2">
-          {{ form.username }}
-          {% for error in form.username.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="p-2 border-b-2">
-          {{ form.password1 }}
-          {% for error in form.password1.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="p-2 border-b-2">
-          {{ form.password2 }}
-          {% for error in form.password2.errors %}
-            <span class="text-red-500">{{ error }}</span>
-          {% endfor %}
-        </div>
-      </div>
+
+    <div class="mb-4">
+      {{ form.username|as_crispy_field }}
     </div>
+
+    <div class="mb-4">
+      {{ form.first_name|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      {{ form.middle_name|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      {{ form.last_name|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      {{ form.universitas|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      {{ form.jurusan|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      {{ form.keahlian|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      {{ form.password1|as_crispy_field }}
+    </div>
+
+    <div class="mb-4">
+      {{ form.password2|as_crispy_field }}
+    </div>
+    
     <div class="flex flex-col justify-center items-center">
       <button type="submit" class="border-2 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150">Sign Up</button>
     </div>
