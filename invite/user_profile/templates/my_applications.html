@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+  <div class="flex flex-grow flex-col items-center">
+    <div class="flex w-full md:w-2/5 p-4">
+      <h1 class="text-2xl">My Applications</h1>
+    </div>
+    <div class="flex flex-col flex-grow w-full md:w-2/5 p-4 gap-4">
+      {% if data.daftar_lamaran %}
+        {% for lamaran in data.daftar_lamaran %}
+        <div class="flex flex-col p-3 text-sm gap-5 rounded-lg shadow-md bg-white">
+          <div class="flex flex-row items-center">
+            <span 
+            class="py-1 px-3 mr-auto rounded-2xl tracking-wide text-white">
+              {{ lamaran.status }}
+            </span>
+            <span class="ml-auto">
+              {{ lamaran.lowongan.nama_regu }}
+            </span>
+          </div>
+          <span class="">
+            <strong>Penerima:</strong> {{ lamaran.penerima }}
+          </span>
+        </div>
+        {% endfor %}
+    {% else %}
+      <p>No applications found.</p>
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}
