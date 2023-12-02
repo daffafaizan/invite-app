@@ -24,6 +24,21 @@ class TautanMediaSosialLowongan(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+# NOTE reference: https://stackoverflow.com/questions/61104897/python-django-best-practice-for-request-user-in-class-based-views-and-queryset
+class LowonganReguQuerySet(models.QuerySet):
+    def owned_by_user(self, user):
+        return self.filter(ketua=user)
+
+class LowonganManager(models.Manager):
+    def get_queryset(self):
+        return LowonganReguQuerySet(self.model, using=self._db)
+
+    # def lowongan_list(self) -> List[LowonganRegu]:
+    #     return list(self.get_queryset())
+    
+    def owned_by_user(self, user):
+        return self.get_queryset().owned_by_user(user)
+
 class LowonganRegu(models.Model):
     def vacancy_directory_path(self, filename):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -46,15 +61,9 @@ class LowonganRegu(models.Model):
     total_anggota_dibutuhkan = models.PositiveIntegerField(default=0)
     
     tautan_medsos_regu = models.OneToOneField(TautanMediaSosialLowongan, on_delete=models.SET_NULL, blank=True, null=True)
-    objects = models.Manager()
+    
+    objects = LowonganManager()
 
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-class LowonganManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset()
-
-    def lowongan_list(self) -> List[LowonganRegu]:
-        return list(self.get_queryset())

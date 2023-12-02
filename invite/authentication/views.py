@@ -1,8 +1,7 @@
 import datetime, logging
 from django.conf import settings
 from django.http import request, JsonResponse, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView, FormView
 from django.forms.models import BaseModelForm
@@ -49,10 +48,9 @@ class RegisterView(CreateView):
 
 # TODO current form is still sent in plaintext, use LoginView in the future
 # https://docs.djangoproject.com/en/4.2/topics/auth/default/#django.contrib.auth.views.LoginView
-class LoginViewAuth(LoginView):
-    template_name = "authentication/login.html"
-    next_page = settings.LOGIN_REDIRECT_URL
-
+# class LoginViewAuth(LoginView):
+#     template_name = "authentication/login.html"
+#     next_page = settings.LOGIN_REDIRECT_URL
 
 class LoginViewOld(FormView):
     form_class = RegisteredUserLoginForm #
@@ -109,5 +107,3 @@ class LogoutView(LoginRequiredMixin, View):
         res.delete_cookie("user_id")
 
         return res
-    
-
