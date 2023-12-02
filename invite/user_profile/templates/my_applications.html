@@ -13,7 +13,11 @@
         <div class="flex flex-col p-3 text-sm gap-5 rounded-lg shadow-md hover:scale-105 hover:duration-150 transition bg-white">
           <div class="flex flex-row items-center">
             <span 
-            class="py-1 px-3 mr-auto rounded-2xl tracking-wide font-light text-white">
+            class="py-1 px-3 mr-auto rounded-2xl tracking-wide font-light text-white
+            {% if lamaran.status == 'Denied' %}bg-[#EB6060]
+            {% elif lamaran.status == 'Pending' %}bg-[#F7E463]
+            {% elif lamaran.status == 'Accepted' %}bg-[#7CD992]
+            {% endif %}">
               {{ lamaran.status }}
             </span>
             <span class="ml-auto text-emerald-900 font-semibold">
