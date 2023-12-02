@@ -1,11 +1,11 @@
 import datetime
 from typing import List
 import uuid
+
 from django.db import models
+from django.core.validators import MinLengthValidator, MaxLengthValidator
+
 from authentication.models import RegisteredUser
-import datetime
-from django.db import models
-from authentication.models import * 
 
 def get_n_days_future(n=180):
     # Default is 6 months
@@ -20,6 +20,10 @@ class TautanMediaSosialLowongan(models.Model):
     linkedin = models.CharField(max_length=250, blank=True)
     github = models.CharField(max_length=250, blank=True)
 
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class LowonganRegu(models.Model):
     def vacancy_directory_path(self, filename):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -28,15 +32,14 @@ class LowonganRegu(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     
     ketua = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
 
     nama_regu = models.CharField(max_length=255, blank=False, null=False) # non-null
-    deskripsi_lowongan_regu = models.TextField()
-    foto_lowongan_regu = models.ImageField(upload_to=vacancy_directory_path)
+    deskripsi_lowongan_regu = models.TextField(blank=False, null=False, validators=[MinLengthValidator(3), MaxLengthValidator(2000)])
+    foto_lowongan_regu = models.ImageField(blank=True, null=True, upload_to=vacancy_directory_path)
 
     nama_lomba = models.CharField(max_length=255)
     bidang_lomba = models.CharField(max_length=255)
-    tanggal_lomba = models.DateTimeField()
+    tanggal_lomba = models.DateTimeField(blank=True, null=True)
     expiry = models.DateTimeField(default=get_n_days_future) # By default, set expiry date to 6 months from creation date
 
     jumlah_anggota_sekarang = models.PositiveIntegerField(default=0)
@@ -44,6 +47,10 @@ class LowonganRegu(models.Model):
     
     tautan_medsos_regu = models.OneToOneField(TautanMediaSosialLowongan, on_delete=models.SET_NULL, blank=True, null=True)
     objects = models.Manager()
+
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class LowonganManager(models.Manager):
     def get_queryset(self):

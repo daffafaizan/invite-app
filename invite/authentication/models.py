@@ -22,6 +22,10 @@ class TautanMediaSosial(models.Model):
     linkedin = models.CharField(max_length=250, blank=True)
     github = models.CharField(max_length=250, blank=True)
 
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class ProfileDetails(models.Model):
     def __str__(self) -> str:
         res = "\nProfile details:\n"
@@ -34,14 +38,12 @@ class ProfileDetails(models.Model):
     jumlah_upvote = models.PositiveIntegerField(default=0)
     jumlah_downvote = models.PositiveIntegerField(default=0)
 
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
 # Extend the default User model, don't use OneToOne relation
 class RegisteredUser(AbstractUser):
-    def default_profile_details(self):
-        return ProfileDetails.objects.create()
-    
     def user_directory_path(self, filename):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
         return f'user_{self.user.username}/{filename}'
@@ -49,8 +51,8 @@ class RegisteredUser(AbstractUser):
     def save(self, *args, **kwargs):
         # Check if profile_details is not set, then create a default ProfileDetails instance
         if not self.profile_details:
-            default_profile_details = ProfileDetails.objects.create()
-            self.profile_details = default_profile_details
+            default_pd = ProfileDetails.objects.create()
+            self.profile_details = default_pd
         if not self.tautan_media_sosial:
             default_tms = TautanMediaSosial.objects.create()
             self.tautan_media_sosial = default_tms
@@ -71,8 +73,8 @@ class RegisteredUser(AbstractUser):
     tautan_portfolio = models.CharField(max_length=250, blank=True)
 
     tautan_media_sosial = models.OneToOneField(TautanMediaSosial, on_delete=models.SET_NULL, blank=True, null=True)
-
     profile_details = models.OneToOneField(ProfileDetails, on_delete=models.SET_NULL, blank=True, null=True)
 
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
