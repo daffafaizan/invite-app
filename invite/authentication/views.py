@@ -31,7 +31,7 @@ class RegisterView(CreateView):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            logger.info(f"REGISTERED user {form.cleaned_data["username"][0]}")
+            logger.info(f"REGISTERED user {form.cleaned_data['username'][0]}")
 
             return redirect(self.success_url)
         else:
