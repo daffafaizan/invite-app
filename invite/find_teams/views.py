@@ -1,12 +1,17 @@
 from django.shortcuts import render
-
+from django.contrib.auth.models import User
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
 
 def show_vacancies(request):
-    # TODO
-    return render(request, "vacancies.html")
+    vacancy_list = LowonganRegu.objects.all()
+
+    context = {
+        'vacancy_list': vacancy_list,
+    }
+
+    return render(request, "show_vacancies.html", context)
 
 def show_vacancy_details(request, lowongan_id):
     # TODO
