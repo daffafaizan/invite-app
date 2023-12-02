@@ -91,4 +91,11 @@ class VacancyUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     
- 
+class VacancyDeleteView(LoginRequiredMixin, DeleteView):
+    model = LowonganRegu
+    pk_url_kwarg = 'vacancy_id'
+    template_name = "find_members/delete_vacancy.html"
+    success_url = reverse_lazy("find_teams:show_vacancies")
+
+    def get_object(self, queryset=None) -> LowonganRegu:
+        return self.model.objects.get(ketua=self.request.user, uuid=self.kwargs["vacancy_id"])
