@@ -8,43 +8,39 @@
   <span class="text-3xl mb-8 md:text-4xl md:mb-10">Register</span>
   <form method="post">
     {% csrf_token %}
-
-    <div class="mb-4">
-      {{ form.username|as_crispy_field }}
+    <div class="flex flex-row">
+      <div class="flex flex-col">
+        <div class="mb-4">
+          {{ form.first_name|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.middle_name|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.last_name|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.universitas|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.jurusan|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.keahlian|as_crispy_field }}
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="mb-4">
+          {{ form.username|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.password1|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.password2|as_crispy_field }}
+        </div>
+      </div>
     </div>
-
-    <div class="mb-4">
-      {{ form.first_name|as_crispy_field }}
-    </div>
-
-    <div class="mb-4">
-      {{ form.middle_name|as_crispy_field }}
-    </div>
-
-    <div class="mb-4">
-      {{ form.last_name|as_crispy_field }}
-    </div>
-
-    <div class="mb-4">
-      {{ form.universitas|as_crispy_field }}
-    </div>
-
-    <div class="mb-4">
-      {{ form.jurusan|as_crispy_field }}
-    </div>
-
-    <div class="mb-4">
-      {{ form.keahlian|as_crispy_field }}
-    </div>
-
-    <div class="mb-4">
-      {{ form.password1|as_crispy_field }}
-    </div>
-
-    <div class="mb-4">
-      {{ form.password2|as_crispy_field }}
-    </div>
-    
     <div class="flex flex-col justify-center items-center">
       <button type="submit" class="border-2 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150">Sign Up</button>
     </div>
