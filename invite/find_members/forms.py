@@ -22,10 +22,10 @@ class LowonganForm(ModelForm):
     # validations
 
     # a minimum of 1 member (the team leader) is already in the team 
-    jumlah_anggota_sekarang = forms.IntegerField(min_value=1)
+    jumlah_anggota_sekarang = forms.IntegerField(min_value=1, max_value=100)
 
     # a minimum of 1 needed member for a vacancy to exist
-    total_anggota_dibutuhkan = forms.IntegerField(min_value=1)
+    total_anggota_dibutuhkan = forms.IntegerField(min_value=1, max_value=100)
 
     # competition date and vacancy expiry date cannot be before the current time
     tanggal_lomba = forms.DateTimeField(
