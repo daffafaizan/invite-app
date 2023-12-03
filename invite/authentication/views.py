@@ -27,6 +27,17 @@ class RegisterView(CreateView):
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         return super().form_valid(form)
 
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect(reverse("core:home"))
+        
+        form = self.form_class()
+        context = {
+            "status": "Fetching form",
+            "form": form,
+        }
+
+        return render(request, self.template_name, context, status=200)
     def post(self, request):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
@@ -64,6 +75,9 @@ class LoginViewOld(FormView):
     template_name = "authentication/login.html"
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect(reverse("core:home"))
+        
         form = self.form_class()
         context = {
             "status": "Fetching form",
@@ -120,6 +134,9 @@ class LoginViewOld(FormView):
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect(reverse("authentication:login"))
+        
         logger.info("LOGGED OUT of %s" % request.user.get_username())
         logout(request)
 
