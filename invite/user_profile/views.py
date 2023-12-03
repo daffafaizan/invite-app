@@ -100,7 +100,7 @@ def show_my_applications(request):
 
     if not daftar_lamaran:
         logger.info("Tidak ada lamaran ditemukan")
-        return render(request, "my_applications.html", status=404)
+        return render(request, "user_profile/my_applications.html", status=404)
 
     context = {
         "status": "success",
@@ -109,7 +109,7 @@ def show_my_applications(request):
         }
     }
 
-    return render(request, "my_applications.html", context, status=200)
+    return render(request, "user_profile/my_applications.html", context, status=200)
 
 def delete_application(request, application_id):
     lamaran = Lamaran.objects.get(id=application_id)

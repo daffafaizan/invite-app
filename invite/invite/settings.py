@@ -154,6 +154,10 @@ LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
