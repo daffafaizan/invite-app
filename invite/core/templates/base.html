@@ -35,7 +35,7 @@
     </head>
     <body>
         {% include 'navbar.html' %} 
-        <div class="min-h-screen min-w-screen flex flex-col p-4 md:p-8 bg-emerald-50">
+        <div class="relative selection:bg-emerald-600 selection:text-white min-h-screen min-w-screen flex flex-col">
             {% block content %} {% endblock content %}
         </div>
     </body>
