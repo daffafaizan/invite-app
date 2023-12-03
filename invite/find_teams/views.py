@@ -57,6 +57,12 @@ def apply_vacancy_second(request, lowongan_id):
     cover_letter = first_page_data.get("cover_letter")
     portofolio = first_page_data.get("portofolio")
 
+    user_data = {
+        "nama": current_user.nama,
+        "universitas": current_user.universitas,
+        "jurusan": current_user.jurusan,
+    }
+
     if request.method == "POST":
         form_data = {
             "keahlian": keahlian,
@@ -78,6 +84,16 @@ def apply_vacancy_second(request, lowongan_id):
             return render(request, "application_success.html", {"lamaran": form})
         
     else:
-        form = LamaranForm()
+        form_data = {
+            "nama": user_data["nama"],
+            "universitas": user_data["universitas"],
+            "jurusan": user_data["jurusan"],
+        }
+        form = LamaranForm(initial=form_data)
 
-    return render(request, "apply_vacancy_second.html", {"form": form})
+    context = {
+        "form": form,
+        "user_data": user_data,  # Pass the user data to the template
+    }
+
+    return render(request, "apply_vacancy_second.html", context)
