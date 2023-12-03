@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Apply{% endblock %}
+
+{% block content %}
+<div class="flex flex-grow flex-col justify-center items-center">
+  <div class="flex flex-col justify-center items-center py-8 px-12 md:p-16 shadow-lg rounded-2xl bg-white">
+    <span class="text-3xl text-emerald-900 mb-8 md:text-4xl md:mb-10">Application Form</span>
+    <form method="post" class="w-full">
+      {% csrf_token %}
+      <div class="flex flex-col justify-center gap-3">
+        <label for="keahlian" class="-mb-1 text-sm font-semibold">Keahlian</label>
+        <input type="text" id="keahlian" class="py-2 px-4 border rounded-lg focus:border-emerald-800 placeholder:text-sm" placeholder="Saya jago..." required>
+        <label for="cover_letter" class="-mb-1 text-sm font-semibold">Cover Letter</label>
+        <input type="text" id="cover_letter" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="Alasan saya apply adalah..." required>
+        <label for="tautan_portfolio" class="-mb-1 text-sm font-semibold">Portofolio</label>
+        <input type="text" id="tautan_portfolio" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="https://daffafaizan.com" required>
+      </div>
+      <div class="flex flex-col justify-center items-center">
+        <button type="submit" class="py-2 px-4 mt-8 shadow-md rounded-xl bg-emerald-800 text-white hover:scale-110 duration-150">Next</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
