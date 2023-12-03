@@ -22,6 +22,9 @@ def show_vacancy_details(request, lowongan_id):
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request):
+    initial = {
+        "first_page_data": request.session.get("first_page_data", None)
+    }
     if request.method == "POST":
         keahlian = request.POST.get("keahlian")
         cover_letter = request.POST.get("cover_letter")
@@ -34,8 +37,12 @@ def apply_vacancy_first(request):
         }
 
         return redirect("find_teams:apply_vacancy_second")
+    
+    context = {
+        "form": initial
+    }
 
-    return render(request, "apply_vacancy_first.html")
+    return render(request, "apply_vacancy_first.html", context)
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_second(request, lowongan_id):
