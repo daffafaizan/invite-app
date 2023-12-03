@@ -1,9 +1,11 @@
 import logging
 from django.conf import settings
 
+from django.shortcuts import redirect, render
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 
+from user_profile.models import UlasanProfil
 from find_teams.models import Lamaran
 from authentication.models import RegisteredUser
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -79,6 +81,17 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         return render(request, self.template_name, context, status=200)
 
+def review_profile(request, profile_id):
+    if request.method == "POST":
+        diulas = RegisteredUser.objects.get(id=profile_id)
+        rating = request.POST.get("rating")
+        deskripsi_kerja_setim = request.POST.get("deskripsi_kerja_setim")
+        ulasan = request.POST.get("ulasan")
+        
+        pengulas = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+        UlasanProfil.objects.create(diulas=diulas, pengulas=pengulas, rating=rating, deskripsi_kerja_setim=deskripsi_kerja_setim, ulasan=ulasan)
+        
+        return redirect('user_profile:profile', profile_id=profile_id)
 
 def show_my_applications(request):
     user = RegisteredUser.objects.get(username=request.COOKIES.get("user_id"))
