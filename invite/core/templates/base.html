@@ -34,7 +34,9 @@
         {% block meta %} {% endblock meta %}
     </head>
     <body>
-        {% include 'navbar.html' %} 
+        {% if request.user.is_authenticated %}
+            {% include 'navbar.html' %}     
+        {% endif %}
         <div class="relative selection:bg-emerald-600 selection:text-white min-h-screen min-w-screen flex flex-col bg-emerald-50">
             {% block content %} {% endblock content %}
         </div>

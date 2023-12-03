@@ -7,14 +7,17 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        Hi {{ user.username }}!
-        <p><a href="{% url 'authentication:logout' %}"></a></p>
-        <button style="text-decoration: underline;">
-            <a href="{% url 'profile:me' %}">My Profile</a>
-        </button>
-        <button style="text-decoration: underline;">
-            <a href="{% url 'authentication:logout' %}">Log Out</a>
-        </button>
+        <!-- Home Page -->
+        <div class="flex flex-col items-center">
+            <p>Hi {{ user.username }}!</p>
+            <p><a href="{% url 'authentication:logout' %}"></a></p>
+            <button style="text-decoration: underline;">
+                <a href="{% url 'profile:me' %}">My Profile</a>
+            </button>
+            <button style="text-decoration: underline;">
+                <a href="{% url 'authentication:logout' %}">Log Out</a>
+            </button>
+        </div>
     {% else %}
         <!-- When not logged in -->
         <div class="h-[100dvh] w-[100-dvw] bg-emerald-50 flex flex-col items-center justify-center">
