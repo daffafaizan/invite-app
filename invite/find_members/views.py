@@ -2,7 +2,7 @@ from typing import Any
 from django.conf import settings
 from django.db import models
 from django.forms.models import BaseModelForm
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseNotFound
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -16,9 +16,30 @@ from .models import LowonganRegu, TautanMediaSosialLowongan
 class VacancyDetailView(DetailView):
     model = LowonganRegu
     pk_url_kwarg = 'vacancy_id'
+    template_name = "find_members/vacancy_detail.html"
+    context_object_name = "vacancy"
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+        else:
+            raise AttributeError("VacancyDetailView must be called with either an object pk or a slug.")
+    
+        try:
+            return queryset.get()
+        except queryset.model.DoesNotExist:
+            res = render(self.request, "find_members/vacancy_detail.html", {"vacancy": None})
+            res.status_code = 404
+            return res
+            # return HttpResponse("LowonganRegu matching query does not exist.", status=404)
 
 class MyVacanciesDetailView(LoginRequiredMixin, ListView):
     model = LowonganRegu
+    template_name = "find_members/my_vacancies.html"
+    context_object_name = "vacancies"
     
     def get_queryset(self) -> QuerySet[Any]:
         # Return only the vacancies created by the current user
@@ -96,6 +117,7 @@ class VacancyDeleteView(LoginRequiredMixin, DeleteView):
     pk_url_kwarg = 'vacancy_id'
     template_name = "find_members/delete_vacancy.html"
     success_url = reverse_lazy("find_teams:show_vacancies")
+    context_object_name = "vacancy"
 
     def get_object(self, queryset=None) -> LowonganRegu:
         return self.model.objects.get(ketua=self.request.user, uuid=self.kwargs["vacancy_id"])
