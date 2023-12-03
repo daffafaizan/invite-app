@@ -35,19 +35,6 @@
               <h2 class="mb-4 fw-bold">Create A Vacancy</h2>
             </div>
             
-            {% if messages %}
-              <script>
-                $(document).ready(function(){
-                  // Get the first error message (you can customize this based on your needs)
-                  var errorMessage = '{{ messages.0}}';
-                  if (errorMessage) {
-                    // Show an alert with the error message
-                    alert(errorMessage);
-                  }
-                });
-              </script>
-            {% endif %}
-          
             <div class="card">
               <div class="card-body py-5 px-md-5">
                 <div class="create_vacancy">

@@ -22,10 +22,10 @@ class LowonganForm(ModelForm):
     # validations
 
     # a minimum of 1 member (the team leader) is already in the team 
-    jumlah_anggota_sekarang = forms.IntegerField(min_value=1)
+    jumlah_anggota_sekarang = forms.IntegerField(min_value=1, max_value=100)
 
     # a minimum of 1 needed member for a vacancy to exist
-    total_anggota_dibutuhkan = forms.IntegerField(min_value=1)
+    total_anggota_dibutuhkan = forms.IntegerField(min_value=1, max_value=100)
 
     # competition date and vacancy expiry date cannot be before the current time
     tanggal_lomba = forms.DateTimeField(
@@ -50,11 +50,11 @@ class LowonganForm(ModelForm):
         return expiry
 
     def clean(self):
-            cleaned_data = super().clean()
-            jumlah_anggota_sekarang = cleaned_data.get('jumlah_anggota_sekarang')
-            total_anggota_dibutuhkan = cleaned_data.get('total_anggota_dibutuhkan')
+        cleaned_data = super().clean()
+        jumlah_anggota_sekarang = cleaned_data.get('jumlah_anggota_sekarang')
+        total_anggota_dibutuhkan = cleaned_data.get('total_anggota_dibutuhkan')
 
-            if jumlah_anggota_sekarang is not None and total_anggota_dibutuhkan is not None:
-                if total_anggota_dibutuhkan <= jumlah_anggota_sekarang:
-                    raise ValidationError("Total members needed must be greater than current members.")
-            return cleaned_data
+        if jumlah_anggota_sekarang is not None and total_anggota_dibutuhkan is not None:
+            if total_anggota_dibutuhkan <= jumlah_anggota_sekarang:
+                raise ValidationError("Total members needed must be greater than current members.")
+        return cleaned_data
