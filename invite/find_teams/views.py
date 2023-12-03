@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
@@ -17,6 +20,7 @@ def show_vacancy_details(request, lowongan_id):
     # TODO
     return render(request, "vacancy.html")
 
+@login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request):
     if request.method == "POST":
         keahlian = request.POST.get("keahlian")
@@ -33,6 +37,7 @@ def apply_vacancy_first(request):
 
     return render(request, "apply_vacancy_first.html")
 
+@login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_second(request, lowongan_id):
     first_page_data = request.session.get("first_page_data", None)
 
