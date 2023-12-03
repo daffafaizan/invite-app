@@ -17,16 +17,23 @@
         </button>
     {% else %}
         <!-- When not logged in -->
-        <div class="h-[100dvh] w-[100-dvw] flex flex-col items-center justify-center">
+        <div class="h-[100dvh] w-[100-dvw] bg-emerald-50 flex flex-col items-center justify-center">
+            <img src="{% static 'invite/icon_light.svg' %}" alt="Invite Logo">
+            <div class="py-3"></div>
             <div class="text-2xl md:text-4xl font-semibold">
                 Welcome to <span class="font-bold text-emerald-600">Invite</span>!
             </div>
-            <div class="py-4"></div>
+            <div class="py-2"></div>
             <div class="flex flex-col gap-y-4 items-center">
-                <p class="text-lg">You are not logged in</p>
                 <div class="flex flex-row gap-x-6">
-                    <a class="px-8 py-4 border border-emerald-600 rounded-xl hover:bg-gray-100" href="{% url 'authentication:login' %}">Log In</a>
-                    <a class="px-8 py-4 border border-emerald-600 rounded-xl hover:bg-gray-100" href="{% url 'authentication:register' %}">Sign Up</a>
+                    <a class="w-[160px] h-[60px] flex items-center justify-center border border-emerald-600 rounded-xl hover:bg-emerald-100 text-lg duration-200" 
+                        href="{% url 'authentication:login' %}">
+                        Log In
+                    </a>
+                    <a class="w-[160px] h-[60px] flex items-center justify-center border border-emerald-600 rounded-xl hover:bg-emerald-100 text-lg duration-200" 
+                        href="{% url 'authentication:register' %}">
+                        Sign Up
+                    </a>
                 </div>
             </div>
 
