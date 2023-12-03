@@ -32,7 +32,7 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
         context = {
             "status": "Success fetching my profile",
             "data": {
-                "registered_user": registered_user
+                "user": registered_user
             }
         }
 
@@ -72,7 +72,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         context = {
             "status": "Success fetching user profile",
             "data": {
-                "registered_user": filtered_user
+                "user": filtered_user
             }
         }
 

@@ -3,38 +3,48 @@
 {% load static %}
 
 {% block meta %}
-<title>Post Detail</title>
+<title>My Profile</title>
 {% endblock meta %}
 
 {% block content %}
-<main>
-	<h1>My Profile</h1>
-    <p>
-        Created at: {{ data.registered_user.created_at }}
-    </p>
-    <p>
-        Username: {{ data.registered_user.username }}
-    </p>
-    <p>
-        Name: {{ data.registered_user.first_name }} {{ data.registered_user.last_name }}
-    </p>
-    <p>
-        University: {{ data.registered_user.universitas }}
-    </p>
-    <p>
-        Jurusan: {{ data.registered_user.jurusan }}
-    </p>
-    <p>
-        Tautan Media Sosial: {{ data.registered_user.tautan_media_sosial }}
-    </p>
-    <p>
-        Profile Details: {{ data.registered_user.profile_details }}
-    </p>
-    <p>
-        Profile Picture: {{ data.registered_user.profile_picture }}
-    </p>
-
-
+<main class="md:h-[100dvh] flex flex-col p-4 md:p-8 items-center border border-black">
+    
+    <div class="md:w-[800px] flex flex-col border border-black p-2 md:p-4">
+        <div class="flex flex-row items-center justify-between">
+            <p class="text-xl md:text-2xl font-semibold text-gray-600">{{ data.user.first_name }} {{ data.user.last_name }}</p>
+            <div class="relative w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden">
+                <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+            </div>
+        </div>
+        <!-- User Profile Section -->
+        <div>
+            <h1>TODO</h1>
+            <p>
+                Created at: {{ data.user.created_at }}
+            </p>
+            <p>
+                Username: {{ data.user.username }}
+            </p>
+            <p>
+                Name: {{ data.user.first_name }} {{ data.user.last_name }}
+            </p>
+            <p>
+                University: {{ data.user.universitas }}
+            </p>
+            <p>
+                Jurusan: {{ data.user.jurusan }}
+            </p>
+            <p>
+                Tautan Media Sosial: {{ data.user.tautan_media_sosial }}
+            </p>
+            <p>
+                Profile Details: {{ data.user.profile_details }}
+            </p>
+            <p>
+                Profile Picture: {{ data.user.profile_picture }}
+            </p>
+        </div>
+    </div>
 </main>
 
 {% endblock content %}

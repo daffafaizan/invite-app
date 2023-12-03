@@ -52,16 +52,6 @@ class RegisterView(CreateView):
                 logger.error("FAILED, Form invalid")
                 messages.error(request, error)
                 return redirect(request.path)
-            # message = "Login failed!"
-
-            # context = {
-            #     "status": message,
-            #     "form": form,
-            # }
-
-            # logger.error(form.errors)
-
-            # return render(request, self.template_name, context, status=500)
 
 # TODO current form is still sent in plaintext, use LoginView in the future
 # https://docs.djangoproject.com/en/4.2/topics/auth/default/#django.contrib.auth.views.LoginView
@@ -123,14 +113,6 @@ class LoginViewOld(FormView):
                 logger.error("FAILED, Form invalid")
                 messages.error(request, error)
                 return redirect(request.path)
-        # else:
-        #     context = {
-        #         "status": "Login failed!",
-        #         "form": form,
-        #     }
-
-        #     logger.error("LOGIN FAILED")
-        #     return render(request, self.template_name, context, status=500)
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
