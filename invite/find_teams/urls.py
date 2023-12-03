@@ -5,7 +5,7 @@ app_name = "find_teams"
 
 urlpatterns = [
     path('', show_vacancies, name='show_vacancies'),
-    path('<int:lowongan_id>/details', show_vacancy_details, name='show_vacancy_details'),
-    path('<int:lowongan_id>/apply/first', apply_vacancy_first, name='apply_vacancy_first'),
-    path('<int:lowongan_id>/apply/second', apply_vacancy_second, name='apply_vacancy_second'),
+    path('<uuid:lowongan_id>/details', show_vacancy_details, name='show_vacancy_details'),
+    path('<uuid:lowongan_id>/apply/first', apply_vacancy_first, name='apply_vacancy_first'),
+    path('<uuid:lowongan_id>/apply/second', apply_vacancy_second, name='apply_vacancy_second'),
 ]
