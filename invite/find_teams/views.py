@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
 
+@login_required(login_url='/accounts/login/')
 def show_vacancies(request):
     vacancy_list = LowonganRegu.objects.all()
 
     context = {
-        'vacancy_list': vacancy_list,
+        'vacancy_list': reversed(vacancy_list),
     }
 
     return render(request, "show_vacancies.html", context)

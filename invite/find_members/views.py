@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .forms import LowonganForm
 from .models import *
 
@@ -15,6 +16,7 @@ def create_vacancy(request):
             lowongan = form.save(commit=False)
 
             lowongan.ketua = request.user
+            lowongan.is_active = True
 
             lowongan.nama_regu = request.POST.get('nama_regu')
             lowongan.deskripsi_lowongan_regu = request.POST.get('deskripsi_lowongan_regu')
@@ -34,12 +36,14 @@ def create_vacancy(request):
                 twitter = request.POST.get('twitter'),
                 linkedin = request.POST.get('linkedin'), 
                 github = request.POST.get('github'),
-            ).save()
+            )
+            tautan_medsos_regu.save()
             lowongan.tautan_medsos_regu = tautan_medsos_regu
 
             lowongan.save()
 
             # if succesful, redirect to melihat daftar lowongan
+            messages.success(request, 'Form submitted successfully!')
             return redirect('find_teams:show_vacancies')
         
     context = {
@@ -47,4 +51,8 @@ def create_vacancy(request):
     }
 
     # if unsuccesful, reload form and display inputted values
+    for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{error}')
+
     return render(request, 'create_vacancy.html', context)

@@ -5,6 +5,7 @@ app_name = "profile"
 
 urlpatterns = [
     path('me/', views.MyProfileDetailView.as_view(), name='me'),
+    path('my-vacancies/', views.show_my_vacancies, name='show_my_vacancies'),
     path('<str:user_id>/', views.ProfileDetailView.as_view(), name='profile'),
     path('<uuid:user_id>/review/create/', views.review_profile, name='review_profile'),
     path('my-applications/', views.show_my_applications, name='show_my_applications'),
