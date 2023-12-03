@@ -7,9 +7,9 @@ from django.views.generic.detail import DetailView
 
 from user_profile.models import UlasanProfil
 from find_teams.models import Lamaran
+from find_members.models import LowonganRegu
 from authentication.models import RegisteredUser
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 
 logger = logging.getLogger("app_api")
 
@@ -126,3 +126,12 @@ def delete_application(request, application_id):
     }
 
     return render(request, "vacancies.html", context, status=204)
+
+def show_my_vacancies(request):
+    vacancy_list = LowonganRegu.objects.all().filter(ketua=request.user)
+
+    context = {
+        'vacancy_list': reversed(vacancy_list),
+    }
+
+    return render(request, "show_my_vacancies.html", context)
