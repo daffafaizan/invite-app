@@ -8,7 +8,7 @@
 {% block content %}
     {% if user.is_authenticated %}
         <!-- Home Page -->
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center p-4 md:p-8">
             <p>Hi {{ user.username }}!</p>
             <p><a href="{% url 'authentication:logout' %}"></a></p>
             <button style="text-decoration: underline;">
