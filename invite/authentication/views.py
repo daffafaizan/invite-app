@@ -53,13 +53,7 @@ class RegisterView(CreateView):
                 messages.error(request, error)
                 return redirect(request.path)
 
-# TODO current form is still sent in plaintext, use LoginView in the future
-# https://docs.djangoproject.com/en/4.2/topics/auth/default/#django.contrib.auth.views.LoginView
-# class LoginViewAuth(LoginView):
-#     template_name = "authentication/login.html"
-#     next_page = settings.LOGIN_REDIRECT_URL
-
-class LoginViewOld(FormView):
+class LoginView(FormView):
     form_class = RegisteredUserLoginForm
     success_url = reverse_lazy("core:home")
     template_name = "authentication/login.html"

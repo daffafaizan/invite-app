@@ -100,8 +100,21 @@ class VacancyUpdateView(LoginRequiredMixin, UpdateView):
         'jumlah_anggota_sekarang', 'total_anggota_dibutuhkan',
         'tautan_medsos_regu',
         ]
-    def get_object(self, queryset=None) -> LowonganRegu:
-        return self.model.objects.get(ketua=self.request.user, uuid=self.kwargs["vacancy_id"])
+    def get_object(self):
+        queryset = self.get_queryset()
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+        else:
+            raise AttributeError("VacancyUpdateView must be called with either an object pk or a slug.")
+    
+        try:
+            return queryset.get()
+        except queryset.model.DoesNotExist:
+            res = render(self.request, "find_members/update_vacancy.html", {"vacancy": None})
+            res.status_code = 404
+            return res
     
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form.instance.ketua = self.request.user
