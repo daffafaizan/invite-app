@@ -130,6 +130,11 @@ def show_my_applications(request):
 @login_required(login_url='/accounts/login/')
 def delete_application(request, application_id):
     lamaran = Lamaran.objects.get(id=application_id)
+
+    context = {
+        "id": application_id,
+        "nama": lamaran.lowongan.nama_regu
+    }
     
     if not lamaran:
         logger.info("Lamaran tidak ditemukan")
@@ -139,7 +144,7 @@ def delete_application(request, application_id):
         lamaran.delete()
         return render(request, "delete_success.html")
 
-    return render(request, "user_profile/delete_confirmation.html")
+    return render(request, "user_profile/delete_confirmation.html", context)
 
 def show_my_vacancies(request):
     vacancy_list = LowonganRegu.objects.all().filter(ketua=request.user)
