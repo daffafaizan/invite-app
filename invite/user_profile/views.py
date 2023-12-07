@@ -13,13 +13,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 logger = logging.getLogger("app_api")
 
+
 class MyProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
     template_name = "user_profile/my_profile.html"
 
     def get(self, request):
         # If showing my profile, auto-retrieve my user id from cookies
-        registered_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+        registered_user = RegisteredUser.objects.get(
+            id=request.COOKIES.get("user_id"))
 
         if not registered_user:
             context = {
@@ -28,7 +30,7 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
 
             logger.info("User not found")
             return render(request, self.template_name, context, status=404)
-        
+
         context = {
             "status": "Success fetching my profile",
             "data": {
@@ -46,14 +48,14 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = "user_profile/profile.html"
 
     def get(self, request, user_id):
-        # If showing other's profile, retrieve user id url params        
-        logger.info(f"id from path: %s"%str(user_id))
-        
+        # If showing other's profile, retrieve user id url params
+        logger.info(f"id from path: %s" % str(user_id))
+
         registered_user = RegisteredUser.objects.get(id=user_id)
-        
+
         if not registered_user:
             return render(request, self.template_name, status=404)
-        
+
         filtered_user = {
             "id": registered_user.id,
             "username": registered_user.username,
@@ -68,11 +70,13 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             "foto_profil": registered_user.foto_profil,
         }
 
+        ulasan = UlasanProfil.objects.filter(diulas=registered_user)
         # Return certain fields only
         context = {
             "status": "Success fetching user profile",
             "data": {
-                "user": filtered_user
+                "user": filtered_user,
+                "ulasan": ulasan
             }
         }
 
@@ -87,11 +91,12 @@ def review_profile(request, profile_id):
         rating = request.POST.get("rating")
         deskripsi_kerja_setim = request.POST.get("deskripsi_kerja_setim")
         ulasan = request.POST.get("ulasan")
-        
-        pengulas = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
-        UlasanProfil.objects.create(diulas=diulas, pengulas=pengulas, rating=rating, deskripsi_kerja_setim=deskripsi_kerja_setim, ulasan=ulasan)
-        
-        return redirect('user_profile:profile', profile_id=profile_id)
+
+        pengulas = RegisteredUser.objects.get(
+            id=request.COOKIES.get("user_id"))
+        UlasanProfil.objects.create(diulas=diulas, pengulas=pengulas, rating=rating,
+                                    deskripsi_kerja_setim=deskripsi_kerja_setim, ulasan=ulasan)
+        return redirect('profile:profile', user_id=profile_id)
 
 def show_my_applications(request):
     user = RegisteredUser.objects.get(username=request.COOKIES.get("user_id"))
