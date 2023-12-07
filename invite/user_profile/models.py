@@ -19,3 +19,7 @@ class UlasanProfil(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        # descending order
+        ordering = ['-updated_at']
