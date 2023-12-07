@@ -10,11 +10,11 @@
       {% csrf_token %}
       <div class="flex flex-col justify-center gap-3">
         <label for="keahlian" class="-mb-1 text-sm font-semibold">Keahlian</label>
-        <input type="text" id="keahlian" value="{{ form.keahlian }}" class="py-2 px-4 border rounded-lg focus:border-emerald-800 placeholder:text-sm" placeholder="Saya jago..." required>
+        <input type="text" id="keahlian" name="keahlian" value="{{ form.keahlian }}" class="py-2 px-4 border rounded-lg focus:border-emerald-800 placeholder:text-sm" placeholder="Saya jago..." required>
         <label for="cover_letter" class="-mb-1 text-sm font-semibold">Cover Letter</label>
-        <input type="text" id="cover_letter" value="{{ form.cover_letter }}" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="Alasan saya apply adalah..." required>
-        <label for="tautan_portfolio" class="-mb-1 text-sm font-semibold">Portofolio</label>
-        <input type="text" id="tautan_portfolio" value="{{ form.tautan_portfolio }}" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="https://daffafaizan.com" required>
+        <input type="text" id="cover_letter" name="cover_letter" value="{{ form.cover_letter }}" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="Alasan saya apply adalah..." required>
+        <label for="tautan_portofolio" class="-mb-1 text-sm font-semibold">Portofolio</label>
+        <input type="text" id="tautan_portofolio" name="tautan_portofolio" value="{{ form.tautan_portofolio }}" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="https://daffafaizan.com" required>
       </div>
       <div class="flex flex-col justify-center items-center">
         <button type="submit" class="py-2 px-4 mt-8 shadow-md rounded-xl bg-emerald-800 text-white hover:scale-110 duration-150">Next</button>
