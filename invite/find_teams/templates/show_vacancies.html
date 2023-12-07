@@ -36,6 +36,8 @@
                         <p class="card-text">Field: {{vacancy.bidang_lomba}}</p>
                         <p class="card-text">Recruiting until {{vacancy.expiry}}</p>
                         <p class="card-text">Current members {{vacancy.jumlah_anggota_sekarang}}/{{vacancy.total_anggota_dibutuhkan}}</p>
+                        <br>
+                        <a href="{% url 'find_teams:apply_vacancy_first' lowongan_id=vacancy.id %}" class="btn btn-dark" role="button">Apply</a>
                     </div>
                 </div>
               </a>

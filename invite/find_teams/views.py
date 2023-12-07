@@ -21,7 +21,7 @@ def show_vacancy_details(request, lowongan_id):
     return render(request, "vacancy.html")
 
 @login_required(login_url=settings.LOGIN_URL)
-def apply_vacancy_first(request):
+def apply_vacancy_first(request, lowongan_id):
     initial = {
         "first_page_data": request.session.get("first_page_data", None)
     }
@@ -36,7 +36,7 @@ def apply_vacancy_first(request):
             "portofolio": portofolio
         }
 
-        return redirect("find_teams:apply_vacancy_second")
+        return redirect("find_teams:apply_vacancy_second", lowongan_id=lowongan_id)
     
     context = {
         "form": initial
@@ -58,7 +58,7 @@ def apply_vacancy_second(request, lowongan_id):
     portofolio = first_page_data.get("portofolio")
 
     user_data = {
-        "nama": current_user.nama,
+        "nama": current_user.first_name,
         "universitas": current_user.universitas,
         "jurusan": current_user.jurusan,
     }
