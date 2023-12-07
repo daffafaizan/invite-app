@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
+from find_members.models import LowonganRegu
 
 class TautanMediaSosial(models.Model):
     def __str__(self) -> str:
@@ -74,6 +75,8 @@ class RegisteredUser(AbstractUser):
 
     tautan_media_sosial = models.OneToOneField(TautanMediaSosial, on_delete=models.SET_NULL, blank=True, null=True)
     profile_details = models.OneToOneField(ProfileDetails, on_delete=models.SET_NULL, blank=True, null=True)
+    
+    bookmarked_lowongans = models.ManyToManyField(LowonganRegu, blank=True)
 
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

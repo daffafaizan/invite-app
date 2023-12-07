@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -8,13 +9,27 @@ from find_members.models import LowonganRegu
 
 @login_required(login_url='/accounts/login/')
 def show_vacancies(request):
+    if request.method == 'POST':
+        lowongan_id = request.POST.get('lowongan_id')
+        bookmark_lowongan(request, lowongan_id)
+
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+
+    # Save the user changes before querying bookmarked_lowongans
+    current_user.save()
+
+    # Get the list of bookmarked lowongans for the current user
+    bookmarked_lowongans = current_user.bookmarked_lowongans.all()
+
     vacancy_list = LowonganRegu.objects.all()
 
     context = {
         'vacancy_list': reversed(vacancy_list),
+        'bookmarked_lowongans': bookmarked_lowongans,
     }
 
     return render(request, "show_vacancies.html", context)
+
 
 def show_vacancy_details(request, lowongan_id):
     # TODO
@@ -97,3 +112,19 @@ def apply_vacancy_second(request, lowongan_id):
     }
 
     return render(request, "apply_vacancy_second.html", context)
+    
+@login_required(login_url='/accounts/login/')
+def bookmark_lowongan(request, lowongan_id):
+    
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    lowongan = LowonganRegu.objects.get(id=lowongan_id)
+
+    if lowongan in current_user.bookmarked_lowongans.all():
+        # If lowongan is already bookmarked, unbookmark it
+        current_user.bookmarked_lowongans.remove(lowongan)
+    else:
+        # If lowongan is not bookmarked, bookmark it
+        current_user.bookmarked_lowongans.add(lowongan)
+        
+    current_user.save()
+    # return redirect("find_teams:show_vacancies")
