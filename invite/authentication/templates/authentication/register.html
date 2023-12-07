@@ -1,12 +1,53 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<h2>Sign Up</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Sign Up</button>
-</form>
+<div class="md:max-h-[100dvh] flex flex-col justify-center p-8 md:py-16 items-center border-2 rounded-2xl">
+  <div class="max-w-[360px] md:max-w-[600px] flex flex-col">
+    <span class="text-3xl mb-8 md:text-4xl md:mb-10 font-semibold text-center">Create a new account</span>
+    <form method="post">
+      {% csrf_token %}
+      <!-- <div class="flex flex-col justify-center"> -->
+      <div class="flex flex-col md:grid md:grid-cols-2 gap-x-4">
+        <div class="mb-4 col-span-2">
+          {{ form.username|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.password1|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.password2|as_crispy_field }}
+        </div>
+      </div>
+      <div class="flex flex-col md:grid md:grid-cols-2 gap-x-4">
+        <div class="mb-4">
+          {{ form.first_name|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.middle_name|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.last_name|as_crispy_field }}
+        </div>
+        <div class="relative mb-4">
+          {{ form.universitas|as_crispy_field }}
+          <div class="absolute -bottom-2 text-sm text-gray-500">Example: Institut Teknologi Bandung</div>
+        </div>
+        <div class="relative mb-4">
+          {{ form.jurusan|as_crispy_field }}
+          <div class="absolute -bottom-2 text-sm text-gray-500">Example: Sistem Informasi</div>
+        </div>
+        <div class="relative mb-4">
+          {{ form.keahlian|as_crispy_field }}
+          <div class="absolute -bottom-2 text-sm text-gray-500">Example: Java, C++, Figma</div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-center items-center">
+        <button type="submit" class="border border-gray-600 py-2 px-4 mt-4 rounded-xl hover:bg-gray-100 duration-200">Sign Up</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
