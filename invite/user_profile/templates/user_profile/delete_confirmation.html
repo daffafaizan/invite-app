@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Confirmation{% endblock %}
+
+{% block content %}
+  <div class="flex flex-grow flex-col items-center">
+    <h2 class="text-xl font-semibold mb-4">Delete Confirmation</h2>
+    <p>Are you sure you want to delete the application for {{ lamaran.lowongan.nama_regu }}?</p>
+    <form method="post" action="{% url 'delete_application' application_id=lamaran.id %}">
+      {% csrf_token %}
+      <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Yes, delete</button>
+      <a href="{% url 'name_of_the_view_for_my_applications' %}" class="text-emerald-900 ml-4">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

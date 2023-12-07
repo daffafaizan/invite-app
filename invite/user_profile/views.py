@@ -135,14 +135,11 @@ def delete_application(request, application_id):
         logger.info("Lamaran tidak ditemukan")
         return render(request, "vacancies.html", status=404)
     
-    lamaran.delete()
+    if request.method == "POST":
+        lamaran.delete()
+        return render(request, "delete_success.html")
 
-    context = {
-        "status": "success",
-        "message": "Lamaran berhasil dihapus"
-    }
-
-    return render(request, "vacancies.html", context, status=204)
+    return render(request, "user_profile/delete_confirmation.html")
 
 def show_my_vacancies(request):
     vacancy_list = LowonganRegu.objects.all().filter(ketua=request.user)
