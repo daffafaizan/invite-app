@@ -11,11 +11,11 @@
       {% csrf_token %}
       <div class="flex flex-col justify-center gap-3">
         <label for="nama" class="-mb-1 text-sm font-semibold">Nama</label>
-        <input type="text" id="nama" class="py-2 px-4 border rounded-lg focus:border-emerald-800 placeholder:text-sm" placeholder="Saya jago..." required>
+        <input type="text" id="nama" name="nama" class="py-2 px-4 border rounded-lg focus:border-emerald-800 placeholder:text-sm" placeholder="{{ user_data.name }}" required>
         <label for="universitas" class="-mb-1 text-sm font-semibold">Universitas</label>
-        <input type="text" id="universitas" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="Alasan saya apply adalah..." required>
+        <input type="text" id="universitas" name="universitas" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="{{ user_data.universitas }}" required>
         <label for="jurusan" class="-mb-1 text-sm font-semibold">Jurusan</label>
-        <input type="text" id="jurusan" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="https://daffafaizan.com" required>
+        <input type="text" id="jurusan" name="jurusan" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="{{ user_data.jurusan }}"required>
       </div>
       <div class="flex flex-col justify-center items-center">
         <button type="submit" class="py-2 px-4 mt-8 shadow-md rounded-xl bg-emerald-800 text-white hover:scale-110 duration-150">Submit</button>
