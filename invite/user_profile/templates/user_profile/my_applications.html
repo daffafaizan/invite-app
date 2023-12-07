@@ -10,7 +10,7 @@
     <div class="flex flex-col flex-grow w-full md:w-2/5 p-4 gap-4">
       {% if data.daftar_lamaran %}
         {% for lamaran in data.daftar_lamaran %}
-        <div class="flex flex-col p-3 text-sm gap-5 rounded-lg shadow-md hover:scale-105 hover:duration-150 transition bg-white">
+        <div class="flex flex-col p-3 text-sm gap-5 rounded-lg shadow-md bg-white">
           <div class="flex flex-row items-center">
             <span 
             class="py-1 px-3 mr-auto rounded-2xl tracking-wide font-light text-white
@@ -20,12 +20,13 @@
             {% endif %}">
               {{ lamaran.status }}
             </span>
-            <span class="ml-auto text-emerald-900 font-semibold">
-              {{ lamaran.lowongan.nama_regu }}
-            </span>
+            <a href="{% url 'profile:delete_application' lamaran.id %}" class="text-red-500 hover:text-red-700 ml-auto">Delete</a>
           </div>
-          <span class="text-emerald-900 font-light">
-            <strong>Penerima:</strong> {{ lamaran.penerima }}
+          <span class="text-emerald-900 font-semibold">
+            {{ lamaran.lowongan.nama_regu }}
+          </span>
+          <span class="text-emerald-900 font-light -mt-4">
+            {{ lamaran.created_at }}
           </span>
         </div>
         {% endfor %}

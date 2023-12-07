@@ -10,6 +10,7 @@ from find_teams.models import Lamaran
 from find_members.models import LowonganRegu
 from authentication.models import RegisteredUser
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger("app_api")
 
@@ -98,9 +99,19 @@ def review_profile(request, profile_id):
                                     deskripsi_kerja_setim=deskripsi_kerja_setim, ulasan=ulasan)
         return redirect('profile:profile', user_id=profile_id)
 
+@login_required(login_url='/accounts/login/')
 def show_my_applications(request):
-    user = RegisteredUser.objects.get(username=request.COOKIES.get("user_id"))
-    registered_user = RegisteredUser.objects.get(user=user)
+    registered_user = RegisteredUser.objects.get(
+        id=request.COOKIES.get("user_id"))
+
+    if not registered_user:
+        context = {
+            "status": "User not found",
+        }
+
+        logger.info("User not found")
+        return render(request, "user_profile/my_applications.html", context, status=404)
+
     daftar_lamaran = Lamaran.objects.filter(pengirim=registered_user)
 
     if not daftar_lamaran:
@@ -116,21 +127,24 @@ def show_my_applications(request):
 
     return render(request, "user_profile/my_applications.html", context, status=200)
 
+@login_required(login_url='/accounts/login/')
 def delete_application(request, application_id):
     lamaran = Lamaran.objects.get(id=application_id)
+
+    context = {
+        "id": application_id,
+        "nama": lamaran.lowongan.nama_regu
+    }
     
     if not lamaran:
         logger.info("Lamaran tidak ditemukan")
         return render(request, "vacancies.html", status=404)
     
-    lamaran.delete()
+    if request.method == "POST":
+        lamaran.delete()
+        return render(request, "user_profile/delete_success.html")
 
-    context = {
-        "status": "success",
-        "message": "Lamaran berhasil dihapus"
-    }
-
-    return render(request, "vacancies.html", context, status=204)
+    return render(request, "user_profile/delete_confirmation.html", context)
 
 def show_my_vacancies(request):
     vacancy_list = LowonganRegu.objects.all().filter(ketua=request.user)

@@ -5,8 +5,8 @@
 {% block content %}
 <div class="flex flex-grow flex-col justify-center items-center">
   <div class="flex flex-col justify-center items-center py-8 px-12 md:p-16 shadow-lg rounded-2xl bg-white">
-    <span class="text-3xl text-emerald-900 mb-2 md:text-4xl md:mb-4">Application sent!</span>
-    <span class="text-md text-emerald-900 mb-6 md:text-md md:mb-6" id="countdown-text">Lamaranmu telah dikirim dan akan segera di-review oleh Ketua Regu</span>
+    <span class="text-3xl text-emerald-900 mb-2 md:text-4xl md:mb-4">Application deleted!</span>
+    <span class="text-md text-emerald-900 mb-6 md:text-md md:mb-6" id="countdown-text">Lamaranmu telah berhasil dihapus</span>
     <span class="text-md text-emerald-900 mb-6 md:text-md md:mb-6" id="countdown">5</span>
   </div>
 </div>
@@ -19,7 +19,7 @@
         seconds--;
 
         if (seconds < 0) {
-            window.location.href = "{% url 'find_teams:show_vacancies' %}";
+            window.location.href = "{% url 'profile:show_my_applications' %}";
         } else {
             setTimeout(updateCountdown, 1000);  // Update every 1 second
         }
