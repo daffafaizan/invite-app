@@ -34,18 +34,18 @@
     </div>
 
     <!-- Ulasan Section -->
-    <div class="flex flex-col p-2 md:p-4 border border-black">
-      <div class="text-lg md:text-xl font-semibold py-1">Ulasan untuk pengguna</div>
+    <div class=" flex flex-col justify-center items-center py-4 px-8 md:p-6 shadow-lg rounded-2xl bg-white">
+      <div class="text-xl md:text-2xl font-semibold p-4 text-emerald-900 underline decoration-emerald-900 underline-offset-[9px]">Ulasan untuk {{data.user.first_name}}</div>
       
-      <button class="rounded border border-black bg-white hover:bg-gray-200" id="openFormButton">
+      <button class="p-2 rounded-xl border bg-emerald-600 text-white hover:bg-emerald-700" id="openFormButton">
         Membuat Ulasan Profil Baru
       </button>
-      <div class="py-2">
+      <div class="py-4 text-emerald-900">
       {% if data.ulasan %}
 
             {% for item in data.ulasan %}
             <div class="mb-4">
-                <div class="border border-black rounded p-2 py-2">
+                <div class="shadow-md bg-emerald-50 hover:bg-emerald-100 rounded-2xl p-2 py-2">
                     <div><b>Pengulas: </b>{{ item.pengulas.username }}</div>
                     <div><b>Rating: </b>{{ item.rating }}</div>
                     <div><b>Deskripsi Kerja Setim: </b>{{ item.deskripsi_kerja_setim }}</div>
@@ -76,6 +76,7 @@
           width: 400px;
           border-radius: 8px;
         "
+        class = "text-emerald-900"
       >
         <button
           class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
@@ -128,7 +129,7 @@
         
             
             <button
-            class="p-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+            class="p-1 bg-emerald-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
             type="submit"
             >
             Submit
