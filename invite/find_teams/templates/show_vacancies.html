@@ -26,16 +26,6 @@
     <div class="row">
         {% for vacancy in vacancy_list %}
             <div class="col-md-4 mb-4">
-<<<<<<< HEAD
-                <div class="card">
-                    <img src="{{ vacancy.foto_lowongan_regu.url }}" class="card-img-top" alt="Lowongan Image">
-                    <div class="card-body">
-                        <h5 class="card-title">{{vacancy.nama_regu}}</h5>
-                        <p class="card-text">{{vacancy.nama_lomba}}</p>
-                    </div>
-                </div>
-            </div>
-=======
               <a href="{% url 'find_teams:show_vacancy_details' lowongan_id=vacancy.id %}" style="color: black; text-decoration: none;">
                 <div class="card">
                   <img src="{% static vacancy.foto_lowongan_regu %}" class="card-img-top" alt="Lowongan Image">
@@ -50,7 +40,6 @@
                 </div>
               </a>
             </div> 
->>>>>>> dev
         {% endfor %}
     </div>
 </div>
