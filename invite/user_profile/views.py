@@ -142,7 +142,7 @@ def delete_application(request, application_id):
     
     if request.method == "POST":
         lamaran.delete()
-        return render(request, "delete_success.html")
+        return render(request, "user_profile/delete_success.html")
 
     return render(request, "user_profile/delete_confirmation.html", context)
 

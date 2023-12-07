@@ -3,17 +3,29 @@
 {% block title %}Delete{% endblock %}
 
 {% block content %}
-<script>
-    // Wait for 5 seconds and then redirect
-    setTimeout(function () {
-        window.location.href = "{% url 'profile:show_my_applications' %}";
-    }, 5000);  // 5000 milliseconds = 5 seconds
-</script>
 <div class="flex flex-grow flex-col justify-center items-center">
   <div class="flex flex-col justify-center items-center py-8 px-12 md:p-16 shadow-lg rounded-2xl bg-white">
     <span class="text-3xl text-emerald-900 mb-2 md:text-4xl md:mb-4">Application deleted!</span>
-    <span class="text-md text-emerald-900 mb-6 md:text-md md:mb-6">Lamaranmu telah berhasil dihapus</span>
+    <span class="text-md text-emerald-900 mb-6 md:text-md md:mb-6" id="countdown-text">Lamaranmu telah berhasil dihapus</span>
+    <span class="text-md text-emerald-900 mb-6 md:text-md md:mb-6" id="countdown">5</span>
   </div>
 </div>
 
+<script>
+    let seconds = 5;  // Set the countdown duration in seconds
+
+    function updateCountdown() {
+        document.getElementById('countdown').innerHTML = seconds;
+        seconds--;
+
+        if (seconds < 0) {
+            window.location.href = "{% url 'profile:show_my_applications' %}";
+        } else {
+            setTimeout(updateCountdown, 1000);  // Update every 1 second
+        }
+    }
+
+    // Start the countdown
+    updateCountdown();
+</script>
 {% endblock %}
