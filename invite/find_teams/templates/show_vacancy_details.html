@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Vacancy Detail {% endblock %}
+
+{% block content %}
+<style>
+    .detail-label {
+        font-weight: bold;
+    }
+    .detail-content {
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="flex flex-col justify-center items-center p-8 md:p-16 border-2 rounded-2xl">
+  <span class="text-3xl mb-8 md:text-4xl md:mb-10">Vacancy Detail</span>
+  
+  {% if vacancy %}
+    <div>
+      <div class="detail-content"><span class="detail-label">Id:</span> {{ vacancy.id }}</div>
+      <div class="detail-content"><span class="detail-label">Nama Regu:</span> {{ vacancy.nama_regu }}</div>
+      <div class="detail-content"><span class="detail-label">Deskripsi Lowongan Regu:</span> {{ vacancy.deskripsi_lowongan_regu }}</div>
+      <div class="detail-content">
+        <span class="detail-label">Foto Lowongan Regu:</span> 
+        {% if vacancy.foto_lowongan_regu %}
+          <img src="{{ vacancy.foto_lowongan_regu.url }}" alt="Foto Lowongan Regu" style="max-width: 300px;">
+        {% else %}
+          <span>No image available.</span>
+        {% endif %}
+      </div>
+      <div class="detail-content"><span class="detail-label">Nama Lomba:</span> {{ vacancy.nama_lomba }}</div>
+      <div class="detail-content"><span class="detail-label">Bidang Lomba:</span> {{ vacancy.bidang_lomba }}</div>
+      <div class="detail-content"><span class="detail-label">Tanggal Lomba:</span> {{ vacancy.tanggal_lomba|date:"d M Y H:i" }}</div>
+      <div class="detail-content"><span class="detail-label">Expiry:</span> {{ vacancy.expiry|date:"d M Y H:i" }}</div>
+      <div class="detail-content"><span class="detail-label">Jumlah Anggota Sekarang:</span> {{ vacancy.jumlah_anggota_sekarang }}</div>
+      <div class="detail-content"><span class="detail-label">Total Anggota Dibutuhkan:</span> {{ vacancy.total_anggota_dibutuhkan }}</div>
+      <div class="detail-content"><span class="detail-label">Tautan Medsos Regu:</span> {{ vacancy.tautan_medsos_regu }}</div>
+      <div class="detail-content"><span class="detail-label">Is Active:</span> {{ vacancy.is_active }}</div>
+      <div class="detail-content"><span class="detail-label">Created At:</span> {{ vacancy.created_at|date:"d M Y H:i" }}</div>
+      <div class="detail-content"><span class="detail-label">Updated At:</span> {{ vacancy.updated_at|date:"d M Y H:i" }}</div>
+    </div>
+  {% else %}
+    <h1>404 Not Found</h1>
+    <p>The requested vacancy does not exist.</p>
+  {% endif %}
+
+  <div class="flex flex-col justify-center items-center">
+    <a href="{% url 'find_teams:show_vacancies' %}" class="border-2 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150">Back</a>
+  </div>
+</div>
+{% endblock %}

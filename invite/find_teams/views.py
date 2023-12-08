@@ -1,6 +1,6 @@
 import logging
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views import View
@@ -12,47 +12,50 @@ from find_members.models import LowonganRegu
 logger = logging.getLogger("app_api")
 
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url="/accounts/login/")
 def show_vacancies(request):
-    query = request.GET.get('q', '')  
-    sort_order = request.GET.get('sort', 'newest') 
+    query = request.GET.get("q", "")
+    sort_order = request.GET.get("sort", "newest")
 
     vacancy_list = LowonganRegu.objects.all()
 
     if query:
         vacancy_list = vacancy_list.filter(
-            Q(nama_regu__icontains=query) | 
-            Q(nama_lomba__icontains=query) | 
-            Q(bidang_lomba__icontains=query)
+            Q(nama_regu__icontains=query)
+            | Q(nama_lomba__icontains=query)
+            | Q(bidang_lomba__icontains=query)
         )
 
-    if sort_order == 'oldest':
-        vacancy_list = vacancy_list.order_by('created_at')
+    if sort_order == "oldest":
+        vacancy_list = vacancy_list.order_by("created_at")
     else:  # Default to newest
-        vacancy_list = vacancy_list.order_by('-created_at')
+        vacancy_list = vacancy_list.order_by("-created_at")
 
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
     context = {
-        'vacancy_list': vacancy_list,
-        'current_user': current_user,
-        'query': query,
-        'sort_order': sort_order
+        "vacancy_list": vacancy_list,
+        "current_user": current_user,
+        "query": query,
+        "sort_order": sort_order,
     }
 
     return render(request, "show_vacancies.html", context)
 
+
 def show_vacancy_details(request, lowongan_id):
-    # TODO
-    return render(request, "vacancy.html")
+    try:
+        vacancy = LowonganRegu.objects.get(id=lowongan_id)
+    except (LowonganRegu.DoesNotExist, ValueError):
+        return render(request, "show_vacancy_details.html", {"vacancy": False})
+
+    return render(request, "show_vacancy_details.html", {"vacancy": vacancy})
+
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request, lowongan_id):
+    initial = {"first_page_data": request.session.get("first_page_data", None)}
 
-    initial = {
-        "first_page_data": request.session.get("first_page_data", None)
-    }
-    
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
     penerima = LowonganRegu.objects.get(id=lowongan_id).ketua
 
@@ -69,17 +72,15 @@ def apply_vacancy_first(request, lowongan_id):
         request.session["first_page_data"] = {
             "keahlian": keahlian,
             "cover_letter": cover_letter,
-            "tautan_portofolio": tautan_portofolio
+            "tautan_portofolio": tautan_portofolio,
         }
 
         return redirect("find_teams:apply_vacancy_second", lowongan_id=lowongan_id)
-    
-    context = {
-        "form": initial,
-        "vacancy": LowonganRegu.objects.get(id=lowongan_id)
-    }
+
+    context = {"form": initial, "vacancy": LowonganRegu.objects.get(id=lowongan_id)}
 
     return render(request, "apply_vacancy_first.html", context)
+
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_second(request, lowongan_id):
@@ -87,7 +88,7 @@ def apply_vacancy_second(request, lowongan_id):
 
     if first_page_data is None:
         return redirect("find_teams:apply_vacancy_first", lowongan_id=lowongan_id)
-    
+
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
     vacancy = LowonganRegu.objects.get(id=lowongan_id)
     keahlian = first_page_data.get("keahlian")
@@ -122,7 +123,7 @@ def apply_vacancy_second(request, lowongan_id):
             lamaran.save()
 
             return render(request, "application_success.html")
-        
+
     else:
         form_data = {
             "nama": user_data["nama"],
