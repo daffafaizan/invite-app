@@ -42,7 +42,7 @@
     <div class="row">
         {% for vacancy in vacancy_list %}
             <div class="col-md-4 mb-4">
-              <a href="{% url 'find_members:vacancy_detail' vacancy_id=vacancy.id %}" style="color: black; text-decoration: none;">
+              <a href="{% url 'find_teams:show_vacancy_details' vacancy_id=vacancy.id %}" style="color: black; text-decoration: none;">
                 <div class="card">
                   <img src="{% static vacancy.foto_lowongan_regu %}" class="card-img-top" alt="Lowongan Image">
                   <div class="card-body"> 
