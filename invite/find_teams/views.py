@@ -40,7 +40,8 @@ def apply_vacancy_first(request, lowongan_id):
         return redirect("find_teams:apply_vacancy_second", lowongan_id=lowongan_id)
     
     context = {
-        "form": initial
+        "form": initial,
+        "vacancy": LowonganRegu.objects.get(id=lowongan_id)
     }
 
     return render(request, "apply_vacancy_first.html", context)
