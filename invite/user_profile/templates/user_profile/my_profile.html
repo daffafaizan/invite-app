@@ -105,24 +105,39 @@
             <!-- TMS -->
             <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
                 <div class="font-semibold text-lg md:text-xl">
-                    Tautan Media Sosial
+                    Media Sosial
                 </div>
                 <div class="flex flex-col gap-y-2 md:gap-y-4">
-                    <div class="flex flex-row gap-x-2 md:gap-x-4">
-                        {{ data.tms.website }}
-                    </div>
-                    <div class="flex flex-row gap-x-2 md:gap-x-4">
-                        {{ data.tms.instagram }}
-                    </div>
-                    <div class="flex flex-row gap-x-2 md:gap-x-4">
-                        {{ data.tms.twitter }}
-                    </div>
-                    <div class="flex flex-row gap-x-2 md:gap-x-4">
-                        {{ data.tms.linkedin }}
-                    </div>
-                    <div class="flex flex-row gap-x-2 md:gap-x-4">
-                        {{ data.tms.github }}
-                    </div>
+                    <a 
+                        href="https://www.{{ data.tms.website }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.website }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.instagram }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.instagram }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.twitter }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.twitter }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.linkedin }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.linkedin }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.github }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.github }}
+                    </a>
                 </div>
             </div>
 
@@ -144,21 +159,31 @@
 
         <!-- Ulasan Section -->
         <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
-            <div class="flex flex-row gap-x-2 md:gap-x-4">
+            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
             <!-- Label -->
                 <div class="font-semibold text-lg md:text-xl">
                     Upvote
                 </div>
-                {{ data.pd.jumlah_upvote }}
+
+                <div>
+                    {{ data.pd.jumlah_upvote }} 
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
             </div>
-            <div class="flex flex-row gap-x-2 md:gap-x-4">
+            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
             <!-- Label -->
                 <div class="font-semibold text-lg md:text-xl">
                     Downvote
                 </div>
-                {{ data.pd.jumlah_downvote }}
+                
+                <div>
+                    {{ data.pd.jumlah_downvote }}
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
             </div>
         </div>
+
+        <!-- TODO Ulasan Profil -->
     </div>
 </main>
 
