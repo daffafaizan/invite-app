@@ -1,3 +1,4 @@
+import logging
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -7,12 +8,16 @@ from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
 
+logger = logging.getLogger("app_api")
+
 @login_required(login_url='/accounts/login/')
 def show_vacancies(request):
     vacancy_list = LowonganRegu.objects.all()
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
     context = {
         'vacancy_list': reversed(vacancy_list),
+        'current_user': current_user
     }
 
     return render(request, "show_vacancies.html", context)
@@ -23,9 +28,19 @@ def show_vacancy_details(request, lowongan_id):
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request, lowongan_id):
+
     initial = {
         "first_page_data": request.session.get("first_page_data", None)
     }
+    
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    penerima = LowonganRegu.objects.get(id=lowongan_id).ketua
+
+    if current_user == penerima:
+        logger.info("Can't apply to your own vacancy")
+
+        return redirect("find_teams:show_vacancies")
+
     if request.method == "POST":
         keahlian = request.POST.get("keahlian")
         cover_letter = request.POST.get("cover_letter")
