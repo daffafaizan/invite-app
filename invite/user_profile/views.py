@@ -172,16 +172,16 @@ def delete_application(request, application_id):
 
     return render(request, "user_profile/delete_confirmation.html", context)
 
-
 @login_required(login_url="/accounts/login/")
 def show_my_vacancies(request):
-    vacancy_list = LowonganRegu.objects.all().filter(ketua=request.user)
+    vacancy_list = LowonganRegu.objects.filter(ketua=request.user).order_by('-created_at')
 
     context = {
-        "vacancy_list": reversed(vacancy_list),
+        "vacancy_list": vacancy_list,
     }
 
     return render(request, "show_my_vacancies.html", context)
+
 
 
 @login_required(login_url="/accounts/login/")
