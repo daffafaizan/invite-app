@@ -4,20 +4,40 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views import View
+from django.db.models import Q
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu
 
 logger = logging.getLogger("app_api")
 
+
 @login_required(login_url='/accounts/login/')
 def show_vacancies(request):
+    query = request.GET.get('q', '')  
+    sort_order = request.GET.get('sort', 'newest') 
+
     vacancy_list = LowonganRegu.objects.all()
+
+    if query:
+        vacancy_list = vacancy_list.filter(
+            Q(nama_regu__icontains=query) | 
+            Q(nama_lomba__icontains=query) | 
+            Q(bidang_lomba__icontains=query)
+        )
+
+    if sort_order == 'oldest':
+        vacancy_list = vacancy_list.order_by('created_at')
+    else:  # Default to newest
+        vacancy_list = vacancy_list.order_by('-created_at')
+
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
     context = {
-        'vacancy_list': reversed(vacancy_list),
-        'current_user': current_user
+        'vacancy_list': vacancy_list,
+        'current_user': current_user,
+        'query': query,
+        'sort_order': sort_order
     }
 
     return render(request, "show_vacancies.html", context)
