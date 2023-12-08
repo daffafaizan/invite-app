@@ -147,6 +147,7 @@ def delete_application(request, application_id):
 
     return render(request, "user_profile/delete_confirmation.html", context)
 
+@login_required(login_url='/accounts/login/')
 def show_my_vacancies(request):
     vacancy_list = LowonganRegu.objects.all().filter(ketua=request.user)
 
