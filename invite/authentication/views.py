@@ -71,18 +71,35 @@ class LoginView(FormView):
         return render(request, self.template_name, context, status=200)
 
     def post(self, request):
+        logger.info(request.POST)
         form = self.form_class(request.POST)
         if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"]
-            )
+            use_email = False
+            if "@" in form.cleaned_data["username_email"]:
+                use_email = True
+
+            if use_email:
+                # Email auth
+                user = authenticate(
+                    username=form.cleaned_data["username_email"],
+                    password=form.cleaned_data["password"]
+                )
+                
+            else:
+                # Username auth
+                user = authenticate(
+                    username=form.cleaned_data["username_email"],
+                    password=form.cleaned_data["password"]
+                )
 
             if user is not None:
                 login(request, user)
 
                 # Set cookies
-                registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username"])
+                if use_email:
+                    registered_user = RegisteredUser.objects.get(email=form.cleaned_data["username_email"])
+                else:
+                    registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username_email"])
 
                 logger.info(f"LOGGED IN AS {user.get_username()}")
                 messages.success(request, f"Logged in as {user.username}!")
@@ -97,7 +114,7 @@ class LoginView(FormView):
                     "status": "Invalid username or password",
                     "form": form,
                 }
-
+                logger.error("USER:", user)   
                 logger.error("LOGIN FAILED")
                 messages.error(request, "Invalid username or password")
 

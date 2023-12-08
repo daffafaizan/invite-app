@@ -64,6 +64,8 @@ class RegisteredUser(AbstractUser):
     # NOTE MODEL FIELDS
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
 
+    email = models.EmailField(unique=True, max_length=254, blank=False, null=False)
+
     middle_name = models.CharField(max_length=30, blank=True)
     universitas = models.CharField(max_length=100, blank=True) 
     jurusan = models.CharField(max_length=100, blank=True)

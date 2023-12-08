@@ -4,7 +4,7 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="md:max-h-[100dvh] flex flex-col justify-center p-8 md:py-16 items-center border-2 rounded-2xl">
+<div class="flex flex-col justify-center p-8 md:py-16 items-center border-2 rounded-2xl">
   <div class="max-w-[360px] md:max-w-[600px] flex flex-col">
     <span class="text-3xl mb-8 md:text-4xl md:mb-10 font-semibold text-center">Create a new account</span>
     <form method="post">
@@ -13,6 +13,9 @@
       <div class="flex flex-col md:grid md:grid-cols-2 gap-x-4">
         <div class="mb-4 col-span-2">
           {{ form.username|as_crispy_field }}
+        </div>
+        <div class="mb-4 col-span-2">
+          {{ form.email|as_crispy_field }}
         </div>
         <div class="mb-4">
           {{ form.password1|as_crispy_field }}

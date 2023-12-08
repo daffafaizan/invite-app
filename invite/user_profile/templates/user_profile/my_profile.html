@@ -10,12 +10,24 @@
 <main class="md:h-[100dvh] flex flex-col p-4 md:p-8 items-center border border-black">
     
     <div class="md:w-[800px] flex flex-col border border-black p-2 md:p-4">
-        <div class="flex flex-row items-center justify-between">
+        <div
+            class="w-full flex flex-row bg-gray-300 items-center justify-between"
+        >
+            <div 
+                class="flex flex-row"
+            >
+                <p class="text-xl md:text-2xl font-semibold text-gray-600">{{ data.user.first_name }} {{ data.user.last_name }}</p>
+                <div class="relative w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden">
+                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+        <!-- <div class="flex flex-row items-center justify-between">
             <p class="text-xl md:text-2xl font-semibold text-gray-600">{{ data.user.first_name }} {{ data.user.last_name }}</p>
             <div class="relative w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden">
                 <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
             </div>
-        </div>
+        </div> -->
         <!-- User Profile Section -->
         <div>
             <h1>TODO</h1>
@@ -24,6 +36,9 @@
             </p>
             <p>
                 Username: {{ data.user.username }}
+            </p>
+            <p>
+                Email: {{ data.user.email }}
             </p>
             <p>
                 Name: {{ data.user.first_name }} {{ data.user.last_name }}
