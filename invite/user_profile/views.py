@@ -148,6 +148,10 @@ def delete_application(request, application_id):
 
 def show_my_vacancies(request):
     vacancy_list = LowonganRegu.objects.all().filter(ketua=request.user)
+    for vacancy in vacancy_list:
+        
+        applicants = Lamaran.objects.filter()
+        print(applicants)
 
     context = {
         'vacancy_list': reversed(vacancy_list),

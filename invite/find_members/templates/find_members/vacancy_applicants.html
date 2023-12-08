@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block meta %}
+<title>Applicants for my vacancy</title>
+{% endblock meta %}
+
+{% block content %}
+<main>
+    <div>
+        <!-- Display a list of applicants -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">Applicants</h2>
+            <ul>
+                {% for applicant in applicants %}
+                    <li>
+                        <strong>{{ applicant.nama }}</strong> - {{ applicant.universitas }} - {{ applicant.jurusan }}
+                        <!-- Add more applicant details as needed -->
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+
+
+    </div>
+
+
+</main>
+
+
+
+
+{% endblock content %}
