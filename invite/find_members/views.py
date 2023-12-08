@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.views.generic import DetailView, ListView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
+from find_teams.models import Lamaran
 
 from .forms import LowonganForm
 from .models import LowonganRegu, TautanMediaSosialLowongan
@@ -117,3 +118,17 @@ class VacancyDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None) -> LowonganRegu:
         return self.model.objects.get(ketua=self.request.user, uuid=self.kwargs["vacancy_id"])
+    
+    
+def vacancy_applicants(request, vacancy_id):
+
+    applicants = Lamaran.objects.filter(id=vacancy_id)
+    print(applicants)
+
+    context = {
+        'applicants': reversed(applicants),
+    }
+
+    return render(request, "find_members/vacancy_applicants.html", context)
+
+
