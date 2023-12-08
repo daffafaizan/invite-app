@@ -7,7 +7,7 @@ from django.views import View
 from django.db.models import Q
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
-from find_members.models import LowonganRegu
+from find_members.models import LowonganRegu, TautanMediaSosialLowongan
 
 logger = logging.getLogger("app_api")
 
@@ -44,12 +44,23 @@ def show_vacancies(request):
 
 
 def show_vacancy_details(request, lowongan_id):
+    context = {
+        "vacancy": False,
+        "sosmed": False,  # Pass the user data to the template
+    }
     try:
         vacancy = LowonganRegu.objects.get(id=lowongan_id)
+        context["vacancy"] = vacancy
     except (LowonganRegu.DoesNotExist, ValueError):
-        return render(request, "show_vacancy_details.html", {"vacancy": False})
+        return render(request, "show_vacancy_details.html", context)
 
-    return render(request, "show_vacancy_details.html", {"vacancy": vacancy})
+    try:
+        sosmed = vacancy.tautan_medsos_regu
+        context["sosmed"] = sosmed
+    except (LowonganRegu.DoesNotExist, ValueError):
+        return render(request, "show_vacancy_details.html", context)
+
+    return render(request, "show_vacancy_details.html", context)
 
 
 @login_required(login_url=settings.LOGIN_URL)

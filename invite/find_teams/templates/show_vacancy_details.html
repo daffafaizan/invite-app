@@ -24,7 +24,7 @@
       <div class="detail-content">
         <span class="detail-label">Foto Lowongan Regu:</span> 
         {% if vacancy.foto_lowongan_regu %}
-          <img src="{{ vacancy.foto_lowongan_regu.url }}" alt="Foto Lowongan Regu" style="max-width: 300px;">
+          <img src="{{ vacancy.foto_lowongan_regu.url}}" alt="Foto Lowongan Regu" style="max-width: 300px;">
         {% else %}
           <span>No image available.</span>
         {% endif %}
@@ -35,7 +35,16 @@
       <div class="detail-content"><span class="detail-label">Expiry:</span> {{ vacancy.expiry|date:"d M Y H:i" }}</div>
       <div class="detail-content"><span class="detail-label">Jumlah Anggota Sekarang:</span> {{ vacancy.jumlah_anggota_sekarang }}</div>
       <div class="detail-content"><span class="detail-label">Total Anggota Dibutuhkan:</span> {{ vacancy.total_anggota_dibutuhkan }}</div>
-      <div class="detail-content"><span class="detail-label">Tautan Medsos Regu:</span> {{ vacancy.tautan_medsos_regu }}</div>
+      {% if sosmed %}
+        <!-- Display sosmed details -->
+        <div class="detail-content"><span class="detail-label">Website:</span> {{ sosmed.website }}</div>
+        <div class="detail-content"><span class="detail-label">Instagram:</span> {{ sosmed.instagram }}</div>
+        <div class="detail-content"><span class="detail-label">Twitter:</span> {{ sosmed.twitter }}</div>
+        <div class="detail-content"><span class="detail-label">LinkedIn:</span> {{ sosmed.linkedin }}</div>
+        <div class="detail-content"><span class="detail-label">GitHub:</span> {{ sosmed.github }}</div>
+      {% else %}
+        <div class="detail-content"><span class="detail-label">Tautan Medsos Regu:</span> <span>No social media links available.</span></div>
+      {% endif %}
       <div class="detail-content"><span class="detail-label">Is Active:</span> {{ vacancy.is_active }}</div>
       <div class="detail-content"><span class="detail-label">Created At:</span> {{ vacancy.created_at|date:"d M Y H:i" }}</div>
       <div class="detail-content"><span class="detail-label">Updated At:</span> {{ vacancy.updated_at|date:"d M Y H:i" }}</div>
