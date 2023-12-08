@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
-
+from django.db.models import Q
 from user_profile.models import UlasanProfil
 from find_teams.models import Lamaran
 from find_members.models import LowonganRegu
@@ -174,14 +174,33 @@ def delete_application(request, application_id):
 
 @login_required(login_url="/accounts/login/")
 def show_my_vacancies(request):
+    query = request.GET.get('q', '')  
+    sort_order = request.GET.get('sort', 'newest') 
+    
     vacancy_list = LowonganRegu.objects.filter(ketua=request.user).order_by('-created_at')
 
+    if query:
+        vacancy_list = vacancy_list.filter(
+            Q(nama_regu__icontains=query) | 
+            Q(nama_lomba__icontains=query) | 
+            Q(bidang_lomba__icontains=query)
+        )
+
+    if sort_order == 'oldest':
+        vacancy_list = vacancy_list.order_by('created_at')
+    else:  # Default to newest
+        vacancy_list = vacancy_list.order_by('-created_at')
+
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+
     context = {
-        "vacancy_list": vacancy_list,
+        'vacancy_list': vacancy_list,
+        'current_user': current_user,
+        'query': query,
+        'sort_order': sort_order
     }
 
     return render(request, "show_my_vacancies.html", context)
-
 
 
 @login_required(login_url="/accounts/login/")

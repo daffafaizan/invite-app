@@ -25,12 +25,19 @@
 
     <div class="container mt-3">
       <form method="get" action=".">
-          <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Search for vacancies..." name="q" value="{{ query }}">
-              <button class="btn btn-outline-secondary" type="submit">Search</button>
-          </div>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Search for vacancies..." name="q" value="{{ query }}">
+          <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+        <!-- Sorting Buttons -->
+        <div>
+            <button type="submit" name="sort" value="newest" class="btn btn-primary">Newest First</button>
+            <button type="submit" name="sort" value="oldest" class="btn btn-secondary">Oldest First</button>
+        </div>
       </form>
     </div>
+
+    <br>
 
     <div class="row">
         {% for vacancy in vacancy_list %}
