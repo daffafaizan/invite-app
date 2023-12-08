@@ -9,7 +9,7 @@
 {% block content %}
 <main class="relative md:h-[100dvh] flex flex-col items-center">
     <!-- Page -->
-    <div class="w-full flex flex-col">
+    <div class="w-full flex flex-col p-2 md:p-4">
         <!-- Header -->
         <div
             class="w-full p-2 md:p-4 flex flex-row bg-gray-200 items-center justify-between"
@@ -46,53 +46,106 @@
         <!-- User Profile Section -->
         <div class="w-full p-2 md:p-4 flex flex-col text-md md:text-lg">
             <!-- Univ -->
-            <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
-                <div>
-                    Universitas
+            {% if data.user.universitas %}
+                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                    <div>
+                        Universitas
+                    </div>
+                    <div class="">
+                        {{ data.user.universitas }}
+                    </div>
                 </div>
-                <div class="">
-                    {{ data.user.universitas }}
-                </div>
-            </div>
+            {% endif %}
 
             <!-- Jurusan -->
-            <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
-                <div>
-                    Jurusan
+            {% if data.user.jurusan %}
+                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                    <div>
+                        Jurusan
+                    </div>
+                    <div class="">
+                        {{ data.user.jurusan }}
+                    </div>
                 </div>
-                <div class="">
-                    {{ data.user.jurusan }}
-                </div>
-            </div>
+            {% endif %}
 
+            <!-- Keahlian -->
+            {% if data.user.keahlian %}
+                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                    <div>
+                        Keahlian
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {% for kn in data.user.keahlian %}
+                            <div class="inline-block py-1 px-3 rounded-2xl bg-gray-300 hover:cursor-pointer hover:bg-gray-400 duration-200">
+                                {{ kn }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
             <!-- TMS -->
             <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
-                <div>
+                <div class="">
                     Tautan Media Sosial
                 </div>
-                <div class="">
-                    {{ data.tms.website }}
-                    {{ data.tms.instagram }}
-                    {{ data.tms.twitter }}
-                    {{ data.tms.linkedin }}
-                    {{ data.tms.github }}
+                <div class="flex flex-col gap-y-2 md:gap-y-4">
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {{ data.tms.website }}
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {{ data.tms.instagram }}
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {{ data.tms.twitter }}
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {{ data.tms.linkedin }}
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {{ data.tms.github }}
+                    </div>
                 </div>
             </div>
 
-            <p>
-                Tautan Media Sosial: {{ data.user.tautan_media_sosial }}
-            </p>
-            <p>
-                Profile Details: {{ data.user.profile_details }}
-            </p>
-            <p>
-                Profile Picture: {{ data.user.profile_picture }}
-            </p>
+            <!-- Photo -->
+            {% if data.user.profile_picture %}
+                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                    <div>
+                        Photo
+                    </div>
+                    <div class="">
+                        {{ data.user.profile_picture }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="py-4"></div>
+
             <a 
-            class="text-white bg-emerald-700 hover:bg-emerald-800 focus:ring-2 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800" 
-            href="{% url 'profile:show_my_applications' %}"">
-                Daftar Lamaran
+                class="max-w-[100px] md:max-w-[240px] text-white bg-emerald-700 hover:bg-emerald-800 focus:ring-2 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800" 
+                href="{% url 'profile:show_my_applications' %}"">
+                    Daftar Lamaran
             </a>
+
+            
+        </div>
+
+        <!-- Ulasan Section -->
+        <div class="w-full p-2 md:p-4 flex flex-col">
+            <div class="flex flex-row gap-x-2 md:gap-x-4">
+                <div>
+                    Upvote
+                </div>
+                {{ data.pd.jumlah_upvote }}
+            </div>
+            <div class="flex flex-row gap-x-2 md:gap-x-4">
+                <div>
+                    Downvote
+                </div>
+                {{ data.pd.jumlah_downvote }}
+            </div>
         </div>
     </div>
 </main>
