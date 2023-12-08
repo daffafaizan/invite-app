@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_tailwind',
 
+    # third party
+    'fontawesomefree',
+
     # django applications
     'core',
     'authentication',
@@ -134,7 +137,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# Can add static files to these dirs
+STATICFILES_DIRS = [ BASE_DIR / "static", ]
+
+# Automatically copy static files to STATIC_ROOT
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Django serves static files on STATIC_URL
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -151,12 +167,9 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 # Path to Extended user model
 AUTH_USER_MODEL = "authentication.RegisteredUser"
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+LOGIN_REDIRECT_URL = "core:home"
+LOGOUT_REDIRECT_URL = "core:home"
+AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend']
 
 LOGGING = {
     'version': 1,
