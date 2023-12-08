@@ -43,6 +43,7 @@ def show_vacancies(request):
     return render(request, "show_vacancies.html", context)
 
 
+@login_required(login_url="/accounts/login/")
 def show_vacancy_details(request, lowongan_id):
     context = {
         "vacancy": False,
