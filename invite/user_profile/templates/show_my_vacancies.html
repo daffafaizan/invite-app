@@ -21,8 +21,8 @@
                         <p>Recruiting until {{vacancy.expiry}}</p>
                         <p>Current members {{vacancy.jumlah_anggota_sekarang}}/{{vacancy.total_anggota_dibutuhkan}}</p>
                       </a>
-                  <div>
-                    <a class-"py-2" href="{% url 'find_members:vacancy_applicants' vacancy_id=vacancy.id %}" class="p-1 bg-emerald-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Show Applicants</a>
+                  <div class="mt-8">
+                    <a href="{% url 'find_members:vacancy_applicants' vacancy_id=vacancy.id %}" class="p-1 bg-emerald-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Show Applicants</a>
                   </div>
                 </div>
               

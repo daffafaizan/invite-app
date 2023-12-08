@@ -123,7 +123,7 @@ class VacancyDeleteView(LoginRequiredMixin, DeleteView):
 def vacancy_applicants(request, vacancy_id):
 
     applicants = Lamaran.objects.filter(id=vacancy_id)
-    print(applicants)
+    print(len(applicants))
 
     context = {
         'applicants': reversed(applicants),
