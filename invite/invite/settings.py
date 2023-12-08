@@ -151,8 +151,8 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 # Path to Extended user model
 AUTH_USER_MODEL = "authentication.RegisteredUser"
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "core:home"
+LOGOUT_REDIRECT_URL = "core:home"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
