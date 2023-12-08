@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_tailwind',
 
+    # third party
+    'fontawesomefree',
+
     # django applications
     'core',
     'authentication',
