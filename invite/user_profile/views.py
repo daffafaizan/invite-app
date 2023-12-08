@@ -66,6 +66,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
                 "jurusan": registered_user.jurusan,
                 "keahlian": registered_user.keahlian,
                 "tautan_portfolio": registered_user.tautan_portfolio,
+                "created_at": registered_user.created_at,
                 "foto_profil": registered_user.foto_profil,
             }
             
@@ -73,7 +74,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             context = {
                 "status": "Success fetching user profile",
                 "data": {
-                    "user": registered_user,
+                    "user": filtered_user,
                     "tms": tms,
                     "pd": pd,
                     "ulasan": ulasan,
@@ -86,6 +87,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             return render(request, self.template_name, context, status=200)
         except Http404 as error:
             logger.error("ProfileDetailError: Object not found: %s" % str(error))
+            return render(request, self.template_name, status=404)
 
         # registered_user = get_object_or_404(RegisteredUser, id=user_id)
 

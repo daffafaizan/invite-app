@@ -40,11 +40,12 @@ def show_vacancies(request):
         'sort_order': sort_order
     }
 
-    return render(request, "show_vacancies.html", context)
+    # NOTE new html
+    return render(request, "find_teams/show_vacancies_new.html", context)
 
 def show_vacancy_details(request, lowongan_id):
     # TODO
-    return render(request, "vacancy.html")
+    return render(request, "find_teams/vacancy.html")
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request, lowongan_id):
@@ -79,7 +80,7 @@ def apply_vacancy_first(request, lowongan_id):
         "vacancy": LowonganRegu.objects.get(id=lowongan_id)
     }
 
-    return render(request, "apply_vacancy_first.html", context)
+    return render(request, "find_teams/apply_vacancy_first.html", context)
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_second(request, lowongan_id):
@@ -121,7 +122,7 @@ def apply_vacancy_second(request, lowongan_id):
             lamaran.status = "Pending"
             lamaran.save()
 
-            return render(request, "application_success.html")
+            return render(request, "find_teams/application_success.html")
         
     else:
         form_data = {
@@ -136,4 +137,4 @@ def apply_vacancy_second(request, lowongan_id):
         "user_data": user_data,  # Pass the user data to the template
     }
 
-    return render(request, "apply_vacancy_second.html", context)
+    return render(request, "find_teams/apply_vacancy_second.html", context)
