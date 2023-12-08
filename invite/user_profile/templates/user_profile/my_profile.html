@@ -7,48 +7,78 @@
 {% endblock meta %}
 
 {% block content %}
-<main class="md:h-[100dvh] flex flex-col p-4 md:p-8 items-center border border-black">
-    
-    <div class="md:w-[800px] flex flex-col border border-black p-2 md:p-4">
+<main class="relative md:h-[100dvh] flex flex-col items-center">
+    <!-- Page -->
+    <div class="w-full flex flex-col">
+        <!-- Header -->
         <div
-            class="w-full flex flex-row bg-gray-300 items-center justify-between"
+            class="w-full p-2 md:p-4 flex flex-row bg-gray-200 items-center justify-between"
         >
-            <div 
-                class="flex flex-row"
-            >
-                <p class="text-xl md:text-2xl font-semibold text-gray-600">{{ data.user.first_name }} {{ data.user.last_name }}</p>
-                <div class="relative w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden">
+            <!-- Profile Headers -->
+            <div class="flex flex-row justify-center items-center gap-x-2 md:gap-x-4">
+                <!-- Image -->
+                <div class="relative w-[40px] h-[40px] md:w-[60px] md:h-[60px] rounded-full overflow-hidden">
                     <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                </div>
+
+                <div class="flex flex-col items-start">
+                    <!-- Username -->
+                    <p class="text-md md:text-lg font-semibold text-gray-600">
+                        {{ data.user.first_name }} 
+                        {{ data.user.middle_name }} 
+                        {{ data.user.last_name }}
+                    </p>
+    
+                    <!-- Email -->
+                    <p class="text-sm md:text-md font-base text-gray-600">{{ data.user.email }}</p>
+                </div>
+            </div>
+
+            <!-- Profile Menu -->
+            <div class="flex flex-col items-center">
+                <div class="rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200">
+                    Edit Profile
                 </div>
             </div>
         </div>
-        <!-- <div class="flex flex-row items-center justify-between">
-            <p class="text-xl md:text-2xl font-semibold text-gray-600">{{ data.user.first_name }} {{ data.user.last_name }}</p>
-            <div class="relative w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden">
-                <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
-            </div>
-        </div> -->
+
         <!-- User Profile Section -->
-        <div>
-            <h1>TODO</h1>
-            <p>
-                Created at: {{ data.user.created_at }}
-            </p>
-            <p>
-                Username: {{ data.user.username }}
-            </p>
-            <p>
-                Email: {{ data.user.email }}
-            </p>
-            <p>
-                Name: {{ data.user.first_name }} {{ data.user.last_name }}
-            </p>
-            <p>
-                University: {{ data.user.universitas }}
-            </p>
-            <p>
-                Jurusan: {{ data.user.jurusan }}
-            </p>
+        <div class="w-full p-2 md:p-4 flex flex-col text-md md:text-lg">
+            <!-- Univ -->
+            <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                <div>
+                    Universitas
+                </div>
+                <div class="">
+                    {{ data.user.universitas }}
+                </div>
+            </div>
+
+            <!-- Jurusan -->
+            <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                <div>
+                    Jurusan
+                </div>
+                <div class="">
+                    {{ data.user.jurusan }}
+                </div>
+            </div>
+
+            <!-- TMS -->
+            <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                <div>
+                    Tautan Media Sosial
+                </div>
+                <div class="">
+                    {{ data.tms.website }}
+                    {{ data.tms.instagram }}
+                    {{ data.tms.twitter }}
+                    {{ data.tms.linkedin }}
+                    {{ data.tms.github }}
+                </div>
+            </div>
+
             <p>
                 Tautan Media Sosial: {{ data.user.tautan_media_sosial }}
             </p>
