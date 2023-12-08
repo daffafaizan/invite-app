@@ -7,12 +7,12 @@ class EmailOrUsernameBackend(ModelBackend):
 
     # Backend to authenticate using email or username
     def authenticate(self, request, username=None, password=None, **kwargs):
+        UserModel = get_user_model()
+
         if username is None:
             username = kwargs.get(UserModel.USERNAME_FIELD)
         if username is None or password is None:
             return
-        
-        UserModel = get_user_model()
 
         if not re.match(self.EMAIL_REGEX, username):
             # Use default username auth

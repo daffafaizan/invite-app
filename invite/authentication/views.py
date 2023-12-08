@@ -81,9 +81,10 @@ class LoginView(FormView):
             if use_email:
                 # Email auth
                 user = authenticate(
-                    email=form.cleaned_data["username_email"],
+                    username=form.cleaned_data["username_email"],
                     password=form.cleaned_data["password"]
                 )
+                
             else:
                 # Username auth
                 user = authenticate(
@@ -113,7 +114,7 @@ class LoginView(FormView):
                     "status": "Invalid username or password",
                     "form": form,
                 }
-
+                logger.error("USER:", user)   
                 logger.error("LOGIN FAILED")
                 messages.error(request, "Invalid username or password")
 
