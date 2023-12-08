@@ -46,7 +46,10 @@
     <!-- Vacancy content -->
     <div class="w-full flex flex-col gap-y-2 md:grid md:grid-cols-3 md:gap-4">
         {% for vacancy in vacancy_list %}
-            <div class="border border-2 p-2 md:p-4 shadow min-h-max flex flex-col gap-y-4 md:gap-y-6 justify-between">
+            <div 
+                class="border border-2 p-2 md:p-4 shadow min-h-max flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer"
+            >
+            <a href="{% url 'find_members:vacancy_detail' vacancy_id=vacancy.id %}">
                 <div class="flex flex-row gap-x-2">
                     <img 
                         src="{% static vacancy.foto_lowongan_regu %}" 
@@ -77,6 +80,7 @@
                             Apply
                         </button>
                     {% endif %}
+                    </a>
                 </div>
             </div>
         {% endfor %}
