@@ -20,7 +20,7 @@ class RegisteredUserCreationForm(UserCreationForm):
         fields = REGISTERED_USER_FIELDS
 
 class RegisteredUserLoginForm(forms.Form):
-    username_email = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'autofocus': True}))
+    username_email = forms.CharField(max_length=254, label="Username or email", widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(max_length=150, widget=forms.PasswordInput)
 
 class RegisteredUserChangeForm(UserChangeForm):

@@ -12,6 +12,8 @@ class EmailOrUsernameBackend(ModelBackend):
         if username is None or password is None:
             return
         
+        UserModel = get_user_model()
+
         if not re.match(self.EMAIL_REGEX, username):
             # Use default username auth
             try:
@@ -25,7 +27,6 @@ class EmailOrUsernameBackend(ModelBackend):
                     return user
         else:
             # Email auth
-            UserModel = get_user_model()
             try:
                 user = UserModel.objects.get(email=username)
             except UserModel.DoesNotExist:

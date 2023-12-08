@@ -71,9 +71,14 @@ class LoginView(FormView):
         return render(request, self.template_name, context, status=200)
 
     def post(self, request):
+        logger.info(request.POST)
         form = self.form_class(request.POST)
         if form.is_valid():
+            use_email = False
             if "@" in form.cleaned_data["username_email"]:
+                use_email = True
+
+            if use_email:
                 # Email auth
                 user = authenticate(
                     email=form.cleaned_data["username_email"],
@@ -90,7 +95,10 @@ class LoginView(FormView):
                 login(request, user)
 
                 # Set cookies
-                registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username"])
+                if use_email:
+                    registered_user = RegisteredUser.objects.get(email=form.cleaned_data["username_email"])
+                else:
+                    registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username_email"])
 
                 logger.info(f"LOGGED IN AS {user.get_username()}")
                 messages.success(request, f"Logged in as {user.username}!")
