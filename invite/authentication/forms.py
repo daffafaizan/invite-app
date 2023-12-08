@@ -5,6 +5,7 @@ from .models import RegisteredUser
 
 REGISTERED_USER_FIELDS = (
             "username", 
+            "email",
             "first_name", 
             "middle_name", 
             "last_name",
@@ -19,7 +20,7 @@ class RegisteredUserCreationForm(UserCreationForm):
         fields = REGISTERED_USER_FIELDS
 
 class RegisteredUserLoginForm(forms.Form):
-    username = forms.CharField(max_length=150)
+    username_email = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(max_length=150, widget=forms.PasswordInput)
 
 class RegisteredUserChangeForm(UserChangeForm):

@@ -73,10 +73,18 @@ class LoginView(FormView):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"]
-            )
+            if "@" in form.cleaned_data["username_email"]:
+                # Email auth
+                user = authenticate(
+                    email=form.cleaned_data["username_email"],
+                    password=form.cleaned_data["password"]
+                )
+            else:
+                # Username auth
+                user = authenticate(
+                    username=form.cleaned_data["username_email"],
+                    password=form.cleaned_data["password"]
+                )
 
             if user is not None:
                 login(request, user)
