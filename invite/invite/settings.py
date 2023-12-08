@@ -134,7 +134,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# Can add static files to these dirs
+STATICFILES_DIRS = [ BASE_DIR / "static", ]
+
+# Automatically copy static files to STATIC_ROOT
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Django serves static files on STATIC_URL
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -154,10 +167,6 @@ LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "core:home"
 LOGOUT_REDIRECT_URL = "core:home"
 AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend']
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 LOGGING = {
     'version': 1,

@@ -1,5 +1,6 @@
 import logging
 from django.conf import settings
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -9,7 +10,7 @@ from django.views.generic.detail import DetailView
 from user_profile.models import UlasanProfil
 from find_teams.models import Lamaran
 from find_members.models import LowonganRegu
-from authentication.models import RegisteredUser, ProfileDetails
+from authentication.models import RegisteredUser, ProfileDetails, TautanMediaSosial
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
@@ -22,26 +23,24 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
 
     def get(self, request):
         # If showing my profile, auto-retrieve my user id from cookies
-        registered_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+        try:
+            registered_user = get_object_or_404(RegisteredUser, id=request.COOKIES.get("user_id"))
+            tms = get_object_or_404(TautanMediaSosial, id=registered_user.tautan_media_sosial.id)
+            pd = get_object_or_404(ProfileDetails, id=registered_user.profile_details.id)
 
-        if not registered_user:
             context = {
-                "status": "User not found",
+                "status": "Success fetching my profile",
+                "data": {
+                    "user": registered_user,
+                    "tms": tms,
+                    "pd": pd,
+                },
             }
 
-            logger.info("User not found")
-            return render(request, self.template_name, context, status=404)
-
-        context = {
-            "status": "Success fetching my profile",
-            "data": {"user": registered_user},
-        }
-
-        logger.info(f"Showing {registered_user.get_username()}'s profile")
-        logger.info(f"Registered user: {registered_user}\n")
-
-        return render(request, self.template_name, context, status=200)
-
+            logger.info(f"Showing {registered_user.get_username()}'s profile")
+            return render(request, self.template_name, context, status=200)
+        except Http404 as error:
+            logger.error("ProfileDetailError: Object not found: %s" % str(error))
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
@@ -51,10 +50,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # If showing other's profile, retrieve user id url params
         logger.info(f"id from path: %s" % str(user_id))
 
-        registered_user = RegisteredUser.objects.get(id=user_id)
-
-        if not registered_user:
-            return render(request, self.template_name, status=404)
+        registered_user = get_object_or_404(RegisteredUser, id=user_id)
 
         filtered_user = {
             "id": registered_user.id,
