@@ -6,6 +6,8 @@ from .models import RegisteredUser, ProfileDetails, TautanMediaSosial
 
 @admin.register(RegisteredUser)
 class RegisteredUserAdmin(UserAdmin):
+    readonly_fields = ["get_tautan_medsos", "get_profile_details"]
+
     add_form = RegisteredUserCreationForm
     form = RegisteredUserChangeForm
     model = RegisteredUser
@@ -29,10 +31,23 @@ class RegisteredUserAdmin(UserAdmin):
                 "tautan_portfolio",
             )
         }),
+        ("Custom Relations", {
+            "fields": (
+                "get_tautan_medsos",
+                "get_profile_details",
+            )
+        })
     )
+
+    def get_tautan_medsos(self, reguser):
+        return reguser.tautan_media_sosial
+
+    def get_profile_details(self, reguser):
+        return reguser.profile_details
 
 @admin.register(ProfileDetails)
 class ProfileDetailsAdmin(admin.ModelAdmin):
+    search_fields = ["id"]
     list_display = [
                     "id",
                     "jumlah_upvote",
@@ -44,6 +59,7 @@ class ProfileDetailsAdmin(admin.ModelAdmin):
 
 @admin.register(TautanMediaSosial)
 class TautanMediaSosialAdmin(admin.ModelAdmin):
+    search_fields = ["id"]
     list_display = [
                     "id",
                     "instagram",

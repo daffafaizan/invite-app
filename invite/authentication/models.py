@@ -7,10 +7,12 @@ from django.contrib.postgres.fields import ArrayField
 
 class TautanMediaSosial(models.Model):
     def __str__(self) -> str:
-        res = "\nWebsites:\n"
+        res = f"\nWebsite id: {self.id}\n"
+        options = ["website", "instagram", "twitter", "linkedin", "github"]
+        values = (self.website, self.instagram, self.twitter, self.linkedin, self.github)
 
-        for link in (self.website, self.instagram, self.twitter, self.linkedin, self.github):
-            res += f"{link}\n"
+        for i in range(len(options)):
+            res += f"{options[i]}: {values[i]}\n"
         
         return res
             
@@ -28,7 +30,7 @@ class TautanMediaSosial(models.Model):
 
 class ProfileDetails(models.Model):
     def __str__(self) -> str:
-        res = "\nProfile details:\n"
+        res = f"\nProfile details id: {self.id}\n"
         res += f"Upvote: {self.jumlah_upvote}\n"
         res += f"Downvote: {self.jumlah_downvote}\n"
         return res
