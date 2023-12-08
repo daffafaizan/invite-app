@@ -12,7 +12,7 @@
     <div class="w-full flex flex-col gap-y-4 md:gap-y-6 p-2 md:p-4">
         <!-- Header -->
         <div
-            class="w-full p-2 md:p-4 flex flex-row bg-gray-200 bg-opacity-80 rounded-xl items-center justify-between"
+            class="w-full py-4 px-2 md:p-4 flex flex-col gap-y-4 md:gap-y-0 md:flex-row bg-gray-200 bg-opacity-80 rounded-xl items-start md:items-center justify-between"
         >
             <!-- Profile Headers -->
             <div class="flex flex-row justify-center items-center gap-x-2 md:gap-x-4">
@@ -38,9 +38,9 @@
             </div>
 
             <!-- Profile Menu -->
-            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
+            <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
                 <a 
-                    class="max-w-[100px] md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+                    class="max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_vacancies' %}"">
                         Lowongan Terbuat
@@ -61,7 +61,7 @@
         <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
             <!-- Univ -->
             {% if data.user.universitas %}
-                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
                     <!-- Label -->
                     <div class="font-semibold text-lg md:text-xl">
                         Universitas
@@ -74,7 +74,7 @@
 
             <!-- Jurusan -->
             {% if data.user.jurusan %}
-                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
                     <!-- Label -->
                     <div class="font-semibold text-lg md:text-xl">
                         Jurusan
@@ -87,7 +87,7 @@
 
             <!-- Keahlian -->
             {% if data.user.keahlian %}
-                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
                     <!-- Label -->
                     <div class="font-semibold text-lg md:text-xl">
                         Keahlian
@@ -103,7 +103,7 @@
             {% endif %}
             
             <!-- TMS -->
-            <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+            <div class="flex flex-row items-start w-full gap-x-2 md:gap-x-4">
                 <div class="font-semibold text-lg md:text-xl">
                     Media Sosial
                 </div>
@@ -143,7 +143,7 @@
 
             <!-- Photo -->
             {% if data.user.profile_picture %}
-                <div class="flex flex-row w-full gap-x-2 md:gap-x-4">
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
                     <!-- Label -->
                     <div class="font-semibold text-lg md:text-xl">
                         Photo
@@ -183,7 +183,7 @@
             </div>
         </div>
 
-        <!-- TODO Ulasan Profil -->
+        <!-- TODO ulasan untuk saya  -->
     </div>
 </main>
 
