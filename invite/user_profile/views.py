@@ -68,13 +68,15 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
                 "tautan_portfolio": registered_user.tautan_portfolio,
                 "foto_profil": registered_user.foto_profil,
             }
-
+            
+            ulasan = UlasanProfil.objects.filter(diulas=registered_user)
             context = {
                 "status": "Success fetching user profile",
                 "data": {
                     "user": registered_user,
                     "tms": tms,
                     "pd": pd,
+                    "ulasan": ulasan,
                 },
             }
 
@@ -116,6 +118,14 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
 @login_required(login_url="/accounts/login/")
 def review_profile(request, profile_id):
+    diulas = RegisteredUser.objects.get(id=profile_id)
+    pengulas = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+
+    if diulas == pengulas:
+        logger.info("Can't review for your own profile")
+        messages.error(request, "Can't review for your own profile")
+        return redirect("profile:profile", user_id=profile_id)
+    
     if request.method == "POST":
         diulas = RegisteredUser.objects.get(id=profile_id)
         rating = request.POST.get("rating")
