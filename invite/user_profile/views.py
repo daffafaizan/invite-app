@@ -85,7 +85,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         logger.info(f"Registered user: {registered_user}\n")
 
         return render(request, self.template_name, context, status=200)
-
+    
+@login_required(login_url='/accounts/login/')
 def review_profile(request, profile_id):
     if request.method == "POST":
         diulas = RegisteredUser.objects.get(id=profile_id)
