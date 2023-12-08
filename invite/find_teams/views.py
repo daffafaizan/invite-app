@@ -10,14 +10,26 @@ from find_members.models import LowonganRegu
 
 logger = logging.getLogger("app_api")
 
+from django.db.models import Q
+
 @login_required(login_url='/accounts/login/')
 def show_vacancies(request):
+    query = request.GET.get('q', '')  # Get the query from request
     vacancy_list = LowonganRegu.objects.all()
+
+    if query:
+        vacancy_list = vacancy_list.filter(
+            Q(nama_regu__icontains=query) | 
+            Q(nama_lomba__icontains=query) | 
+            Q(bidang_lomba__icontains=query)
+        )
+
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
     context = {
         'vacancy_list': reversed(vacancy_list),
-        'current_user': current_user
+        'current_user': current_user,
+        'query': query
     }
 
     return render(request, "show_vacancies.html", context)

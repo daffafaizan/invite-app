@@ -23,6 +23,15 @@
   <div class="container mt-5">
     <h1 class="mb-4">Available Vacancies</h1>
 
+    <div class="container mt-3">
+      <form method="get" action=".">
+          <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Search for vacancies..." name="q" value="{{ query }}">
+              <button class="btn btn-outline-secondary" type="submit">Search</button>
+          </div>
+      </form>
+    </div>
+
     <div class="row">
         {% for vacancy in vacancy_list %}
             <div class="col-md-4 mb-4">
