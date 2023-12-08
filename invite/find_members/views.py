@@ -120,7 +120,6 @@ class VacancyUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.ketua = self.request.user
         return super().form_valid(form)
 
-    
 class VacancyDeleteView(LoginRequiredMixin, DeleteView):
     model = LowonganRegu
     pk_url_kwarg = 'vacancy_id'
@@ -129,4 +128,7 @@ class VacancyDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "vacancy"
 
     def get_object(self, queryset=None) -> LowonganRegu:
-        return self.model.objects.get(ketua=self.request.user, uuid=self.kwargs["vacancy_id"])
+        try:
+            return self.model.objects.get(ketua=self.request.user, id=self.kwargs["vacancy_id"])
+        except LowonganRegu.DoesNotExist:
+            raise Http404("Vacancy does not exist or you don't have permission to delete it")
