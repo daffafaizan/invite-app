@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block meta %}
+<title>Update Profile</title>
+{% endblock meta %}
+
+{% block content %}
+<main class="relative md:h-[100dvh] flex flex-col items-center">
+    <!-- Page -->
+    <div class="w-full flex flex-col gap-y-4 md:gap-y-6 p-2 md:p-4">
+        <!-- Form Header -->
+        <div class="w-full py-4 px-2 md:p-4 bg-gray-200 bg-opacity-80 rounded-xl">
+            <h1 class="text-xl md:text-2xl font-semibold text-gray-600">Edit Profile</h1>
+        </div>
+
+        <!-- Update Profile Form -->
+        <div class="w-full p-2 md:p-4 bg-gray-200 bg-opacity-80 rounded-xl">
+            <form method="post" enctype="multipart/form-data" class="max-w-4xl mx-auto">
+                {% csrf_token %}
+                <!-- Display form errors -->
+                {% if profile_form.errors %}
+                    <div class="text-red-500">
+                        Please correct the errors below.
+                    </div>
+                {% endif %}
+
+                <div class="grid md:grid-cols-2 md:gap-6">
+                    <!-- Profile Form Fields -->
+                    <div>
+                        {% for field in profile_form %}
+                            <div class="mb-5">
+                                <label for="{{ field.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <p class="mt-2 text-sm text-gray-600">{{ field.help_text }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Social Links Form Fields -->
+                    <div>
+                        {% for field in social_form %}
+                            <div class="mb-5">
+                                <label for="{{ field.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <p class="mt-2 text-sm text-gray-600">{{ field.help_text }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Update Button -->
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Update Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}

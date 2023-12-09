@@ -51,7 +51,8 @@
                     href="{% url 'profile:show_my_applications' %}"">
                         Lamaranku
                 </a>
-                <a class="rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200">
+                <a class="rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200"
+                    href="{% url 'profile:update_profile' profile_id=user.id%}">
                     Edit Profile
                 </a>
             </div>
