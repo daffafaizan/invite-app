@@ -64,13 +64,13 @@
                         {% endif %}
                       </a>
 
-                        <form method="post" style="display: inline;" id="bookmarkForm" class="bookmark-form">
-                          {% csrf_token %}
-                          <input type="hidden" name="user_id" value="{{ request.user.id }}">
-                          <input type="hidden" name="lowongan_id" value="{{ vacancy.id }}">
-                          <button type="button" class="bookmark-button {% if vacancy in bookmarked_lowongans %}bookmarked{% endif %}">
-                              Bookmark
-                          </button>
+                      <form method="post" style="display: inline;" class="bookmark-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                        <input type="hidden" name="lowongan_id" value="{{ vacancy.id }}">
+                        <button type="button" class="bookmark-button {% if vacancy in bookmarked_lowongans %}bookmarked{% endif %}">
+                            Bookmark
+                        </button>
                       </form>
                       
                       
@@ -104,6 +104,13 @@
       });
   });
 </script>
+
+<style>
+  .bookmark-button.bookmarked {
+      color: #ff0000; /* Change to the color you prefer */
+      font-weight: bold; /* Optionally make it bold */
+  }
+</style>
 
 
 
