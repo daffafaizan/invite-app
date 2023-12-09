@@ -22,12 +22,17 @@
             </span>
             <a href="{% url 'profile:delete_application' lamaran.id %}" class="text-red-500 hover:text-red-700 ml-auto">Delete</a>
           </div>
-          <span class="text-emerald-900 font-semibold">
-            {{ lamaran.lowongan.nama_regu }}
+          <span class="text-xl text-emerald-900 font-semibold">
+            {{ lamaran.lowongan.nama_lomba }}
           </span>
-          <span class="text-emerald-900 font-light -mt-4">
-            {{ lamaran.created_at }}
-          </span>
+          <div class="flex flex-row">
+            <span class="text-emerald-900 font-semibold -mt-4">
+              {{ lamaran.lowongan.nama_regu }}
+            </span>
+            <span class="text-emerald-900 font-light ml-auto -mt-4">
+              {{ lamaran.created_at }}
+            </span>
+          </div>
         </div>
         {% endfor %}
     {% else %}
