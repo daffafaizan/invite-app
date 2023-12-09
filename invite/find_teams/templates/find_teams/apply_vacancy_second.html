@@ -3,6 +3,14 @@
 {% block title %}Apply{% endblock %}
 
 {% block content %}
+<div class="flex flex-row p-10">
+  <a href="{% url 'find_teams:apply_vacancy_first' lowongan_id %}" class="flex items-center justify-center px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white shadow-sm rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+    <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+    </svg>
+    <span class="hidden md:inline">Go back</span>
+  </a>
+</div>
 <div class="flex flex-grow flex-col justify-center items-center">
   <div class="flex flex-col justify-center items-center py-8 px-12 md:p-16 shadow-lg rounded-2xl bg-white">
     <span class="text-3xl text-emerald-900 mb-2 md:text-4xl md:mb-4">Application Form</span>
