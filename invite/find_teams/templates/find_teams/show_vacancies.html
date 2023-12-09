@@ -10,7 +10,7 @@
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
     crossorigin="anonymous" />
   <link rel="shortcut icon" href="#">
-  <title>My Vacancies</title>
+  <title>View Vacancies</title>
 </head>
 
 <body>
@@ -21,7 +21,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   
   <div class="container mt-5">
-    <h1 class="mb-4">My Vacancies</h1>
+    <h1 class="mb-4">Available Vacancies</h1>
 
     <div class="container mt-3">
       <form method="get" action=".">
@@ -54,7 +54,11 @@
                         <p class="card-text">Current members {{vacancy.jumlah_anggota_sekarang}}/{{vacancy.total_anggota_dibutuhkan}}</p>
                         <br>
                         {% if vacancy.ketua != current_user %}
-                            <a href="{% url 'find_teams:apply_vacancy_first' lowongan_id=vacancy.id %}" class="btn btn-dark" role="button">Apply</a>
+                            {% if vacancy.id in sent_application_ids %}
+                                <button class="btn btn-dark" disabled>Applied</button>
+                            {% else %}
+                                <a href="{% url 'find_teams:apply_vacancy_first' lowongan_id=vacancy.id %}" class="btn btn-dark" role="button">Apply</a>
+                            {% endif %}
                         {% else %}
                             <button class="btn btn-dark" disabled>Apply</button>
                         {% endif %}

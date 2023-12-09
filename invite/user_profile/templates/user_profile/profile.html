@@ -37,25 +37,6 @@
                     <p class="text-xs md:text-sm font-base text-gray-600">Registered on {{ data.user.created_at }} </p>
                 </div>
             </div>
-
-            <!-- Profile Menu -->
-            <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
-                <a 
-                    class="max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
-
-                    href="{% url 'profile:show_my_vacancies' %}"">
-                        Lowongan Terbuat
-                </a>
-                <a 
-                    class="max-w-[100px] md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
-
-                    href="{% url 'profile:show_my_applications' %}"">
-                        Lamaranku
-                </a>
-                <a class="rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200">
-                    Edit Profile
-                </a>
-            </div>
         </div>
 
         <!-- User Profile Section -->
