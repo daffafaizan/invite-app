@@ -132,16 +132,21 @@ def apply_vacancy_second(request, lowongan_id):
         form = LamaranForm(data=form_data)
 
         if form.is_valid():
-            lamaran = form.save(commit=False)
-            lamaran.pengirim = current_user
-            lamaran.penerima = vacancy.ketua
-            lamaran.lowongan = vacancy
-            lamaran.status = "Pending"
-            lamaran.save()
 
-            first_page_data = request.session.pop("first_page_data", None)
+            if Lamaran.objects.filter(pengirim=current_user, lowongan=vacancy):
+                return redirect("find_teams:show_vacancies")
 
-            return render(request, "application_success.html")
+            else:
+                lamaran = form.save(commit=False)
+                lamaran.pengirim = current_user
+                lamaran.penerima = vacancy.ketua
+                lamaran.lowongan = vacancy
+                lamaran.status = "Pending"
+                lamaran.save()
+
+                first_page_data = request.session.pop("first_page_data", None)
+
+                return render(request, "find_teams/application_success.html")
         
     else:
         form_data = {
@@ -186,8 +191,13 @@ def show_bookmarked(request):
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
     bookmarked_lowongans = current_user.bookmarked_lowongans.all()
 
+    # Get the list of sent applications for the current user
+    sent_applications = Lamaran.objects.filter(pengirim=current_user)
+    sent_application_ids = sent_applications.values_list('lowongan__id', flat=True)
+
     context = {
         'bookmarked_lowongans': bookmarked_lowongans,
+        'sent_application_ids': sent_application_ids
     }
 
     return render(request, "find_teams/bookmarked_lowongans.html", context)

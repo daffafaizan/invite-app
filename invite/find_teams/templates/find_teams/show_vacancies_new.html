@@ -83,29 +83,29 @@
                             >
                                 Apply
                             </a>
-                            <div class="ml-auto">
-                                <form method="post" style="display: inline;" class="bookmark-form">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="user_id" value="{{ request.user.id }}">
-                                    <input type="hidden" name="lowongan_id" value="{{ vacancy.id }}">
-                                    <button
-                                        class="align-middle select-none font-sans font-bold text-center uppercase transition-all text-xs py-3 px-6 rounded-lg bg-gray-900 shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none flex items-center gap-3 {% if vacancy.id in bookmarked_ids %}text-red-500 fill-current{% else %}text-white fill-none{% endif %} bookmark-button"
-                                        type="submit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" class="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z">
-                                            </path>
-                                        </svg>
-                                        {% if vacancy.id in bookmarked_ids %}
-                                        <span class="bookmark-text">Bookmarked</span>
-                                        {% else %}
-                                        <span class="bookmark-text">Add to Bookmark</span>
-                                        {% endif %}
-                                    </button>
-                                </form>
-                            </div>
                         {% endif %}
+                        <div class="ml-auto">
+                            <form method="post" style="display: inline;" class="bookmark-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                                <input type="hidden" name="lowongan_id" value="{{ vacancy.id }}">
+                                <button
+                                    class="align-middle select-none font-sans font-bold text-center uppercase transition-all text-xs py-3 px-6 rounded-lg bg-gray-900 shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none flex items-center gap-3 {% if vacancy.id in bookmarked_ids %}text-red-500 fill-current{% else %}text-white fill-none{% endif %} bookmark-button"
+                                    type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2"
+                                        stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z">
+                                        </path>
+                                    </svg>
+                                    {% if vacancy.id in bookmarked_ids %}
+                                    <span class="bookmark-text">Bookmarked</span>
+                                    {% else %}
+                                    <span class="bookmark-text">Add to Bookmark</span>
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
                     {% else %}
                         <button 
                             class="px-5 py-2 mr-auto text-white bg-gray-400 shadow-md rounded-lg text-center"

@@ -33,6 +33,21 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between">
+                            {% if lowongan.id in sent_application_ids %}
+                            <button 
+                            class="px-5 py-2 mr-auto text-white bg-gray-400 shadow-md rounded-lg text-center"
+                            disabled
+                            >
+                                Applied
+                            </button>
+                            {% else %}
+                            <a 
+                            href="{% url 'find_teams:apply_vacancy_first' lowongan_id=lowongan.id %}" 
+                            class="px-5 py-2 text-white bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
+                            >
+                                Apply
+                            </a>
+                            {% endif %}
                             <div class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1.5 rounded focus:outline-none focus:shadow-outline">
                                 <form method="post" style="display: inline;">
                                     {% csrf_token %}
