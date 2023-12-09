@@ -13,6 +13,8 @@ from find_members.models import LowonganRegu
 from authentication.models import RegisteredUser, ProfileDetails, TautanMediaSosial
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from user_profile.forms import ProfileUpdateForm, SocialLinksForm
+from django.urls import reverse
 
 logger = logging.getLogger("app_api")
 
@@ -34,12 +36,14 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
                 ProfileDetails, id=registered_user.profile_details.id
             )
 
+            ulasan = UlasanProfil.objects.filter(diulas=registered_user)
             context = {
                 "status": "Success fetching my profile",
                 "data": {
                     "user": registered_user,
                     "tms": tms,
                     "pd": pd,
+                    "ulasan": ulasan,
                 },
             }
 
@@ -298,3 +302,31 @@ def update_profile_review(request, profile_id, review_id):
 
     context = {"review": review, "profile_id": profile_id}
     return render(request, "user_profile/update_review.html", context)
+
+@login_required(login_url="/accounts/login/")
+def update_profile(request, profile_id):
+    user = get_object_or_404(RegisteredUser, id=profile_id)
+
+    # Ensure the logged-in user is updating their own profile
+    if request.user != user:
+        # Handle unauthorized access
+        return redirect("some_other_page")
+
+    if request.method == "POST":
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
+        social_form = SocialLinksForm(request.POST, instance=user.tautan_media_sosial)
+        if profile_form.is_valid() and social_form.is_valid():
+            profile_form.save()
+            social_form.save()
+            messages.success(request, "Profile updated successfully.")
+            # Redirect to the My Profile page
+            return redirect(reverse("profile:me"))
+    else:
+        profile_form = ProfileUpdateForm(instance=user)
+        social_form = SocialLinksForm(instance=user.tautan_media_sosial)
+
+    return render(
+        request,
+        "update_profile.html",
+        {"profile_form": profile_form, "social_form": social_form},
+    )

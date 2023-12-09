@@ -38,6 +38,7 @@ urlpatterns = [
         views.update_profile_review,
         name="update_profile_review",
     ),
+    path("<uuid:profile_id>/update", views.update_profile, name="update_profile"),
 ]
 
 if settings.DEBUG:
