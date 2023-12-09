@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="...styles...">
+    <form action="{% url 'profile:update_profile_review' profile_id=profile_id review_id=review.id %}" method="post">
+        {% csrf_token %}
+
+        <div class="flex flex-col p-1">
+            <label for="rating">Rating:</label>
+            <select class="border border-black rounded p-1 w-36" name="rating" id="rating" required>
+                <option value="" disabled>Memilih rating</option>
+                {% for i in "12345" %}
+                    <option value="{{ i }}" {% if review.rating == i %} selected {% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <!-- Deskripsi Kerja Setim Field -->
+        <div class="flex flex-col p-1">
+            <label for="deskripsi_kerja_setim">Deskripsi Kerja Setim:</label>
+            <textarea
+                class="border border-black rounded p-2"
+                name="deskripsi_kerja_setim"
+                id="deskripsi_kerja_setim"
+                rows="4"
+                required
+            >{{ review.deskripsi_kerja_setim }}</textarea>
+        </div>
+    
+        <!-- Ulasan Field -->
+        <div class="flex flex-col p-1">
+            <label for="ulasan">Ulasan:</label>
+            <textarea
+                class="border border-black rounded p-2"
+                name="ulasan"
+                id="ulasan"
+                rows="8"
+                required
+            >{{ review.ulasan }}</textarea>
+        </div>
+
+        <button
+            class="p-1 bg-emerald-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+            type="submit"
+        >
+            Submit
+        </button>
+    </form>
+</main>
+{% endblock content %}

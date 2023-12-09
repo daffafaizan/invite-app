@@ -32,6 +32,12 @@ urlpatterns = [
     ),
     # Error page
     path("error/<str:message>/", views.error_page, name="error_page"),
+    # Update Review
+    path(
+        "<uuid:profile_id>/review/<uuid:review_id>/update",
+        views.update_profile_review,
+        name="update_profile_review",
+    ),
     path("<uuid:profile_id>/update", views.update_profile, name="update_profile"),
 ]
 

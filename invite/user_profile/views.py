@@ -272,6 +272,38 @@ def error_page(request, message):
 
 
 @login_required(login_url="/accounts/login/")
+def update_profile_review(request, profile_id, review_id):
+    review = UlasanProfil.objects.get(id=review_id)
+    diulas = RegisteredUser.objects.get(id=profile_id)
+    pengulas = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+
+    if diulas == pengulas:
+        logger.info("Can't review for your own profile")
+        messages.error(request, "Can't review for your own profile")
+        return redirect("profile:profile", user_id=profile_id)
+
+    if review.pengulas != pengulas:
+        logger.info("You can't update other people reviews")
+        messages.error(request, "You can't update other people reviews")
+        return redirect("profile:profile", user_id=profile_id)
+
+    if request.method == "POST":
+        rating = request.POST.get("rating")
+        deskripsi_kerja_setim = request.POST.get("deskripsi_kerja_setim")
+        ulasan = request.POST.get("ulasan")
+
+        # Update the review object
+        review.rating = rating
+        review.deskripsi_kerja_setim = deskripsi_kerja_setim
+        review.ulasan = ulasan
+        review.save()
+
+        return redirect("profile:profile", user_id=profile_id)
+
+    context = {"review": review, "profile_id": profile_id}
+    return render(request, "user_profile/update_review.html", context)
+
+@login_required(login_url="/accounts/login/")
 def update_profile(request, profile_id):
     user = get_object_or_404(RegisteredUser, id=profile_id)
 
