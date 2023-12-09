@@ -40,25 +40,25 @@
             <!-- Profile Menu -->
             <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
                 <a 
-                class="flex items-center justify-center text-xs h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+                class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                 href="{% url 'find_teams:show_bookmarked' %}"">
                     Bookmarks
                 </a>
         
                 <a 
-                    class="flex items-center justify-center text-xs h-[45px] max-w-[240px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+                    class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[240px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_vacancies' %}"">
                         Lowongan Terbuat
                 </a>
                 <a 
-                    class="flex items-center justify-center text-xs h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+                    class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_applications' %}"">
                         Lamaranku
                 </a>
-                <a class="flex items-center justify-center text-xs h-[45px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200"
+                <a class="flex items-center justify-center text-xs sm:text-sm h-[45px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200"
                     href="{% url 'profile:update_profile' profile_id=user.id%}">
                     Edit Profile
                 </a>
