@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block meta %}
+<title>List of Vacancies</title>
+
+{% endblock meta %}
+
+{% block content %}
+<main class="w-full p-2 md:p-4 flex flex-col items-center justify-start gap-y-4 md:gap-y-6"">
+    <form method="GET" action=".">
+        <div class="w-full flex flex-row">
+            <input 
+                class="min-w-[260px] md:min-w-[600px] shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                id="search" type="text" placeholder="Search"
+                value="{{ query }}" name="q"
+            >
+            <button class="px-1 py-1 bg-gray-200 border border-black rounded-r-lg">
+                Search
+            </button>
+        </div>
+
+        <!-- Sort n filter -->
+        <div class="py-1 md:py-2"></div>
+        <div class="flex flex-row gap-x-2 md:gap-x-4">
+            <button 
+                type="submit"
+                name="sort"
+                value="newest"
+                class="px-2 py-1 bg-gray-200 border border-black rounded hover:bg-gray-300 duration-200"
+            >
+                Newest
+            </button>
+
+            <button 
+                type="submit"
+                name="sort"
+                value="oldest"
+                class="px-2 py-1 bg-gray-200 border border-black rounded hover:bg-gray-300 duration-200"
+            >
+                Oldest
+            </button>
+        </div>
+    </form>
+
+    <!-- Vacancy content -->
+    <div class="w-full flex flex-col gap-y-2 md:grid md:grid-cols-3 md:gap-4">
+        {% for vacancy in vacancy_list %}
+            <div 
+                class="border border-2 p-2 md:p-4 shadow min-h-max flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer"
+            >
+            <a href="{% url 'find_members:vacancy_detail' vacancy_id=vacancy.id %}">
+                <div class="flex flex-row gap-x-2">
+                    
+                    <img 
+                        src="{% static vacancy.foto_lowongan_regu %}" 
+                        class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg"
+                    >
+                    <div class="flex flex-col gap-y-1">
+                        <h1 class="text-lg font-semibold">{{ vacancy.nama_lomba }}</h1>
+                        <p class="text-sm">Posted by <strong>{{ vacancy.ketua }}</strong> from team <strong>{{ vacancy.nama_regu }}</strong></p>
+                        <p class="text-sm">Field: {{ vacancy.bidang_lomba }}</p>
+                        <p class="text-sm">Recruiting until {{ vacancy.expiry }}</p>
+                        <p class="text-sm">Current members {{ vacancy.jumlah_anggota_sekarang }}/{{ vacancy.total_anggota_dibutuhkan }}</p>
+                    </div>
+                </a>
+                </div>
+            
+                <div class="flex flex-row justify-center gap-x-2">
+                    {% if vacancy.ketua != current_user %}
+                        <a 
+                            href="{% url 'find_teams:apply_vacancy_first' lowongan_id=vacancy.id %}" 
+                            class="px-2 py-1 text-white bg-emerald-600 border rounded-lg min-w-[80px] md:min-w-[120px] text-center"
+                        >
+                            Apply
+                        </a>
+                    {% else %}
+                        <button 
+                            class="px-2 py-1 text-white bg-emerald-600 borderrounded-lg min-w-[80px] md:min-w-[120px] text-center"
+                            disabled
+                        >
+                            Apply
+                        </button>
+                    {% endif %}
+                    
+                    <div>
+                        <form method="post" style="display: inline;" class="bookmark-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                            <input type="hidden" name="lowongan_id" value="{{ vacancy.id }}">
+                            <button
+                                class="align-middle select-none font-sans font-bold text-center uppercase transition-all text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none flex items-center gap-3 bookmark-button {% if vacancy.id|stringformat:"s" in bookmarked_ids %}text-red-500 font-bold{% endif %}"
+                                type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z">
+                                    </path>
+                                </svg>
+                                Add to Bookmark
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+
+        
+    </div>
+
+</main>
+
+
+
+
+<script>
+    $(document).ready(function() {
+        $('.bookmark-form').on('submit', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(data) {
+                    // Toggle the class on success
+                    form.find('.bookmark-button').toggleClass('text-red-500 font-bold');
+                    console.log('Bookmarking success!');
+                },
+                error: function(error) {
+                    // Handle the error if needed
+                    console.error('Bookmarking error:', error);
+                }
+            });
+        });
+    });
+  </script>
+  
+
+
+{% endblock content %}

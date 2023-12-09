@@ -30,7 +30,11 @@ def show_vacancies(request):
 
     # Get the list of bookmarked lowongans for the current user
     bookmarked_lowongans = current_user.bookmarked_lowongans.all()
-
+    print(bookmarked_lowongans.values_list('id'))
+    # bookmarked_ids = bookmarked_lowongans.values_list('lowongan__id', flat=True)
+    bookmarked_ids = [str(lowongan.id) for lowongan in bookmarked_lowongans]
+    print("kosongkah", bookmarked_ids)
+    
     vacancy_list = LowonganRegu.objects.all()
 
     if query:
@@ -56,14 +60,14 @@ def show_vacancies(request):
         'sort_order': sort_order,
         'sent_application_ids': sent_application_ids,
         'bookmarked_lowongans': bookmarked_lowongans,
+        'bookmarked_ids': bookmarked_ids,
     }
 
-    return render(request, "show_vacancies.html", context)
-
+    return render(request, "find_teams/show_vacancies_new.html", context)
 
 def show_vacancy_details(request, lowongan_id):
     # TODO
-    return render(request, "vacancy.html")
+    return render(request, "find_teams/vacancy.html")
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request, lowongan_id):
@@ -98,7 +102,7 @@ def apply_vacancy_first(request, lowongan_id):
         "vacancy": LowonganRegu.objects.get(id=lowongan_id)
     }
 
-    return render(request, "apply_vacancy_first.html", context)
+    return render(request, "find_teams/apply_vacancy_first.html", context)
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_second(request, lowongan_id):
@@ -157,7 +161,7 @@ def apply_vacancy_second(request, lowongan_id):
         "lowongan_id": lowongan_id
     }
 
-    return render(request, "apply_vacancy_second.html", context)
+    return render(request, "find_teams/apply_vacancy_second.html", context)
     
 @login_required(login_url='/accounts/login/')
 def bookmark_lowongan(request, lowongan_id):
@@ -190,4 +194,4 @@ def show_bookmarked(request):
         'bookmarked_lowongans': bookmarked_lowongans,
     }
 
-    return render(request, "bookmarked_lowongans.html", context)
+    return render(request, "find_teams/bookmarked_lowongans.html", context)
