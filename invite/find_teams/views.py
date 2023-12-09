@@ -8,6 +8,7 @@ from django.db.models import Q
 from authentication.models import RegisteredUser
 from find_teams.forms import LamaranForm
 from find_members.models import LowonganRegu, TautanMediaSosialLowongan
+from find_teams.models import Lamaran
 
 logger = logging.getLogger("app_api")
 
@@ -32,15 +33,19 @@ def show_vacancies(request):
         vacancy_list = vacancy_list.order_by("-created_at")
 
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    sent_applications = Lamaran.objects.filter(pengirim=current_user)
+    sent_application_ids = sent_applications.values_list('lowongan__id', flat=True)
 
     context = {
-        "vacancy_list": vacancy_list,
-        "current_user": current_user,
-        "query": query,
-        "sort_order": sort_order,
+        'vacancy_list': vacancy_list,
+        'current_user': current_user,
+        'query': query,
+        'sort_order': sort_order,
+        'sent_application_ids': sent_application_ids
     }
 
-    return render(request, "show_vacancies.html", context)
+    # NOTE new html
+    return render(request, "find_teams/show_vacancies_new.html", context)
 
 
 @login_required(login_url="/accounts/login/")
@@ -62,7 +67,6 @@ def show_vacancy_details(request, lowongan_id):
         return render(request, "show_vacancy_details.html", context)
 
     return render(request, "show_vacancy_details.html", context)
-
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request, lowongan_id):
@@ -91,7 +95,7 @@ def apply_vacancy_first(request, lowongan_id):
 
     context = {"form": initial, "vacancy": LowonganRegu.objects.get(id=lowongan_id)}
 
-    return render(request, "apply_vacancy_first.html", context)
+    return render(request, "find_teams/apply_vacancy_first.html", context)
 
 
 @login_required(login_url=settings.LOGIN_URL)
@@ -124,7 +128,6 @@ def apply_vacancy_second(request, lowongan_id):
         }
 
         form = LamaranForm(data=form_data)
-        print(form_data)
 
         if form.is_valid():
             lamaran = form.save(commit=False)
@@ -133,6 +136,8 @@ def apply_vacancy_second(request, lowongan_id):
             lamaran.lowongan = vacancy
             lamaran.status = "Pending"
             lamaran.save()
+
+            first_page_data = request.session.pop("first_page_data", None)
 
             return render(request, "application_success.html")
 
@@ -147,6 +152,7 @@ def apply_vacancy_second(request, lowongan_id):
     context = {
         "form": form,
         "user_data": user_data,  # Pass the user data to the template
+        "lowongan_id": lowongan_id
     }
 
-    return render(request, "apply_vacancy_second.html", context)
+    return render(request, "find_teams/apply_vacancy_second.html", context)
