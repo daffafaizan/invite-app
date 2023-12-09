@@ -24,25 +24,34 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
     def get(self, request):
         # If showing my profile, auto-retrieve my user id from cookies
         try:
-            registered_user = get_object_or_404(RegisteredUser, id=request.COOKIES.get("user_id"))
-            tms = get_object_or_404(TautanMediaSosial, id=registered_user.tautan_media_sosial.id)
-            pd = get_object_or_404(ProfileDetails, id=registered_user.profile_details.id)
+            registered_user = get_object_or_404(
+                RegisteredUser, id=request.COOKIES.get("user_id")
+            )
+            tms = get_object_or_404(
+                TautanMediaSosial, id=registered_user.tautan_media_sosial.id
+            )
+            pd = get_object_or_404(
+                ProfileDetails, id=registered_user.profile_details.id
+            )
 
+            ulasan = UlasanProfil.objects.filter(diulas=registered_user)
             context = {
                 "status": "Success fetching my profile",
                 "data": {
                     "user": registered_user,
                     "tms": tms,
                     "pd": pd,
+                    "ulasan": ulasan,
                 },
             }
 
             messages.success(request, "Success fetching user profile.")
             logger.info(f"Showing {registered_user.get_username()}'s profile")
-            
+
             return render(request, self.template_name, context, status=200)
         except Http404 as error:
             logger.error("ProfileDetailError: Object not found: %s" % str(error))
+
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
@@ -54,8 +63,12 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         try:
             registered_user = get_object_or_404(RegisteredUser, id=user_id)
-            tms = get_object_or_404(TautanMediaSosial, id=registered_user.tautan_media_sosial.id)
-            pd = get_object_or_404(ProfileDetails, id=registered_user.profile_details.id)
+            tms = get_object_or_404(
+                TautanMediaSosial, id=registered_user.tautan_media_sosial.id
+            )
+            pd = get_object_or_404(
+                ProfileDetails, id=registered_user.profile_details.id
+            )
 
             filtered_user = {
                 "id": registered_user.id,
@@ -68,7 +81,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
                 "tautan_portfolio": registered_user.tautan_portfolio,
                 "foto_profil": registered_user.foto_profil,
             }
-            
+
             ulasan = UlasanProfil.objects.filter(diulas=registered_user)
             context = {
                 "status": "Success fetching user profile",
@@ -125,7 +138,7 @@ def review_profile(request, profile_id):
         logger.info("Can't review for your own profile")
         messages.error(request, "Can't review for your own profile")
         return redirect("profile:profile", user_id=profile_id)
-    
+
     if request.method == "POST":
         diulas = RegisteredUser.objects.get(id=profile_id)
         rating = request.POST.get("rating")
@@ -182,32 +195,35 @@ def delete_application(request, application_id):
 
     return render(request, "user_profile/delete_confirmation.html", context)
 
+
 @login_required(login_url="/accounts/login/")
 def show_my_vacancies(request):
-    query = request.GET.get('q', '')  
-    sort_order = request.GET.get('sort', 'newest') 
-    
-    vacancy_list = LowonganRegu.objects.filter(ketua=request.user).order_by('-created_at')
+    query = request.GET.get("q", "")
+    sort_order = request.GET.get("sort", "newest")
+
+    vacancy_list = LowonganRegu.objects.filter(ketua=request.user).order_by(
+        "-created_at"
+    )
 
     if query:
         vacancy_list = vacancy_list.filter(
-            Q(nama_regu__icontains=query) | 
-            Q(nama_lomba__icontains=query) | 
-            Q(bidang_lomba__icontains=query)
+            Q(nama_regu__icontains=query)
+            | Q(nama_lomba__icontains=query)
+            | Q(bidang_lomba__icontains=query)
         )
 
-    if sort_order == 'oldest':
-        vacancy_list = vacancy_list.order_by('created_at')
+    if sort_order == "oldest":
+        vacancy_list = vacancy_list.order_by("created_at")
     else:  # Default to newest
-        vacancy_list = vacancy_list.order_by('-created_at')
+        vacancy_list = vacancy_list.order_by("-created_at")
 
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
     context = {
-        'vacancy_list': vacancy_list,
-        'current_user': current_user,
-        'query': query,
-        'sort_order': sort_order
+        "vacancy_list": vacancy_list,
+        "current_user": current_user,
+        "query": query,
+        "sort_order": sort_order,
     }
 
     return render(request, "show_my_vacancies.html", context)
