@@ -75,7 +75,6 @@ def create_vacancy(request):
             lowongan.save()
 
             # if succesful, redirect to melihat daftar lowongan
-            messages.success(request, 'Form submitted successfully!')
             return redirect('find_teams:show_vacancies')
         
     context = {
