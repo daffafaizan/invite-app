@@ -38,7 +38,7 @@ def show_vacancies(request):
     if sort_order == "oldest":
         vacancy_list = vacancy_list.order_by("created_at")
     else:  # Default to newest
-        vacancy_list = vacancy_list.order_by("-created_at")
+        vacancy_list = vacancy_list.order_by('-created_at')
 
     # Get the list of bookmarked lowongans for the current user
     bookmarked_lowongans = current_user.bookmarked_lowongans.all()

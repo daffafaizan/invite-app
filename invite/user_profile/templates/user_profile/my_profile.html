@@ -40,6 +40,13 @@
             <!-- Profile Menu -->
             <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
                 <a 
+                class="max-w-[100px] md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                href="{% url 'find_teams:show_bookmarked' %}"">
+                    Bookmarks
+                </a>
+        
+                <a 
                     class="max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_vacancies' %}"">
@@ -158,31 +165,6 @@
             <div class="py-4"></div>
         </div>
 
-        <!-- Ulasan Section -->
-        <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
-            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
-            <!-- Label -->
-                <div class="font-semibold text-lg md:text-xl">
-                    Upvote
-                </div>
-
-                <div>
-                    {{ data.pd.jumlah_upvote }} 
-                    <i class="fa-solid fa-arrow-up"></i>
-                </div>
-            </div>
-            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
-            <!-- Label -->
-                <div class="font-semibold text-lg md:text-xl">
-                    Downvote
-                </div>
-                
-                <div>
-                    {{ data.pd.jumlah_downvote }}
-                    <i class="fa-solid fa-arrow-down"></i>
-                </div>
-            </div>
-        </div>
 
         <!-- TODO ulasan untuk saya  -->
         <div class="flex flex-col justify-center items-center py-4 px-8 md:p-6 shadow-lg rounded-2xl bg-gray-200 bg-opacity-80">
