@@ -15,7 +15,7 @@
             <div class="w-full gap-y-2 md:grid md:grid-cols-3 md:gap-4">
                 {% for lowongan in bookmarked_lowongans %}
                 <div>
-                    <div class="rounded-2xl p-2 md:p-4 shadow-md min-h-max flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer">
+                    <div class="rounded-2xl bg-white p-2 md:p-4 shadow-md min-h-max flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer">
                         <div>
                             <img 
                                 src="{% static lowongan.foto_lowongan_regu %}" 
@@ -35,7 +35,7 @@
                         <div class="flex items-center justify-between">
                             {% if lowongan.id in sent_application_ids %}
                             <button 
-                            class="px-5 py-2 mr-auto text-white bg-gray-400 shadow-md rounded-lg text-center"
+                            class="px-5 py-2 mr-auto text-white font-bold bg-gray-400 shadow-md rounded-lg text-center"
                             disabled
                             >
                                 Applied
@@ -43,12 +43,12 @@
                             {% else %}
                             <a 
                             href="{% url 'find_teams:apply_vacancy_first' lowongan_id=lowongan.id %}" 
-                            class="px-5 py-2 text-white bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
+                            class="px-5 py-2 text-white font-bold bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
                             >
                                 Apply
                             </a>
                             {% endif %}
-                            <div class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1.5 rounded focus:outline-none focus:shadow-outline">
+                            <div class="bg-red-500 hover:bg-red-600 text-white font-bold px-5 py-2 rounded-lg focus:outline-none focus:shadow-outline">
                                 <form method="post" style="display: inline;">
                                     {% csrf_token %}
                                     <input type="hidden" name="lowongan_id" value="{{ lowongan.id }}">

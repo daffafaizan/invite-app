@@ -13,6 +13,8 @@ from find_members.models import LowonganRegu
 from authentication.models import RegisteredUser, ProfileDetails, TautanMediaSosial
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from user_profile.forms import ProfileUpdateForm, SocialLinksForm
+from django.urls import reverse
 
 logger = logging.getLogger("app_api")
 
@@ -24,25 +26,34 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
     def get(self, request):
         # If showing my profile, auto-retrieve my user id from cookies
         try:
-            registered_user = get_object_or_404(RegisteredUser, id=request.COOKIES.get("user_id"))
-            tms = get_object_or_404(TautanMediaSosial, id=registered_user.tautan_media_sosial.id)
-            pd = get_object_or_404(ProfileDetails, id=registered_user.profile_details.id)
+            registered_user = get_object_or_404(
+                RegisteredUser, id=request.COOKIES.get("user_id")
+            )
+            tms = get_object_or_404(
+                TautanMediaSosial, id=registered_user.tautan_media_sosial.id
+            )
+            pd = get_object_or_404(
+                ProfileDetails, id=registered_user.profile_details.id
+            )
 
+            ulasan = UlasanProfil.objects.filter(diulas=registered_user)
             context = {
                 "status": "Success fetching my profile",
                 "data": {
                     "user": registered_user,
                     "tms": tms,
                     "pd": pd,
+                    "ulasan": ulasan,
                 },
             }
 
             messages.success(request, "Success fetching user profile.")
             logger.info(f"Showing {registered_user.get_username()}'s profile")
-            
+
             return render(request, self.template_name, context, status=200)
         except Http404 as error:
             logger.error("ProfileDetailError: Object not found: %s" % str(error))
+
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = RegisteredUser
@@ -54,8 +65,12 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         try:
             registered_user = get_object_or_404(RegisteredUser, id=user_id)
-            tms = get_object_or_404(TautanMediaSosial, id=registered_user.tautan_media_sosial.id)
-            pd = get_object_or_404(ProfileDetails, id=registered_user.profile_details.id)
+            tms = get_object_or_404(
+                TautanMediaSosial, id=registered_user.tautan_media_sosial.id
+            )
+            pd = get_object_or_404(
+                ProfileDetails, id=registered_user.profile_details.id
+            )
 
             filtered_user = {
                 "id": registered_user.id,
@@ -69,7 +84,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
                 "created_at": registered_user.created_at,
                 "foto_profil": registered_user.foto_profil,
             }
-            
+
             ulasan = UlasanProfil.objects.filter(diulas=registered_user)
             context = {
                 "status": "Success fetching user profile",
@@ -127,7 +142,7 @@ def review_profile(request, profile_id):
         logger.info("Can't review for your own profile")
         messages.error(request, "Can't review for your own profile")
         return redirect("profile:profile", user_id=profile_id)
-    
+
     if request.method == "POST":
         diulas = RegisteredUser.objects.get(id=profile_id)
         rating = request.POST.get("rating")
@@ -184,36 +199,35 @@ def delete_application(request, application_id):
 
     return render(request, "user_profile/delete_confirmation.html", context)
 
+
 @login_required(login_url="/accounts/login/")
 def show_my_vacancies(request):
-    query = request.GET.get('q', '')  
-    sort_order = request.GET.get('sort', 'newest') 
-    
-    vacancy_list = LowonganRegu.objects.filter(ketua=request.user).order_by('-created_at')
-    for vacancy in vacancy_list:
-        
-        applicants = Lamaran.objects.filter()
-        print(applicants)
+    query = request.GET.get("q", "")
+    sort_order = request.GET.get("sort", "newest")
+
+    vacancy_list = LowonganRegu.objects.filter(ketua=request.user).order_by(
+        "-created_at"
+    )
 
     if query:
         vacancy_list = vacancy_list.filter(
-            Q(nama_regu__icontains=query) | 
-            Q(nama_lomba__icontains=query) | 
-            Q(bidang_lomba__icontains=query)
+            Q(nama_regu__icontains=query)
+            | Q(nama_lomba__icontains=query)
+            | Q(bidang_lomba__icontains=query)
         )
 
-    if sort_order == 'oldest':
-        vacancy_list = vacancy_list.order_by('created_at')
+    if sort_order == "oldest":
+        vacancy_list = vacancy_list.order_by("created_at")
     else:  # Default to newest
-        vacancy_list = vacancy_list.order_by('-created_at')
+        vacancy_list = vacancy_list.order_by("-created_at")
 
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
     context = {
-        'vacancy_list': vacancy_list,
-        'current_user': current_user,
-        'query': query,
-        'sort_order': sort_order
+        "vacancy_list": vacancy_list,
+        "current_user": current_user,
+        "query": query,
+        "sort_order": sort_order,
     }
 
     return render(request, "user_profile/show_my_vacancies.html", context)
@@ -255,3 +269,32 @@ def delete_profile_review(request, profile_id, review_id):
 
 def error_page(request, message):
     return render(request, "error.html", {"message": message})
+
+
+@login_required(login_url="/accounts/login/")
+def update_profile(request, profile_id):
+    user = get_object_or_404(RegisteredUser, id=profile_id)
+
+    # Ensure the logged-in user is updating their own profile
+    if request.user != user:
+        # Handle unauthorized access
+        return redirect("some_other_page")
+
+    if request.method == "POST":
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
+        social_form = SocialLinksForm(request.POST, instance=user.tautan_media_sosial)
+        if profile_form.is_valid() and social_form.is_valid():
+            profile_form.save()
+            social_form.save()
+            messages.success(request, "Profile updated successfully.")
+            # Redirect to the My Profile page
+            return redirect(reverse("profile:me"))
+    else:
+        profile_form = ProfileUpdateForm(instance=user)
+        social_form = SocialLinksForm(instance=user.tautan_media_sosial)
+
+    return render(
+        request,
+        "update_profile.html",
+        {"profile_form": profile_form, "social_form": social_form},
+    )

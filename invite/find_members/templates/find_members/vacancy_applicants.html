@@ -19,7 +19,6 @@
             </a>
            
 
-            <div class="flex flex-col justify-center items-center py-4 px-8 md:p-6 shadow-lg rounded-2xl bg-gray-200 bg-opacity-80">
                 <div class="w-full py-4 text-emerald-900">
                  
             
@@ -27,8 +26,17 @@
                         <div>
                             {% for applicant in applicants %}
                                 <div class="mb-4 w-full mx-auto overflow-hidden max-w-2xl">
-                                    <div class="shadow-md bg-white hover:bg-emerald-50 rounded-2xl p-10 pl-3">
+                                    <div class="shadow-md bg-white rounded-2xl p-10 pl-3">
                                         <div>
+                                            <span 
+                                                class="py-1 px-3 mr-auto rounded-2xl tracking-wide font-light text-white
+                                                {% if applicant.status == 'Denied' %}bg-[#EB6060]
+                                                {% elif applicant.status == 'Pending' %}bg-[#F7E463]
+                                                {% elif applicant.status == 'Accepted' %}bg-[#7CD992]
+                                                {% endif %}">
+                                                {{ applicant.status }}
+                                            </span>
+                                            <div class="mt-4"></div>
                                             <div> <b>Nama Pendaftar:</b> {{ applicant.nama }}</div>
                                             <div> <b>Universitas Pendaftar:</b> {{ applicant.universitas }} </div>
                                             <div> <b>Jurusan Pendaftar: </b>{{ applicant.jurusan }} </div>
@@ -42,16 +50,15 @@
                                             {% if applicant.status != 'Accepted' and applicant.status != 'Denied' %}
                         
                                                 <div class="flex mt-4">
-                                                    <a href="{% url 'find_members:terima_tolak_lamaran' vacancy_id=applicant.id status='Accepted' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-4">
+                                                    <a href="{% url 'find_members:terima_tolak_lamaran' lamaran_id=applicant.id status='Accepted' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-4">
                                                         Terima
                                                     </a>
-                                                    <a href="{% url 'find_members:terima_tolak_lamaran' vacancy_id=applicant.id status='Denied' %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                                    <a href="{% url 'find_members:terima_tolak_lamaran' lamaran_id=applicant.id status='Denied' %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                                                         Tolak
                                                     </a>
                                                 </div>
-                                                {% else %}
-
-                                                <p class="text-gray-500 mt-4">Status: {{ applicant.status }}</p>
+                                               
+                                         
                                             {% endif %}
 
 
@@ -60,18 +67,17 @@
                                 </div>
                             {% endfor %}
                         </div>
-                    {% else %}
-                        <p class="text-center text-xl text-gray-500">No one has applied yet.</p>
-                    {% endif %}
-
-
-
+                        
+                        
+                        
+                    </div>
                 </div>
-            </div>
-
+                
+                {% else %}
+                    <p class="text-center text-xl text-gray-500">No one has applied yet.</p>
+                {% endif %}
             
 
-        </div>
     </div>
 </main>
 

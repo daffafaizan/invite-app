@@ -158,17 +158,19 @@ def vacancy_applicants(request, vacancy_id):
 
     return render(request, "find_members/vacancy_applicants.html", context)
 
-def terima_tolak_lamaran(request, vacancy_id, status):
-    lowongan = LowonganRegu.objects.get(id=vacancy_id)
-    lamaran = Lamaran.objects.get(lowongan=lowongan)
+def terima_tolak_lamaran(request, lamaran_id, status):
+    lamaran = Lamaran.objects.get(id=lamaran_id)
+    lowongan = lamaran.lowongan
 
     # Pastikan bahwa yang mengakses tampilan ini adalah pemilik lowongan
     if request.user == lamaran.lowongan.ketua:
         
         # if not lamaran.is_active():
         #     lamaran.status = 'Expired'
-        
+        if status == 'Accepted':
+            lowongan.jumlah_anggota_sekarang += 1
+            lowongan.save()
         lamaran.status = status
         lamaran.save()
 
-    return redirect('find_members:vacancy_applicants', lamaran_id=lamaran.id) 
+    return redirect('find_members:vacancy_applicants', vacancy_id=lowongan.id) 
