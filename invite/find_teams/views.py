@@ -159,7 +159,8 @@ def apply_vacancy_second(request, lowongan_id):
     context = {
         "form": form,
         "user_data": user_data,  # Pass the user data to the template
-        "lowongan_id": lowongan_id
+        "lowongan_id": lowongan_id,
+        "vacancy": vacancy,
     }
 
     return render(request, "find_teams/apply_vacancy_second.html", context)
