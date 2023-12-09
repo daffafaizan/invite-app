@@ -167,4 +167,15 @@ def bookmark_lowongan(request, lowongan_id):
         current_user.bookmarked_lowongans.add(lowongan)
         
     current_user.save()
-    # return redirect("find_teams:show_vacancies")
+    # return redirect("find_teams:show_vacancies")\
+
+@login_required(login_url='/accounts/login/')
+def show_bookmarked(request):
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    bookmarked_lowongans = current_user.bookmarked_lowongans.all()
+
+    context = {
+        'bookmarked_lowongans': bookmarked_lowongans,
+    }
+
+    return render(request, "bookmarked_lowongans.html", context)

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Bookmarked Lowongan{% endblock %}
+
+{% block content %}
+<div class="flex flex-grow flex-col justify-center items-center">
+    <h2>Bookmarked Lowongans</h2>
+    
+    {% if bookmarked_lowongans %}
+      <ul>
+        {% for lowongan in bookmarked_lowongans %}
+          <li>
+            <a href="{% url 'find_members:vacancy_detail' vacancy_id=lowongan.id %}">{{ lowongan.nama_regu }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No bookmarked lowongans.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
