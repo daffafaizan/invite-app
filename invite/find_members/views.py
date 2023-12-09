@@ -10,7 +10,8 @@ from django.contrib import messages
 from django.views.generic import DetailView, ListView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
-
+from find_teams.models import Lamaran
+from authentication.models import RegisteredUser
 from .forms import LowonganForm
 from .models import LowonganRegu, TautanMediaSosialLowongan
 
@@ -131,3 +132,43 @@ class VacancyDeleteView(LoginRequiredMixin, DeleteView):
             return self.model.objects.get(ketua=self.request.user, id=self.kwargs["vacancy_id"])
         except LowonganRegu.DoesNotExist:
             raise Http404("Vacancy does not exist or you don't have permission to delete it")
+    
+    
+def vacancy_applicants(request, vacancy_id):
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+
+    try:
+        lowongan = LowonganRegu.objects.get(id=vacancy_id)
+        
+        # kalo coba access lowongan orang lain dari url, bakal ke redirect ke home aja
+        if lowongan.ketua != current_user:
+            messages.error(request, "Can't access")
+            return redirect("core:home")
+            
+    except LowonganRegu.DoesNotExist:
+        return HttpResponseNotFound("LowonganRegu not found")
+    
+    applicants = Lamaran.objects.filter(lowongan=lowongan)
+    print(len(applicants))
+
+    context = {
+        'lowongan' : lowongan,
+        'applicants': applicants,
+    }
+
+    return render(request, "find_members/vacancy_applicants.html", context)
+
+def terima_tolak_lamaran(request, vacancy_id, status):
+    lowongan = LowonganRegu.objects.get(id=vacancy_id)
+    lamaran = Lamaran.objects.get(lowongan=lowongan)
+
+    # Pastikan bahwa yang mengakses tampilan ini adalah pemilik lowongan
+    if request.user == lamaran.lowongan.ketua:
+        
+        # if not lamaran.is_active():
+        #     lamaran.status = 'Expired'
+        
+        lamaran.status = status
+        lamaran.save()
+
+    return redirect('find_members:vacancy_applicants', lamaran_id=lamaran.id) 

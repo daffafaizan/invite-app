@@ -190,6 +190,10 @@ def show_my_vacancies(request):
     sort_order = request.GET.get('sort', 'newest') 
     
     vacancy_list = LowonganRegu.objects.filter(ketua=request.user).order_by('-created_at')
+    for vacancy in vacancy_list:
+        
+        applicants = Lamaran.objects.filter()
+        print(applicants)
 
     if query:
         vacancy_list = vacancy_list.filter(
