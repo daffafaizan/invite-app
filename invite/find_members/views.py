@@ -165,6 +165,10 @@ def terima_tolak_lamaran(request, vacancy_id, status):
 
     # Pastikan bahwa yang mengakses tampilan ini adalah pemilik lowongan
     if request.user == lamaran.lowongan.ketua:
+        
+        # if not lamaran.is_active():
+        #     lamaran.status = 'Expired'
+        
         lamaran.status = status
         lamaran.save()
 
