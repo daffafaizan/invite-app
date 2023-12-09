@@ -16,6 +16,7 @@ logger = logging.getLogger("app_api")
 
 @login_required(login_url='/accounts/login/')
 def show_vacancies(request):
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
     query = request.GET.get('q', '')  
     sort_order = request.GET.get('sort', 'newest') 
 
@@ -23,17 +24,8 @@ def show_vacancies(request):
         lowongan_id = request.POST.get('lowongan_id')
         bookmark_lowongan(request, lowongan_id)
 
-    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
-
     # Save the user changes before querying bookmarked_lowongans
     current_user.save()
-
-    # Get the list of bookmarked lowongans for the current user
-    bookmarked_lowongans = current_user.bookmarked_lowongans.all()
-    print(bookmarked_lowongans.values_list('id'))
-    # bookmarked_ids = bookmarked_lowongans.values_list('lowongan__id', flat=True)
-    bookmarked_ids = [str(lowongan.id) for lowongan in bookmarked_lowongans]
-    print("kosongkah", bookmarked_ids)
     
     vacancy_list = LowonganRegu.objects.all()
 
@@ -49,7 +41,11 @@ def show_vacancies(request):
     else:  # Default to newest
         vacancy_list = vacancy_list.order_by('-created_at')
 
-    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    # Get the list of bookmarked lowongans for the current user
+    bookmarked_lowongans = current_user.bookmarked_lowongans.all()
+    bookmarked_ids = bookmarked_lowongans.values_list('id', flat=True)
+
+    # Get the list of sent applications for the current user
     sent_applications = Lamaran.objects.filter(pengirim=current_user)
     sent_application_ids = sent_applications.values_list('lowongan__id', flat=True)
 
