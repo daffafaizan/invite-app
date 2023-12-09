@@ -27,7 +27,7 @@
                             <p class="text-sm">Recruiting until {{ lowongan.expiry }}</p>
                             <p class="text-sm">Current members {{ lowongan.jumlah_anggota_sekarang }}/{{ lowongan.total_anggota_dibutuhkan }}</p>
                             <div>
-                                <a href="{% url 'find_members:vacancy_detail' vacancy_id=lowongan.id %}" class="text-blue-500 no-underline hover:underline cursor-pointer">
+                                <a href="{% url 'find_teams:show_vacancy_details' lowongan_id=lowongan.id %}" class="text-blue-500 no-underline hover:underline cursor-pointer">
                                     Klik disini untuk melihat detail lowongan
                                 </a>
                             </div>
