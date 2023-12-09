@@ -11,27 +11,66 @@
     <div>
         <!-- Display a list of applicants -->
         <div class="mt-8">
-            <h2 class="text-2xl md:text-3xl font-semibold p-4 text-emerald-900 underline decoration-emerald-900 underline-offset-[9px] text-center">Applicants</h2>
+            <h2 class="text-2xl md:text-3xl font-semibold p-4 text-emerald-900 underline decoration-emerald-900 underline-offset-[9px] text-center">
+                Daftar Pelamar untuk Lowongan {{ lowongan.nama_regu}}</h2>
 
             <a href="{% url 'profile:show_my_vacancies' %}" class="text-emerald-900 underline decoration-emerald-900 underline-offset-[9px] p-2 ml-4 mb-4 block">
                 &larr; Back
             </a>
+           
 
-            {% if applicants.length == 0 %}
-                <ul>
-                    <p>MAusk</p>
-                    {% for applicant in applicants %}
-                        <div class="mb-4 flex flex-col justify-center items-center py-4 px-8 md:p-6 shadow-lg rounded-2xl bg-white">
-                            <li>
-                                <strong>{{ applicant.nama }}</strong> - {{ applicant.universitas }} - {{ applicant.jurusan }}
-                                <!-- Add more applicant details as needed -->
-                            </li>
+            <div class="flex flex-col justify-center items-center py-4 px-8 md:p-6 shadow-lg rounded-2xl bg-gray-200 bg-opacity-80">
+                <div class="w-full py-4 text-emerald-900">
+                 
+            
+                    {% if applicants.length != 0 %}
+                        <div>
+                            {% for applicant in applicants %}
+                                <div class="mb-4 w-full mx-auto overflow-hidden max-w-2xl">
+                                    <div class="shadow-md bg-white hover:bg-emerald-50 rounded-2xl p-10 pl-3">
+                                        <div>
+                                            <div> <b>Nama Pendaftar:</b> {{ applicant.nama }}</div>
+                                            <div> <b>Universitas Pendaftar:</b> {{ applicant.universitas }} </div>
+                                            <div> <b>Jurusan Pendaftar: </b>{{ applicant.jurusan }} </div>
+                                            <div> <b>Current Status:</b> {{ applicant.status }}</div>
+                                            <div>
+                                                <a href="{% url 'profile:profile' user_id=applicant.pengirim.id %}" class="text-blue-500 no-underline hover:underline cursor-pointer">
+                                                    Klik disini untuk melihat detail profil pendaftar
+                                                </a>
+                                            </div>
+
+                                            {% if applicant.status != 'Accepted' and applicant.status != 'Denied' %}
+                        
+                                                <div class="flex mt-4">
+                                                    <a href="{% url 'find_members:terima_tolak_lamaran' vacancy_id=applicant.id status='Accepted' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-4">
+                                                        Terima
+                                                    </a>
+                                                    <a href="{% url 'find_members:terima_tolak_lamaran' vacancy_id=applicant.id status='Denied' %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                                        Tolak
+                                                    </a>
+                                                </div>
+                                                {% else %}
+
+                                                <p class="text-gray-500 mt-4">Status: {{ applicant.status }}</p>
+                                            {% endif %}
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-center text-xl text-gray-500">No one has applied yet.</p>
-            {% endif %}
+                    {% else %}
+                        <p class="text-center text-xl text-gray-500">No one has applied yet.</p>
+                    {% endif %}
+
+
+
+                </div>
+            </div>
+
+            
+
         </div>
     </div>
 </main>
