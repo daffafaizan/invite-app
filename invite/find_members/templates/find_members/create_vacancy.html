@@ -18,6 +18,14 @@
     body {
       background-color: hsl(0, 0%, 96%);
     }
+
+    /* Custom CSS for red alert background */
+    .alert-custom {
+      background-color: red !important;
+      color: white; 
+    }
+
+
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
@@ -34,6 +42,15 @@
             <div class="text-center">
               <h2 class="mb-4 fw-bold">Create A Vacancy</h2>
             </div>
+
+            <div class="container">
+              {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor %}
+            </div>            
             
             <div class="card">
               <div class="card-body py-5 px-md-5">

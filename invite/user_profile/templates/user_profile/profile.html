@@ -3,55 +3,317 @@
 {% load static %}
 
 {% block meta %}
-<title>Profile Detail</title>
+<title>My Profile</title>
 {% endblock meta %}
 
 {% block content %}
-<main class="md:h-[100dvh] flex flex-col p-4 md:p-8 items-center border border-black">
-    <div class="md:w-[800px] flex flex-col gap-y-4 md:gap-y-8">
-        <div class="flex flex-col p-2 md:p-4 border border-black">
-            <div class="flex flex-row items-center justify-between">
-                <p class="text-xl md:text-2xl font-semibold text-gray-600">{{ data.user.first_name }} {{ data.user.last_name }}</p>
-                <div class="relative w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden">
+
+<main class="relative md:h-[100dvh] flex flex-col items-center">
+    <!-- Page -->
+    <div class="w-full flex flex-col gap-y-4 md:gap-y-6 p-2 md:p-4">
+        <!-- Header -->
+        <div
+            class="w-full py-4 px-2 md:p-4 flex flex-col gap-y-4 md:gap-y-0 md:flex-row bg-gray-200 bg-opacity-80 rounded-xl items-start md:items-center justify-between"
+        >
+            <!-- Profile Headers -->
+            <div class="flex flex-row justify-center items-center gap-x-2 md:gap-x-4">
+                <!-- Image -->
+                <div class="relative w-[40px] h-[40px] md:w-[60px] md:h-[60px] rounded-full overflow-hidden">
+                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
                     <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
                 </div>
+
+                <div class="flex flex-col items-start">
+                    <!-- Username -->
+                    <p class="text-md md:text-lg font-semibold text-gray-600">
+                        {{ data.user.first_name }} 
+                        {{ data.user.middle_name }} 
+                        {{ data.user.last_name }}
+                    </p>
+    
+                    <!-- Email -->
+                    <p class="text-sm md:text-md font-base text-gray-600">{{ data.user.email }}</p>
+
+                    <p class="text-xs md:text-sm font-base text-gray-600">Registered on {{ data.user.created_at }} </p>
+                </div>
             </div>
-            <!-- User Profile Section -->
-            <div>
-                <h1>TODO</h1>
-                <p>
-                    Created at: {{ data.user.created_at }}
-                </p>
-                <p>
-                    Username: {{ data.user.username }}
-                </p>
-                <p>
-                    Name: {{ data.user.first_name }} {{ data.user.last_name }}
-                </p>
-                <p>
-                    University: {{ data.user.universitas }}
-                </p>
-                <p>
-                    Jurusan: {{ data.user.jurusan }}
-                </p>
-                <p>
-                    Tautan Media Sosial: {{ data.user.tautan_media_sosial }}
-                </p>
-                <p>
-                    Profile Details: {{ data.user.profile_details }}
-                </p>
-                <p>
-                    Profile Picture: {{ data.user.profile_picture }}
-                </p>
+
+            <!-- Profile Menu -->
+            <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
+                <a 
+                    class="max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                    href="{% url 'profile:show_my_vacancies' %}"">
+                        Lowongan Terbuat
+                </a>
+                <a 
+                    class="max-w-[100px] md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                    href="{% url 'profile:show_my_applications' %}"">
+                        Lamaranku
+                </a>
+                <a class="rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- User Profile Section -->
+        <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
+            <!-- Univ -->
+            {% if data.user.universitas %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Universitas
+                    </div>
+                    <div class="">
+                        {{ data.user.universitas }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Jurusan -->
+            {% if data.user.jurusan %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Jurusan
+                    </div>
+                    <div class="">
+                        {{ data.user.jurusan }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Keahlian -->
+            {% if data.user.keahlian %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Keahlian
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {% for kn in data.user.keahlian %}
+                            <div class="inline-block py-1 px-3 rounded-2xl bg-gray-300 hover:cursor-pointer hover:bg-gray-400 duration-200">
+                                {{ kn }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- TMS -->
+            <div class="flex flex-row items-start w-full gap-x-2 md:gap-x-4">
+                <div class="font-semibold text-lg md:text-xl">
+                    Media Sosial
+                </div>
+                <div class="flex flex-col gap-y-2 md:gap-y-4">
+                    <a 
+                        href="https://www.{{ data.tms.website }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.website }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.instagram }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.instagram }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.twitter }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.twitter }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.linkedin }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.linkedin }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.github }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.github }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Photo -->
+            {% if data.user.profile_picture %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Photo
+                    </div>
+                    <div class="">
+                        {{ data.user.profile_picture }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="py-4"></div>
+        </div>
+
+        <!-- Ulasan Section -->
+        <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
+            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
+            <!-- Label -->
+                <div class="font-semibold text-lg md:text-xl">
+                    Upvote
+                </div>
+
+                <div>
+                    {{ data.pd.jumlah_upvote }} 
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
+            </div>
+            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
+            <!-- Label -->
+                <div class="font-semibold text-lg md:text-xl">
+                    Downvote
+                </div>
+                
+                <div>
+                    {{ data.pd.jumlah_downvote }}
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
             </div>
         </div>
 
         <!-- Ulasan Section -->
-        <div class="flex flex-col p-2 md:p-4 border border-black ">
-            <h1>Ulasan untuk pengguna</h1>
-            <div>Enter ulasan here...</div>
+        <div class="flex flex-col justify-center items-center py-4 px-8 md:p-6 shadow-lg rounded-2xl bg-gray-200 bg-opacity-80">
+          <div class="text-xl md:text-2xl font-semibold p-4 text-emerald-900 underline decoration-emerald-900 underline-offset-[9px]">Ulasan untuk {{ data.user.first_name }} {{ data.user.last_name }}</div>
+          
+            <button class="p-2 rounded-xl border bg-emerald-600 text-white hover:bg-emerald-700" id="openFormButton">
+                Membuat Ulasan Profil Baru
+            </button>
+
+            <div class="w-full py-4 text-emerald-900">
+            {% if data.ulasan %}
+                {% for item in data.ulasan %}
+                    <div class="mb-5 mx-auto overflow-hidden">
+                        <div class="shadow-md bg-emerald-50 hover:bg-emerald-100 rounded-2xl p-10 pl-3">
+                            
+                            <div><b>Pengulas: </b>{{ item.pengulas.username }}</div>
+                            <div><b>Rating: </b>{{ item.rating }}</div>
+                            <div class="whitespace-normal break-words"><b>Deskripsi Kerja Setim: </b>{{ item.deskripsi_kerja_setim }}</div>
+                            <div class="whitespace-normal break-words"><b>Ulasan: </b>{{ item.ulasan }}</div>
+                            <div><b>Post Dibuat: </b>{{ item.created_at }}</div>
+                            <div><b>Post Diperbaharui: </b>{{ item.updated_at }}</div>
+                            <div class="py-4 left"></div>
+                            {% if request.user == item.pengulas %}
+                                <a class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline" href="{% url 'profile:delete_profile_review' profile_id=data.user.id review_id=item.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this review?');">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>      
+          
+                {% endfor %}
+            {% else %}
+            <div>Belum terdapat Ulasan Profil</div>
+            {% endif %}
+            </div>
+        
+          <!-- Pop-up Form -->
+          <div
+            id="popForm"
+            style="
+              display: none;
+              position: fixed;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              background-color: white;
+              padding: 20px;
+              border: 1px solid #ccc;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+              z-index: 1000;
+              width: 400px;
+              border-radius: 8px;
+            "
+            class = "text-emerald-900"
+          >
+            <button
+              class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+              id="closeFormButton"
+              style="position: absolute; top: 10px; right: 10px; font-size: 0.8rem;"
+            >
+              X
+            </button>
+            <form
+              id="reviewForm"
+              action="{% url 'profile:review_profile' profile_id=data.user.id %}"
+              method="post"
+            >
+              {% csrf_token %}
+            
+              <div class="flex flex-col p-1">
+              <label for="rating">Rating:</label>
+                <select  class="border border-black rounded p-1 w-36" name="rating" id="rating" required>
+                    <option value="" disabled selected>Memilih rating</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+              </div>
+        
+        
+              <!-- Deskripsi Kerja Setim Field -->
+              <div class="flex flex-col p-1">
+                <label for="deskripsi_kerja_setim">Deskripsi Kerja Setim:</label>
+                <textarea
+                  class="border border-black rounded p-2"
+                  name="deskripsi_kerja_setim"
+                  rows="4"
+                  required
+                ></textarea>
+              </div>
+        
+              <!-- Ulasan Field -->
+              <div class="flex flex-col p-1">
+                <label for="ulasan">Ulasan:</label>
+                <textarea
+                    class="border border-black rounded p-2"
+                    name="ulasan"
+                    rows="8"
+                    required
+                ></textarea>
+                </div>
+    
+                
+                <button
+                class="p-1 bg-emerald-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+                type="submit"
+                >
+                Submit
+                </button>
+                
+            </div>
+            </form>
+          </div>
         </div>
     </div>
 </main>
 
+<script>
+    console.log("hello")
+    document
+    .getElementById("openFormButton")
+    .addEventListener("click", function () {
+        document.getElementById("popForm").style.display = "block";
+    });
+
+    document
+    .getElementById("closeFormButton")
+    .addEventListener("click", function () {
+        document.getElementById("popForm").style.display = "none";
+});
+</script>
+
 {% endblock content %}
+   

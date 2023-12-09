@@ -7,43 +7,183 @@
 {% endblock meta %}
 
 {% block content %}
-<main class="md:h-[100dvh] flex flex-col p-4 md:p-8 items-center border border-black">
+<main class="relative md:h-[100dvh] flex flex-col items-center">
+    <!-- Page -->
+    <div class="w-full flex flex-col gap-y-4 md:gap-y-6 p-2 md:p-4">
+        <!-- Header -->
+        <div
+            class="w-full py-4 px-2 md:p-4 flex flex-col gap-y-4 md:gap-y-0 md:flex-row bg-gray-200 bg-opacity-80 rounded-xl items-start md:items-center justify-between"
+        >
+            <!-- Profile Headers -->
+            <div class="flex flex-row justify-center items-center gap-x-2 md:gap-x-4">
+                <!-- Image -->
+                <div class="relative w-[40px] h-[40px] md:w-[60px] md:h-[60px] rounded-full overflow-hidden">
+                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                </div>
+
+                <div class="flex flex-col items-start">
+                    <!-- Username -->
+                    <p class="text-md md:text-lg font-semibold text-gray-600">
+                        {{ data.user.first_name }} 
+                        {{ data.user.middle_name }} 
+                        {{ data.user.last_name }}
+                    </p>
     
-    <div class="md:w-[800px] flex flex-col border border-black p-2 md:p-4">
-        <div class="flex flex-row items-center justify-between">
-            <p class="text-xl md:text-2xl font-semibold text-gray-600">{{ data.user.first_name }} {{ data.user.last_name }}</p>
-            <div class="relative w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden">
-                <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                    <!-- Email -->
+                    <p class="text-sm md:text-md font-base text-gray-600">{{ data.user.email }}</p>
+
+                    <p class="text-xs md:text-sm font-base text-gray-600">Registered on {{ data.user.created_at }} </p>
+                </div>
+            </div>
+
+            <!-- Profile Menu -->
+            <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
+                <a 
+                    class="max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                    href="{% url 'profile:show_my_vacancies' %}"">
+                        Lowongan Terbuat
+                </a>
+                <a 
+                    class="max-w-[100px] md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                    href="{% url 'profile:show_my_applications' %}"">
+                        Lamaranku
+                </a>
+                <a class="rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200">
+                    Edit Profile
+                </a>
             </div>
         </div>
+
         <!-- User Profile Section -->
-        <div>
-            <h1>TODO</h1>
-            <p>
-                Created at: {{ data.user.created_at }}
-            </p>
-            <p>
-                Username: {{ data.user.username }}
-            </p>
-            <p>
-                Name: {{ data.user.first_name }} {{ data.user.last_name }}
-            </p>
-            <p>
-                University: {{ data.user.universitas }}
-            </p>
-            <p>
-                Jurusan: {{ data.user.jurusan }}
-            </p>
-            <p>
-                Tautan Media Sosial: {{ data.user.tautan_media_sosial }}
-            </p>
-            <p>
-                Profile Details: {{ data.user.profile_details }}
-            </p>
-            <p>
-                Profile Picture: {{ data.user.profile_picture }}
-            </p>
+        <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
+            <!-- Univ -->
+            {% if data.user.universitas %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Universitas
+                    </div>
+                    <div class="">
+                        {{ data.user.universitas }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Jurusan -->
+            {% if data.user.jurusan %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Jurusan
+                    </div>
+                    <div class="">
+                        {{ data.user.jurusan }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Keahlian -->
+            {% if data.user.keahlian %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Keahlian
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {% for kn in data.user.keahlian %}
+                            <div class="inline-block py-1 px-3 rounded-2xl bg-gray-300 hover:cursor-pointer hover:bg-gray-400 duration-200">
+                                {{ kn }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- TMS -->
+            <div class="flex flex-row items-start w-full gap-x-2 md:gap-x-4">
+                <div class="font-semibold text-lg md:text-xl">
+                    Media Sosial
+                </div>
+                <div class="flex flex-col gap-y-2 md:gap-y-4">
+                    <a 
+                        href="https://www.{{ data.tms.website }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.website }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.instagram }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.instagram }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.twitter }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.twitter }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.linkedin }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.linkedin }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.github }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.github }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Photo -->
+            {% if data.user.profile_picture %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Photo
+                    </div>
+                    <div class="">
+                        {{ data.user.profile_picture }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="py-4"></div>
         </div>
+
+        <!-- Ulasan Section -->
+        <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
+            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
+            <!-- Label -->
+                <div class="font-semibold text-lg md:text-xl">
+                    Upvote
+                </div>
+
+                <div>
+                    {{ data.pd.jumlah_upvote }} 
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
+            </div>
+            <div class="flex flex-row items-center gap-x-2 md:gap-x-4">
+            <!-- Label -->
+                <div class="font-semibold text-lg md:text-xl">
+                    Downvote
+                </div>
+                
+                <div>
+                    {{ data.pd.jumlah_downvote }}
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODO ulasan untuk saya  -->
     </div>
 </main>
 
