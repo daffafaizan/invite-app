@@ -44,11 +44,12 @@ def show_vacancies(request):
         'sent_application_ids': sent_application_ids
     }
 
-    return render(request, "show_vacancies.html", context)
+    # NOTE new html
+    return render(request, "find_teams/show_vacancies_new.html", context)
 
 def show_vacancy_details(request, lowongan_id):
     # TODO
-    return render(request, "vacancy.html")
+    return render(request, "find_teams/vacancy.html")
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request, lowongan_id):
@@ -83,7 +84,7 @@ def apply_vacancy_first(request, lowongan_id):
         "vacancy": LowonganRegu.objects.get(id=lowongan_id)
     }
 
-    return render(request, "apply_vacancy_first.html", context)
+    return render(request, "find_teams/apply_vacancy_first.html", context)
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_second(request, lowongan_id):
@@ -142,4 +143,4 @@ def apply_vacancy_second(request, lowongan_id):
         "lowongan_id": lowongan_id
     }
 
-    return render(request, "apply_vacancy_second.html", context)
+    return render(request, "find_teams/apply_vacancy_second.html", context)
