@@ -71,7 +71,7 @@
                     {% if vacancy.ketua != current_user %}
                         {% if vacancy.id in sent_application_ids %}
                             <button 
-                            class="px-5 py-2 mr-auto text-white bg-gray-400 shadow-md rounded-lg text-center"
+                            class="px-5 py-2 mr-auto text-white font-semibold bg-gray-400 shadow-md rounded-lg text-center"
                             disabled
                             >
                                 Applied
@@ -79,7 +79,7 @@
                         {% else %}
                             <a 
                             href="{% url 'find_teams:apply_vacancy_first' lowongan_id=vacancy.id %}" 
-                            class="px-5 py-2 text-white bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
+                            class="px-5 py-2 text-white font-semibold bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
                             >
                                 Apply
                             </a>
@@ -108,7 +108,7 @@
                         </div>
                     {% else %}
                         <button 
-                            class="px-5 py-2 mr-auto text-white bg-gray-400 shadow-md rounded-lg text-center"
+                            class="px-5 py-2 mr-auto text-white font-semibold bg-gray-400 shadow-md rounded-lg text-center"
                             disabled
                         >
                             Apply
