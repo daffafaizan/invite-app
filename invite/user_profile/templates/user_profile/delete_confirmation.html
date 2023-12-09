@@ -6,7 +6,7 @@
   <div class="flex flex-grow flex-col justify-center items-center">
     <div class="flex flex-col justify-center items-center w-4/5 py-6 sm:w-auto sm:py-8 sm:px-8 shadow-lg rounded-2xl bg-white">
       <span class="text-2xl text-emerald-900 px-2 mb-2 sm:text-4xl sm:mb-4">Delete Confirmation</span>
-      <span class="text-sm text-center text-emerald-900 px-2 mb-6 sm:text-md sm:mb-6">Are you sure you want to delete the application for<span class="font-semibold"> {{ nama }}</span>?</span>
+      <span class="text-sm text-center text-emerald-900 px-2 mb-2 sm:text-md sm:mb-6">Are you sure you want to delete the application for<span class="font-semibold"> {{ nama }}</span>?</span>
       <form method="post" action="{% url 'profile:delete_application' application_id=id %}">
         {% csrf_token %}
         <button type="submit" class="bg-red-500 text-white text-sm px-4 py-2 rounded hover:bg-red-700">Yes, delete</button>

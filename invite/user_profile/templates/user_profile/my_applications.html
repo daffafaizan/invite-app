@@ -4,9 +4,14 @@
 
 {% block content %}
   <div class="flex flex-grow flex-col items-center">
-    <div class="flex w-full md:w-2/5 p-4 underline decoration-emerald-900 underline-offset-[9px]">
-      <h1 class="text-2xl text-emerald-900 font-semibold">My Applications</h1>
+    <div class="flex justify-center items-center w-full md:w-2/5 p-4 underline decoration-emerald-900 underline-offset-[9px]">
+      <span class="text-2xl md:text-3xl font-semibold text-emerald-900 text-center">My Applications</span>
     </div>
+    {% if not data.daftar_lamaran %}
+    <div class="flex justify-center items-center w-full md:w-2/5 p-4">
+      <span class="-mt-4 text-xl text-gray-500 text-center">No applications found.</span>
+    </div>
+    {% endif %}
     <div class="flex flex-col flex-grow w-full md:w-2/5 p-4 gap-4">
       {% if data.daftar_lamaran %}
         {% for lamaran in data.daftar_lamaran %}
@@ -35,9 +40,8 @@
           </div>
         </div>
         {% endfor %}
-    {% else %}
-      <p>No applications found.</p>
-    {% endif %}
+      {% endif %}
+    </div>
     </div>
   </div>
 {% endblock %}

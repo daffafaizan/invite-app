@@ -5,8 +5,6 @@ import uuid
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 
-from authentication.models import RegisteredUser
-
 def get_n_days_future(n=180):
     # Default is 6 months
     return datetime.datetime.now() + datetime.timedelta(days=n)
@@ -46,7 +44,7 @@ class LowonganRegu(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     
-    ketua = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
+    ketua = models.ForeignKey("authentication.RegisteredUser", on_delete=models.CASCADE)
 
     nama_regu = models.CharField(max_length=255, blank=False, null=False) # non-null
     deskripsi_lowongan_regu = models.TextField(blank=False, null=False, validators=[MinLengthValidator(3), MaxLengthValidator(2000)])

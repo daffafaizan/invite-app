@@ -20,4 +20,5 @@ urlpatterns = [
         views.show_vacancy_details,
         name="show_vacancy_details",
     ),
+    path('bookmark', views.show_bookmarked, name='show_bookmarked'),
 ]

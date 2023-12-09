@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Bookmarked Lowongan{% endblock %}
+
+{% block content %}
+<main>
+    <div>
+        <div class="flex flex-grow flex-col justify-center items-center">
+            <h2 class="text-2xl md:text-3xl font-semibold p-4 text-emerald-900 underline decoration-emerald-900 underline-offset-[9px] text-center">
+                Bookmarked Lowongan</h2>
+
+            <div class="text-emerald-900">
+
+            {% if bookmarked_lowongans %}
+            <div class="w-full gap-y-2 md:grid md:grid-cols-3 md:gap-4">
+                {% for lowongan in bookmarked_lowongans %}
+                <div>
+                    <div class="rounded-2xl bg-white p-2 md:p-4 shadow-md min-h-max flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer">
+                        <div>
+                            <img 
+                                src="{% static lowongan.foto_lowongan_regu %}" 
+                                class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg"
+                            >
+                            <h1 class="text-lg font-semibold">{{ lowongan.nama_lomba }}</h1>
+                            <p class="text-sm">Posted by <strong>{{ lowongan.ketua }}</strong> from team <strong>{{ lowongan.nama_regu }}</strong></p>
+                            <p class="text-sm">Field: {{ lowongan.bidang_lomba }}</p>
+                            <p class="text-sm">Recruiting until {{ lowongan.expiry }}</p>
+                            <p class="text-sm">Current members {{ lowongan.jumlah_anggota_sekarang }}/{{ lowongan.total_anggota_dibutuhkan }}</p>
+                            <div>
+                                <a href="{% url 'find_members:vacancy_detail' vacancy_id=lowongan.id %}" class="text-blue-500 no-underline hover:underline cursor-pointer">
+                                    Klik disini untuk melihat detail lowongan
+                                </a>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            {% if lowongan.id in sent_application_ids %}
+                            <button 
+                            class="px-5 py-2 mr-auto text-white font-bold bg-gray-400 shadow-md rounded-lg text-center"
+                            disabled
+                            >
+                                Applied
+                            </button>
+                            {% else %}
+                            <a 
+                            href="{% url 'find_teams:apply_vacancy_first' lowongan_id=lowongan.id %}" 
+                            class="px-5 py-2 text-white font-bold bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
+                            >
+                                Apply
+                            </a>
+                            {% endif %}
+                            <div class="bg-red-500 hover:bg-red-600 text-white font-bold px-5 py-2 rounded-lg focus:outline-none focus:shadow-outline">
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="lowongan_id" value="{{ lowongan.id }}">
+                                    <input type="submit" value="Remove">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center text-xl text-gray-500">No bookmarked lowongans.</div>
+            {% endif %}
+        </div>
+    </div>
+    
+</main>
+{% endblock %}

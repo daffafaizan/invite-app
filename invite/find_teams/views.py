@@ -15,9 +15,17 @@ logger = logging.getLogger("app_api")
 
 @login_required(login_url="/accounts/login/")
 def show_vacancies(request):
-    query = request.GET.get("q", "")
-    sort_order = request.GET.get("sort", "newest")
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    query = request.GET.get('q', '')  
+    sort_order = request.GET.get('sort', 'newest') 
 
+    if request.method == 'POST':
+        lowongan_id = request.POST.get('lowongan_id')
+        bookmark_lowongan(request, lowongan_id)
+
+    # Save the user changes before querying bookmarked_lowongans
+    current_user.save()
+    
     vacancy_list = LowonganRegu.objects.all()
 
     if query:
@@ -30,9 +38,13 @@ def show_vacancies(request):
     if sort_order == "oldest":
         vacancy_list = vacancy_list.order_by("created_at")
     else:  # Default to newest
-        vacancy_list = vacancy_list.order_by("-created_at")
+        vacancy_list = vacancy_list.order_by('-created_at')
 
-    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    # Get the list of bookmarked lowongans for the current user
+    bookmarked_lowongans = current_user.bookmarked_lowongans.all()
+    bookmarked_ids = bookmarked_lowongans.values_list('id', flat=True)
+
+    # Get the list of sent applications for the current user
     sent_applications = Lamaran.objects.filter(pengirim=current_user)
     sent_application_ids = sent_applications.values_list('lowongan__id', flat=True)
 
@@ -41,10 +53,11 @@ def show_vacancies(request):
         'current_user': current_user,
         'query': query,
         'sort_order': sort_order,
-        'sent_application_ids': sent_application_ids
+        'sent_application_ids': sent_application_ids,
+        'bookmarked_lowongans': bookmarked_lowongans,
+        'bookmarked_ids': bookmarked_ids,
     }
 
-    # NOTE new html
     return render(request, "find_teams/show_vacancies_new.html", context)
 
 
@@ -130,17 +143,20 @@ def apply_vacancy_second(request, lowongan_id):
         form = LamaranForm(data=form_data)
 
         if form.is_valid():
-            lamaran = form.save(commit=False)
-            lamaran.pengirim = current_user
-            lamaran.penerima = vacancy.ketua
-            lamaran.lowongan = vacancy
-            lamaran.status = "Pending"
-            lamaran.save()
 
-            first_page_data = request.session.pop("first_page_data", None)
+            if Lamaran.objects.filter(pengirim=current_user, lowongan=vacancy):
+                return redirect("find_teams:show_vacancies")
+            else:
+                lamaran = form.save(commit=False)
+                lamaran.pengirim = current_user
+                lamaran.penerima = vacancy.ketua
+                lamaran.lowongan = vacancy
+                lamaran.status = "Pending"
+                lamaran.save()
 
-            return render(request, "application_success.html")
+                first_page_data = request.session.pop("first_page_data", None)
 
+                return render(request, "find_teams/application_success.html")
     else:
         form_data = {
             "nama": user_data["nama"],
@@ -152,7 +168,46 @@ def apply_vacancy_second(request, lowongan_id):
     context = {
         "form": form,
         "user_data": user_data,  # Pass the user data to the template
-        "lowongan_id": lowongan_id
+        "lowongan_id": lowongan_id,
+        "vacancy": vacancy,
     }
 
     return render(request, "find_teams/apply_vacancy_second.html", context)
+    
+@login_required(login_url='/accounts/login/')
+def bookmark_lowongan(request, lowongan_id):
+    
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    lowongan = LowonganRegu.objects.get(id=lowongan_id)
+
+    if lowongan in current_user.bookmarked_lowongans.all():
+        # If lowongan is already bookmarked, unbookmark it
+        current_user.bookmarked_lowongans.remove(lowongan)
+    else:
+        # If lowongan is not bookmarked, bookmark it
+        current_user.bookmarked_lowongans.add(lowongan)
+        
+    current_user.save()
+
+@login_required(login_url='/accounts/login/')
+def show_bookmarked(request):
+    
+    if request.method == 'POST':
+        lowongan_id = request.POST.get('lowongan_id')
+        bookmark_lowongan(request, lowongan_id)
+        # Redirect to the same page after handling the form submission
+        return redirect('find_teams:show_bookmarked')
+
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    bookmarked_lowongans = current_user.bookmarked_lowongans.all()
+
+    # Get the list of sent applications for the current user
+    sent_applications = Lamaran.objects.filter(pengirim=current_user)
+    sent_application_ids = sent_applications.values_list('lowongan__id', flat=True)
+
+    context = {
+        'bookmarked_lowongans': bookmarked_lowongans,
+        'sent_application_ids': sent_application_ids
+    }
+
+    return render(request, "find_teams/bookmarked_lowongans.html", context)
