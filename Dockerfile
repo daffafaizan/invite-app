@@ -4,7 +4,8 @@ COPY ./requirements.txt /requirements.txt
 COPY ./invite /invite
 WORKDIR /invite
 
-RUN python3 -m venv /py && \
+# RUN python -m venv /py && \
+RUN apk add python3 python3-dev python3-venv && \
     /py/bin/pip install --upgrade pip && \
     adduser --disabled-password --no-create-home django-user 
 

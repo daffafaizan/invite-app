@@ -29,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -46,9 +46,6 @@ INSTALLED_APPS = [
     # tailwind
     'crispy_forms',
     'crispy_tailwind',
-
-    # third party
-    'fontawesomefree',
 
     # django applications
     'core',
@@ -141,7 +138,7 @@ USE_TZ = True
 STATICFILES_DIRS = [ BASE_DIR / "static", ]
 
 # Automatically copy static files to STATIC_ROOT
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = '/static'
 
 # Django serves static files on STATIC_URL
 STATIC_URL = '/static/'

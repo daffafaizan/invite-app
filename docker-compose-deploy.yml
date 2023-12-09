@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  gcloud:
+    image: google/cloud-sdk:latest
+    volumes:
+      - gcp-creds:/creds
+      - .:/invite
+    working_dir: /invite
+    environment:
+      - CLOUDSDK_CONFIG=/creds
+
+volumes:
+  gcp-creds:
+
+
+# NOTE -> docker-compose -f docker-compose-deploy.yml run --rm gcloud sh -c "gcloud app deploy --project rpl-a12"

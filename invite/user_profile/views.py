@@ -327,6 +327,6 @@ def update_profile(request, profile_id):
 
     return render(
         request,
-        "update_profile.html",
+        "user_profile/update_profile.html",
         {"profile_form": profile_form, "social_form": social_form},
     )
