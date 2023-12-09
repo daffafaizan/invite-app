@@ -36,12 +36,14 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
                 ProfileDetails, id=registered_user.profile_details.id
             )
 
+            ulasan = UlasanProfil.objects.filter(diulas=registered_user)
             context = {
                 "status": "Success fetching my profile",
                 "data": {
                     "user": registered_user,
                     "tms": tms,
                     "pd": pd,
+                    "ulasan": ulasan,
                 },
             }
 
