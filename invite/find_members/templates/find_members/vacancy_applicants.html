@@ -42,10 +42,10 @@
                                             {% if applicant.status != 'Accepted' and applicant.status != 'Denied' %}
                         
                                                 <div class="flex mt-4">
-                                                    <a href="{% url 'find_members:terima_tolak_lamaran' vacancy_id=applicant.id status='Accepted' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-4">
+                                                    <a href="{% url 'find_members:terima_tolak_lamaran' lamaran_id=applicant.id status='Accepted' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-4">
                                                         Terima
                                                     </a>
-                                                    <a href="{% url 'find_members:terima_tolak_lamaran' vacancy_id=applicant.id status='Denied' %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                                    <a href="{% url 'find_members:terima_tolak_lamaran' lamaran_id=applicant.id status='Denied' %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                                                         Tolak
                                                     </a>
                                                 </div>
@@ -60,15 +60,15 @@
                                 </div>
                             {% endfor %}
                         </div>
-                    {% else %}
-                        <p class="text-center text-xl text-gray-500">No one has applied yet.</p>
-                    {% endif %}
-
-
-
+                        
+                        
+                        
+                    </div>
                 </div>
-            </div>
-
+                
+                {% else %}
+                    <p class="text-center text-xl text-gray-500">No one has applied yet.</p>
+                {% endif %}
             
 
         </div>
