@@ -45,7 +45,7 @@
                                             <div> <b>Nama Pendaftar:</b> {{ applicant.nama }}</div>
                                             <div> <b>Universitas Pendaftar:</b> {{ applicant.universitas }} </div>
                                             <div> <b>Jurusan Pendaftar: </b>{{ applicant.jurusan }} </div>
-                                            <div> <b>Current Status:</b> {{ applicant.status }}</div>
+                                            
                                             <div>
                                                 <a href="{% url 'profile:profile' user_id=applicant.pengirim.id %}" class="text-blue-500 no-underline hover:underline cursor-pointer">
                                                     Klik disini untuk melihat detail profil pendaftar
