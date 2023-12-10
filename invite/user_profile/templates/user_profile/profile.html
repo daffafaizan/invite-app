@@ -151,8 +151,8 @@
             <div class="w-full py-4 text-emerald-900">
             {% if data.ulasan %}
                 {% for item in data.ulasan %}
-                    <div class="mb-5 mx-auto overflow-hidden">
-                        <div class="shadow-md bg-white hover:bg-emerald-50 rounded-2xl p-10 pl-3">
+                    <div class="mb-5 mx-auto overflow-hidden shadow-md bg-white rounded-2xl">
+                        <div class=" p-10 pl-3">
                             
                             <div><b>Pengulas: </b>{{ item.pengulas.username }}</div>
                             <div><b>Rating: </b>{{ item.rating }}</div>
