@@ -28,8 +28,6 @@ urlpatterns = [
         views.delete_profile_review,
         name="delete_profile_review",
     ),
-    # Error page
-    path("error/<str:message>/", views.error_page, name="error_page"),
     # Update Review
     path(
         "<uuid:profile_id>/review/<uuid:review_id>/update",
@@ -38,4 +36,3 @@ urlpatterns = [
     ),
     path("<uuid:profile_id>/update", views.update_profile, name="update_profile"),
 ]
-
