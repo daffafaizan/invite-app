@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Apply{% endblock %}
+
+{% block content %}
+<div class="flex flex-grow flex-col justify-center items-center">
+  <div class="p-4 sm:p-8 mr-auto">
+    <button onclick="goBack()" style="cursor: pointer;" class="flex items-center justify-center px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white shadow-sm rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+      <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+      </svg>
+      <span class="hidden md:inline">Go back</span>
+    </button>
+  </div>
+  <div class="flex flex-col flex-grow justify-center items-center">
+    <div class="text-2xl -mt-32 mb-4 md:text-3xl font-semibold p-4 text-emerald-900 text-center">
+      Team <span class="underline decoration-emerald-900 underline-offset-[9px]">{{ vacancy.nama_regu }}</span>
+    </div>
+    <div class="flex flex-col justify-center items-center py-8 px-12 md:p-16 shadow-lg rounded-2xl bg-white">
+      <span class="text-3xl text-emerald-900 mb-2 md:text-4xl md:mb-4">Application Form</span>
+      <span class="text-md text-emerald-900 mb-6 md:text-md md:mb-6">Pastikan data diri Anda sudah benar</span>
+      <form method="post" class="w-full">
+        {% csrf_token %}
+        <div class="flex flex-col justify-center gap-3">
+          <label for="nama" class="-mb-1 text-sm font-semibold">Nama</label>
+          <input type="text" id="nama" name="nama" class="py-2 px-4 border rounded-lg focus:border-emerald-800 placeholder:text-sm" placeholder="{{ user_data.nama }}" required>
+          <label for="universitas" class="-mb-1 text-sm font-semibold">Universitas</label>
+          <input type="text" id="universitas" name="universitas" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="{{ user_data.universitas }}" required>
+          <label for="jurusan" class="-mb-1 text-sm font-semibold">Jurusan</label>
+          <input type="text" id="jurusan" name="jurusan" class="py-2 px-4 border rounded-lg focus:border-emerald-800  placeholder:text-sm" placeholder="{{ user_data.jurusan }}"required>
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <button type="submit" class="py-2 px-4 mt-8 shadow-md rounded-xl bg-emerald-800 text-white hover:scale-110 duration-150">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
+
+
+{% endblock %}

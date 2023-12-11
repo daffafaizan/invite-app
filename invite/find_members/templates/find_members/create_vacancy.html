@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Vacancy{% endblock %}
+
+{% block content %}
+<div class="flex flex-col justify-center p-8 md:py-16 items-center border-2 rounded-2xl">
+  <div class="max-w-[360px] md:max-w-[600px] flex flex-col">
+    <span class="text-3xl mb-8 md:text-4xl md:mb-10 font-semibold text-center">Create a New Vacancy</span>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% for message in messages %}
+      <div class="alert {{ message.tags }}">
+          {{ message }}
+      </div>
+      {% endfor %}
+
+      <!-- Single column layout -->
+      <div class="flex flex-col">
+        <div class="mb-4">
+          {{ form.nama_regu|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.deskripsi_lowongan_regu|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Must have a minimum of 3 characters)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.foto_lowongan_regu|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.nama_lomba|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.bidang_lomba|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.tanggal_lomba|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Must be after the current time)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.expiry|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Must be after the current time)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.jumlah_anggota_sekarang|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Minimum is one person since it includes yourself)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.total_anggota_dibutuhkan|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Total members needed must be greater than current members)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.website|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.instagram|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.twitter|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.linkedin|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.github|as_crispy_field }}
+        </div>
+      </div>
+
+      <div class="flex md:flex-row justify-center gap-x-2 md:gap-x-4 w-full">
+        <div class="flex flex-col justify-center items-center">
+          <button type="submit" class="border border-gray-600 py-2 px-4 mt-4 rounded-xl hover:bg-gray-100 duration-200">Create Vacancy</button>
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <button style="color:red" class="border border-gray-600 py-2 px-4 mt-4 rounded-xl hover:bg-gray-100 duration-200">
+            <a href="{% url 'core:home' %}">Cancel</a>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block meta %}
+<title>My Profile</title>
+{% endblock meta %}
+
+{% block content %}
+<main class="relative md:h-[100dvh] flex flex-col items-center">
+    <!-- Page -->
+    <div class="w-full flex flex-col gap-y-4 md:gap-y-6 p-2 md:p-4">
+        <!-- Header -->
+        <div
+            class="w-full py-4 px-2 md:p-4 flex flex-col gap-y-4 md:gap-y-0 md:flex-row bg-gray-200 bg-opacity-80 rounded-xl items-start md:items-center justify-between"
+        >
+            <!-- Profile Headers -->
+            <div class="flex flex-row justify-center items-center gap-x-2 md:gap-x-4">
+                <!-- Profile Photo -->
+                <div class="relative w-[40px] h-[40px] md:w-[60px] md:h-[60px] rounded-full overflow-hidden">
+                    <img src="{% get_media_prefix %}{{ data.user.foto_profil }}" alt="Profile Picture">
+                </div>
+
+                <div class="flex flex-col items-start">
+                    <!-- Username -->
+                    <p class="text-md md:text-lg font-semibold text-gray-600">
+                        {{ data.user.first_name }} 
+                        {{ data.user.middle_name }} 
+                        {{ data.user.last_name }}
+                    </p>
+    
+                    <!-- Email -->
+                    <p class="text-sm md:text-md font-base text-gray-600">{{ data.user.email }}</p>
+
+                    <p class="text-xs md:text-sm font-base text-gray-600">Registered on {{ data.user.created_at }} </p>
+                </div>
+            </div>
+
+            <!-- Profile Menu -->
+            <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
+                <a 
+                class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                href="{% url 'find_teams:show_bookmarked' %}"">
+                    Bookmarks
+                </a>
+        
+                <a 
+                    class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[240px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                    href="{% url 'profile:show_my_vacancies' %}"">
+                        Lowonganku
+                </a>
+                <a 
+                    class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+
+                    href="{% url 'profile:show_my_applications' %}"">
+                        Lamaran
+                </a>
+                <a class="flex items-center justify-center text-xs sm:text-sm h-[45px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200"
+                    href="{% url 'profile:update_profile' profile_id=user.id%}">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- User Profile Section -->
+        <div class="flex flex-col gap-y-2 md:gap-y-4 w-full p-2 md:p-4 flex flex-col text-md md:text-lg bg-gray-200 bg-opacity-80 rounded-xl">
+            <!-- Univ -->
+            {% if data.user.universitas %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Universitas
+                    </div>
+                    <div class="">
+                        {{ data.user.universitas }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Jurusan -->
+            {% if data.user.jurusan %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Jurusan
+                    </div>
+                    <div class="">
+                        {{ data.user.jurusan }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Keahlian -->
+            {% if data.user.keahlian %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Keahlian
+                    </div>
+                    <div class="flex flex-row gap-x-2 md:gap-x-4">
+                        {% for kn in data.user.keahlian %}
+                            <div class="inline-block py-1 px-3 rounded-2xl bg-gray-300 hover:cursor-pointer hover:bg-gray-400 duration-200">
+                                {{ kn }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- TMS -->
+            <div class="flex flex-row items-start w-full gap-x-2 md:gap-x-4">
+                <div class="font-semibold text-lg md:text-xl">
+                    Media Sosial
+                </div>
+                <div class="flex flex-col gap-y-2 md:gap-y-4">
+                    <a 
+                        href="https://www.{{ data.tms.website }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.website }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.instagram }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.instagram }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.twitter }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.twitter }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.linkedin }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.linkedin }}
+                    </a>
+                    <a 
+                        href="https://www.{{ data.tms.github }}" 
+                        target="_blank"
+                        class="flex flex-row gap-x-2 md:gap-x-4 underline text-blue-600 hover:text-blue-600 visited:text-purple-600">
+                            {{ data.tms.github }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Photo -->
+            {% if data.user.profile_picture %}
+                <div class="flex flex-row items-center w-full gap-x-2 md:gap-x-4">
+                    <!-- Label -->
+                    <div class="font-semibold text-lg md:text-xl">
+                        Photo
+                    </div>
+                    <div class="">
+                        {{ data.user.profile_picture }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="py-4"></div>
+        </div>
+
+
+        <!-- TODO ulasan untuk saya  -->
+        <div class="flex flex-col justify-center items-center py-4 px-8 md:p-6 shadow-lg rounded-2xl bg-gray-200 bg-opacity-80">
+            <div class="text-xl md:text-2xl font-semibold p-4 text-emerald-900 underline decoration-emerald-900 underline-offset-[9px]">Ulasan untuk {{ data.user.first_name }} {{ data.user.middle_name }} {{ data.user.last_name }}</div>
+            <div class="w-full py-4 text-emerald-900">
+                {% if data.ulasan %}
+                    {% for item in data.ulasan %}
+                        <div class="mb-5 mx-auto overflow-hidden shadow-md bg-white rounded-2xl">
+                            <div class="p-10 pl-3">
+                                
+                                <div><b>Pengulas: </b>{{ item.pengulas.username }}</div>
+                                <div><b>Rating: </b>{{ item.rating }}</div>
+                                <div class="whitespace-normal break-words"><b>Deskripsi Kerja Setim: </b>{{ item.deskripsi_kerja_setim }}</div>
+                                <div class="whitespace-normal break-words"><b>Ulasan: </b>{{ item.ulasan }}</div>
+                                <div><b>Post Dibuat: </b>{{ item.created_at }}</div>
+                                <div><b>Post Diperbaharui: </b>{{ item.updated_at }}</div>
+                                <div class="py-4 left"></div>
+                                {% if request.user == item.pengulas %}
+                                    <a class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline" href="{% url 'profile:delete_profile_review' profile_id=data.user.id review_id=item.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this review?');">Delete</a>
+                                {% endif %}
+                            </div>
+                        </div>      
+                    {% endfor %}
+                 {% else %}
+            <div class="text-center text-xl text-gray-500">Belum terdapat Ulasan Profil</div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}

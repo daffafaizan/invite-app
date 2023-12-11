@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block meta %}
+<title>My Vacancies</title>
+{% endblock meta %}
+
+{% block content %}
+
+
+<main class="w-full p-2 md:p-4 flex flex-col items-center justify-start gap-y-4 md:gap-y-6">
+    <form method="GET" action=".">
+        <div class="pt-4 pb-1 md:pt-8 pb-2">        
+            <p class="text-xl md:text-2xl lg:text-6xl font-bold text-emerald-600">Lowongan Terbuat</p>
+        </div>
+        <div class="w-full flex flex-row pb-2 pt-1 md:pb-4 pt-2">
+            <input 
+                class="min-w-[260px] md:min-w-[600px] shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                id="search" type="text" placeholder="Search"
+                value="{{ query }}" name="q"
+            >
+            <button class="px-2 py-1 bg-emerald-600 text-white border border-1 border-emerald-600 rounded-r-lg">
+                Search
+            </button>
+        </div>
+
+        <!-- Sort n filter -->
+        <div class="flex flex-col gap-y-2">
+            <p class="text-sm md:text-md font-base">Sort by</p>
+            <div class="flex flex-col gap-y-2 md:gap-y-0 md:flex-row justify-between">
+                <div class="flex flex-row gap-x-2 md:gap-x-4">
+                    <button 
+                        type="submit"
+                        name="sort"
+                        value="newest"
+                        class="px-2 py-1 bg-gray-200 border border-gray-300 rounded active:bg-emerald-600 active:text-white hover:bg-gray-300 duration-200"
+                    >
+                        Newest
+                    </button>
+        
+                    <button 
+                        type="submit"
+                        name="sort"
+                        value="oldest"
+                        class="px-2 py-1 bg-gray-200 border border-gray-300 rounded active:bg-emerald-600 active:text-white hover:bg-gray-300 duration-200"
+                    >
+                        Oldest
+                    </button>
+                </div>
+                <div class="max-w-[200px] px-2 py-1 bg-white border border-emerald-600 rounded active:bg-emerald-600 active:text-white hover:bg-emerald-600 hover:text-white duration-200">
+                    <a href="{% url 'find_members:create_vacancy' %}">
+                        + Buat Lowongan Baru
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <!-- Vacancy content -->
+    <div class="w-full md:w-4/5 flex flex-col gap-y-2 md:grid md:grid-cols-3 md:gap-4">
+        {% for vacancy in vacancy_list %}
+            <div 
+                class="p-4 md:p-4 shadow shadow-md rounded-lg min-h-max bg-white flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer"
+            >
+            <a href="{% url 'find_teams:show_vacancy_details' lowongan_id=vacancy.id %}">
+                <div class="flex flex-row gap-x-2">
+                    
+                    <img 
+                        src="{% get_media_prefix %}{{vacancy.foto_lowongan_regu}}" 
+                        class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg"
+                    >
+                    <div class="flex flex-col gap-y-1">
+                        <h1 class="text-lg font-semibold">{{ vacancy.nama_lomba }}</h1>
+                        <p class="text-sm">Posted by <strong>{{ vacancy.ketua }}</strong> from team <strong>{{ vacancy.nama_regu }}</strong></p>
+                        <p class="text-sm">Field: {{ vacancy.bidang_lomba }}</p>
+                        <p class="text-sm">Recruiting until {{ vacancy.expiry }}</p>
+                        <p class="text-sm">Current members {{ vacancy.jumlah_anggota_sekarang }}/{{ vacancy.total_anggota_dibutuhkan }}</p>
+                    </div>
+                </a>
+                </div>
+
+                <div class="flex flex-row justify-center gap-x-2">
+                    <div class = "ml-auto">
+                        <a href="{% url 'find_members:vacancy_applicants' vacancy_id=vacancy.id %}" class="p-1 bg-emerald-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline mt-4">Show Applicants</a>
+                    </div>  
+                </div>
+        
+            
+        </div>
+        {% empty %}
+            <div class="w-full text-center p-4">
+                <p class="text-gray-700">No vacancies found.</p>
+            </div>
+        {% endfor %}
+
+        
+    </div>
+
+</main>
+
+
+
+{% endblock content %}

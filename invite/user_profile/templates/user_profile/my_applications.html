@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+  <div class="flex flex-grow flex-col items-center">
+    <div class="p-4 sm:p-8 mr-auto">
+      <a href="{% url 'profile:me' %}"style="cursor: pointer;" class="flex items-center justify-center px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white shadow-sm rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+        <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+        </svg>
+        <span class="hidden md:inline">Go back</span>
+      </a>
+    </div>
+    <div class="flex justify-center items-center w-full md:w-2/5 p-4 underline decoration-emerald-900 underline-offset-[9px]">
+      <span class="text-2xl md:text-3xl font-semibold text-emerald-900 text-center">My Applications</span>
+    </div>
+    {% if not data.daftar_lamaran %}
+    <div class="flex justify-center items-center w-full md:w-2/5 p-4">
+      <span class="-mt-4 text-xl text-gray-500 text-center">No applications found.</span>
+    </div>
+    {% endif %}
+    <div class="flex flex-col flex-grow w-full md:w-2/5 p-4 gap-4">
+      {% if data.daftar_lamaran %}
+        {% for lamaran in data.daftar_lamaran %}
+        <div class="flex flex-col p-3 text-sm gap-5 rounded-lg shadow-md bg-white">
+          <div class="flex flex-row items-center">
+            <span 
+            class="py-1 px-3 mr-auto rounded-2xl tracking-wide font-light text-white
+            {% if lamaran.status == 'Denied' %}bg-[#EB6060]
+            {% elif lamaran.status == 'Pending' %}bg-[#F7E463]
+            {% elif lamaran.status == 'Accepted' %}bg-[#7CD992]
+            {% endif %}">
+              {{ lamaran.status }}
+            </span>
+            <a href="{% url 'profile:delete_application' lamaran.id %}" class="text-red-500 hover:text-red-700 ml-auto">Delete</a>
+          </div>
+          <span class="text-xl text-emerald-900 font-semibold">
+            {{ lamaran.lowongan.nama_lomba }}
+          </span>
+          <div class="flex flex-row">
+            <span class="text-emerald-900 font-semibold -mt-4">
+              {{ lamaran.lowongan.nama_regu }}
+            </span>
+            <span class="text-emerald-900 font-light ml-auto -mt-4">
+              {{ lamaran.created_at }}
+            </span>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    </div>
+  </div>
+
+{% endblock %}

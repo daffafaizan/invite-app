@@ -29,9 +29,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG=0
 
-ALLOWED_HOSTS = []
+if os.getenv("GAE_APPLICATION"):
+    ALLOWED_HOSTS = [
+        "rpl-a12.et.r.appspot.com",
+        "invite-app.jeremyalv.com",
+    ]
+else:
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -42,6 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # tailwind
+    'crispy_forms',
+    'crispy_tailwind',
 
     # django applications
     'core',
@@ -90,8 +100,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
+        'PASSWORD': env('PROD_DB_PASSWORD') if os.getenv("GAE_APPLICATION") else env('DB_PASSWORD'),
+        'HOST': env('PROD_DB_HOST') if os.getenv("GAE_APPLICATION") else env('DB_HOST'),
         'PORT': env('DB_PORT')
     }
 }
@@ -130,7 +140,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# Can add static files to these dirs
+STATICFILES_DIRS = [ BASE_DIR / "static", ]
+
+# Automatically copy static files to STATIC_ROOT
+STATIC_ROOT = '/static'
+
+# Django serves static files on STATIC_URL
+STATIC_URL = '/static/'
+
+# Overriden by DEPLOYMENT settings to GCS
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -139,23 +161,65 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CUSTOM FIELDS
 
+# Tailwind
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+
+CRISPY_TEMPLATE_PACK = "tailwind"
+
 # Path to Extended user model
 AUTH_USER_MODEL = "authentication.RegisteredUser"
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "core:home"
+LOGOUT_REDIRECT_URL = "core:home"
+AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend']
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+# DEPLOYMENT
+if os.getenv("GAE_APPLICATION"):
+    # NOTE Already configered in settings.STORAGES.default.BACKEND
+    # DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = 'rpl-a12-media'
+    GS_DEFAULT_ACL = 'publicRead'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         },
-    },
-    'loggers': {
-        'app_api': {
-            'handlers': ['console'],
-            'level': 'INFO',
+    
+        # Fixed conflic with STATICFILES_STORAGE
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        }
+    }
+else:
+    PROJECT_PATH = os.path.join(os.path.abspath(os.path.split(__file__)[0]), '..')
+    MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+    MEDIA_URL = '/media/'
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
-    },
+    
+        # Fixed conflic with STATICFILES_STORAGE
+        "staticfiles": {
+            "BACKEND": 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        }
+    }
+
+    # NOTE: Only for dev
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'app_api': {
+                'handlers': ['console'],
+                'level': 'INFO',
+            },
+        },
     }

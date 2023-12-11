@@ -1,15 +1,18 @@
 import datetime, logging
-from django.forms.models import BaseModelForm
-from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
 from django.http import request, JsonResponse, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
-from authentication.models import RegisteredUser
-from django.contrib.auth.decorators import login_required
-
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView, FormView
+from django.forms.models import BaseModelForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+
+from authentication.models import RegisteredUser
 from .forms import RegisteredUserCreationForm, RegisteredUserLoginForm
 from .models import TautanMediaSosial, ProfileDetails, RegisteredUser
 
@@ -24,84 +27,126 @@ class RegisterView(CreateView):
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         return super().form_valid(form)
 
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect(reverse("core:home"))
+        
+        form = self.form_class()
+        context = {
+            "status": "Fetching form",
+            "form": form,
+        }
+
+        return render(request, self.template_name, context, status=200)
     def post(self, request):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
-            registered_user = form.save(commit=False)
-
-            # pd = ProfileDetails.objects.create()
-            # tms = TautanMediaSosial.objects.create()
-            
-            # form.instance.profile_details = pd
-            # form.instance.tautan_media_sosial = tms
-            
-            # # Save all 3 objects
-            # logger.info("pd", pd)
-            # logger.info("tms", tms)
-
-            # pd.save()
-            # tms.save()
-
-            registered_user.save()
-            logger.info("REGISTERED user", form.cleaned_data["username"][0])
+            # Create user but don't save to db just yet
+            user = form.save(commit=False)
+            user.save()
+            # messages.success(request, f"Registered {user.username}!")
 
             return redirect(self.success_url)
         else:
-            message = "Login failed!"
+            for error in form.errors:
+                logger.error("FAILED, Form invalid")
+                # messages.error(request, error)
+
             context = {
+                "status": "Refetching form",
                 "form": form,
-                "status_code": 500,
-                "message": message,
             }
 
-            logger.error("FAILED, Form invalid")
-            logger.error(form.errors)
-            return render(request, self.template_name, context)
+            return render(request, self.template_name, context, status=200)
 
 class LoginView(FormView):
-    form_class = RegisteredUserLoginForm #
+    form_class = RegisteredUserLoginForm
     success_url = reverse_lazy("core:home")
     template_name = "authentication/login.html"
 
     def get(self, request):
-        form = self.form_class
-        message = ''
+        if request.user.is_authenticated:
+            return redirect(reverse("core:home"))
+        
+        form = self.form_class()
         context = {
+            "status": "Fetching form",
             "form": form,
-            "status_code": 200,
-            "message": message
         }
 
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context, status=200)
 
     def post(self, request):
+        logger.info(request.POST)
         form = self.form_class(request.POST)
         if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"]
-            )
-            
-            logger.info("LOGGED IN AS", user.get_username())
+            use_email = False
+            if "@" in form.cleaned_data["username_email"]:
+                use_email = True
+
+            if use_email:
+                # Email auth
+                user = authenticate(
+                    username=form.cleaned_data["username_email"],
+                    password=form.cleaned_data["password"]
+                )
+                
+            else:
+                # Username auth
+                user = authenticate(
+                    username=form.cleaned_data["username_email"],
+                    password=form.cleaned_data["password"]
+                )
 
             if user is not None:
                 login(request, user)
-                return redirect(self.success_url)
+
+                # Set cookies
+                if use_email:
+                    registered_user = RegisteredUser.objects.get(email=form.cleaned_data["username_email"])
+                else:
+                    registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username_email"])
+
+                logger.info(f"LOGGED IN AS {user.get_username()}")
+                # messages.success(request, f"Logged in as {user.username}!")
+
+                res = redirect(reverse("core:home"))
+                res.set_cookie("last_login", datetime.datetime.now())
+                res.set_cookie("user_id", registered_user.id)
+
+                return res
+            else:
+                context = {
+                    "status": "Invalid username or password",
+                    "form": form,
+                }
+                logger.error("USER:", user)   
+                logger.error("LOGIN FAILED")
+                # messages.error(request, "Invalid username or password")
+
+                return render(request, self.template_name, context, status=404)
+        else:
+            for error in form.errors:
+                logger.error("FAILED, Form invalid")
+                # messages.error(request, error)
             
-        message = "Login failed!"
-        context = {
-            "form": form,
-            "status_code": 500,
-            "message": message,
-        }
+            context = {
+                "status": "Invalid username or password",
+                "form": form,
+            }
 
-        logger.error("LOGIN FAILED")
-        return render(request, self.template_name, context)
+            return render(request, self.template_name, context, status=400)
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect(reverse("authentication:login"))
+        
+        logger.info("LOGGED OUT of %s" % request.user.get_username())
         logout(request)
-        logger.info("LOGGED OUT of %d"%request.user.get_username())
-        return redirect(reverse("core:home"))
-    
 
+        res = redirect(reverse("core:home"))
+        res.delete_cookie("last_login")
+        res.delete_cookie("user_id")
+
+        return res

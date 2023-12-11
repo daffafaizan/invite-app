@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block meta %}
+<title>List of Vacancies</title>
+
+{% endblock meta %}
+
+{% block content %}
+<main class="w-full p-2 md:p-4 flex flex-col items-center justify-start gap-y-8 md:gap-y-10">
+    <form method="GET" action=".">
+        <div class="pt-4 pb-1 md:pt-8 pb-2">        
+            <p class="text-2xl md:text-4xl lg:text-6xl font-bold text-emerald-600">Temukan lombamu disini</p>
+        </div>
+        <div class="w-full flex flex-row pb-2 pt-1 md:pb-4 pt-2">
+            <input 
+                class="min-w-[260px] md:min-w-[600px] shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                id="search" type="text" placeholder="Search"
+                value="{{ query }}" name="q"
+            >
+            <button class="px-2 py-1 bg-emerald-600 text-white border border-1 border-emerald-600 rounded-r-lg">
+                Search
+            </button>
+        </div>
+
+        <!-- Sort n filter -->
+        <div class="flex flex-col gap-y-2">
+            <p class="text-sm md:text-md font-base">Sort by</p>
+            <div class="flex flex-row gap-x-2 md:gap-x-4">
+                <button 
+                    type="submit"
+                    name="sort"
+                    value="newest"
+                    class="px-2 py-1 bg-gray-200 border border-gray-300 rounded active:bg-emerald-600 active:text-white hover:bg-gray-300 duration-200"
+                >
+                    Newest
+                </button>
+    
+                <button 
+                    type="submit"
+                    name="sort"
+                    value="oldest"
+                    class="px-2 py-1 bg-gray-200 border border-gray-300 rounded active:bg-emerald-600 active:text-white hover:bg-gray-300 duration-200"
+                >
+                    Oldest
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Vacancy content -->
+    <div class="md:w-4/5 flex flex-col gap-y-2 md:grid md:grid-cols-3 md:gap-4">
+        {% for vacancy in vacancy_list %}
+            <div 
+                class="p-2 md:p-4 shadow shadow-md rounded-lg min-h-max bg-white flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer"
+            >
+            <a href="{% url 'find_teams:show_vacancy_details' lowongan_id=vacancy.id %}">
+                <div class="flex flex-row gap-x-2">
+                    
+                    <img 
+                        src="{% get_media_prefix %}{{vacancy.foto_lowongan_regu}}" 
+                        class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg"
+                    >
+                    <div class="flex flex-col gap-y-1">
+                        <h1 class="text-lg font-semibold">{{ vacancy.nama_lomba }}</h1>
+                        <p class="text-sm">Posted by <strong>{{ vacancy.ketua }}</strong> from team <strong>{{ vacancy.nama_regu }}</strong></p>
+                        <p class="text-sm">Field: {{ vacancy.bidang_lomba }}</p>
+                        <p class="text-sm">Recruiting until {{ vacancy.expiry }}</p>
+                        <p class="text-sm">Current members {{ vacancy.jumlah_anggota_sekarang }}/{{ vacancy.total_anggota_dibutuhkan }}</p>
+                    </div>
+                </a>
+                </div>
+            
+                <div class="flex flex-row justify-center gap-x-2">
+                    {% if vacancy.ketua != current_user %}
+                        {% if vacancy.id in sent_application_ids %}
+                            <button 
+                            class="px-5 py-2 mr-auto text-white font-semibold bg-gray-400 shadow-md rounded-lg text-center"
+                            disabled
+                            >
+                                Applied
+                            </button>
+                        {% else %}
+                            <a 
+                            href="{% url 'find_teams:apply_vacancy_first' lowongan_id=vacancy.id %}" 
+                            class="px-5 py-2 text-white font-semibold bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
+                            >
+                                Apply
+                            </a>
+                        {% endif %}
+                        <div class="ml-auto">
+                            <form method="post" style="display: inline;" class="bookmark-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                                <input type="hidden" name="lowongan_id" value="{{ vacancy.id }}">
+                                <button
+                                    class="align-middle select-none font-sans font-bold text-center uppercase transition-all text-xs py-3 px-6 rounded-lg bg-gray-900 shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none flex items-center gap-3 {% if vacancy.id in bookmarked_ids %}text-red-500 fill-current{% else %}text-white fill-none{% endif %} bookmark-button"
+                                    type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2"
+                                        stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z">
+                                        </path>
+                                    </svg>
+                                    {% if vacancy.id in bookmarked_ids %}
+                                    <span class="bookmark-text">Bookmarked</span>
+                                    {% else %}
+                                    <span class="bookmark-text">Add to Bookmark</span>
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <button 
+                            class="px-5 py-2 mr-auto text-white font-semibold bg-gray-400 shadow-md rounded-lg text-center"
+                            disabled
+                        >
+                            Apply
+                        </button>
+                    {% endif %}
+                </div>
+
+            </div>
+        {% empty %}
+            <div class="w-full text-center p-4">
+                <p class="text-gray-700">No vacancies found.</p>
+            </div>
+        {% endfor %}
+
+        
+    </div>
+
+</main>
+
+
+
+
+<script>
+    $(document).ready(function() {
+        $('.bookmark-form').on('submit', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(data) {
+                    // Toggle the class on success
+                    var button = form.find('.bookmark-button');
+                    var buttonText = form.find('.bookmark-text');
+
+                    if (buttonText.text() === 'Add to Bookmark') {
+                        button.removeClass('text-white font-bold fill-none')
+                        button.addClass('text-red-500 font-bold fill-current');
+                        buttonText.text('Bookmarked');
+                    } else {
+                        button.removeClass('text-red-500 font-bold fill-current');
+                        button.addClass('text-white font-bold fill-none');
+                        buttonText.text('Add to Bookmark');
+                    }
+
+                    console.log('Bookmarking success!');
+                },
+                error: function(error) {
+                    // Handle the error if needed
+                    console.error('Bookmarking error:', error);
+                }
+            });
+        });
+    });
+  </script>
+  
+
+
+{% endblock content %}
