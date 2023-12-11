@@ -49,47 +49,6 @@ class MyVacanciesDetailView(LoginRequiredMixin, ListView):
     def get_queryset(self) -> QuerySet[Any]:
         # Return only the vacancies created by the current user
         return self.model.objects.owned_by_user(self.request.user)
-        # return LowonganRegu.objects.filter(is_active=True, ketua=self.request.user)
-
-# @login_required(login_url=settings.LOGIN_URL)
-# def create_vacancy(request):
-
-#     form = LowonganForm()
-
-#     if request.method == 'POST':
-#         form = LowonganForm(request.POST)
-        
-#         if form.is_valid():
-#             lowongan = form.save(commit=False)
-
-#             lowongan.ketua = request.user
-#             lowongan.is_active = True
-            
-#             tautan_medsos_regu = TautanMediaSosialLowongan(
-#                 website = request.POST.get('website'),
-#                 instagram = request.POST.get('instagram'),
-#                 twitter = request.POST.get('twitter'),
-#                 linkedin = request.POST.get('linkedin'), 
-#                 github = request.POST.get('github'),
-#             )
-#             tautan_medsos_regu.save()
-#             lowongan.tautan_medsos_regu = tautan_medsos_regu
-
-#             lowongan.save()
-
-#             # if succesful, redirect to melihat daftar lowongan
-#             return redirect('find_teams:show_vacancies')
-        
-#     context = {
-#         'form': form
-#     }
-
-#     # if unsuccesful, reload form and display inputted values
-#     for field, errors in form.errors.items():
-#                 for error in errors:
-#                     messages.error(request, f'{error}')
-
-#     return render(request, 'find_members/create_vacancy.html', context)
 
 class VacancyCreateView(CreateView):
     form_class = VacancyCreationForm
@@ -130,13 +89,12 @@ class VacancyCreateView(CreateView):
             tautan_medsos_regu.save()
             vacancy.tautan_medsos_regu = tautan_medsos_regu
             vacancy.save()
-            messages.success(request, f"Vacancy created!")
+            # messages.success(request, f"Vacancy created!")
 
             return redirect(self.success_url)
         else:
-            # Add error messages for each invalid field
-            for error in form.errors.values():
-                messages.error(request, error.as_text())
+            # for error in form.errors.values():
+            #     messages.error(request, error.as_text())
 
             context = {
                 "form": form,  # Pass the form with submitted data back to the template
@@ -200,7 +158,7 @@ def vacancy_applicants(request, vacancy_id):
         
         # kalo coba access lowongan orang lain dari url, bakal ke redirect ke home aja
         if lowongan.ketua != current_user:
-            messages.error(request, "Can't access")
+            # messages.error(request, "Can't access")
             return redirect("core:home")
             
     except LowonganRegu.DoesNotExist:

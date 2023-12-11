@@ -31,7 +31,13 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DEBUG', 0))
 
-ALLOWED_HOSTS = ["*"]
+if os.getenv("GAE_APPLICATION"):
+    ALLOWED_HOSTS = [
+        "rpl-a12.et.r.appspot.com",
+        "invite-app.jeremyalv.com",
+    ]
+else:
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -94,8 +100,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
+        'PASSWORD': env('PROD_DB_PASSWORD') if os.getenv("GAE_APPLICATION") else env('DB_PASSWORD'),
+        'HOST': env('PROD_DB_HOST') if os.getenv("GAE_APPLICATION") else env('DB_HOST'),
         'PORT': env('DB_PORT')
     }
 }
