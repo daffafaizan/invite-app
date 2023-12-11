@@ -15,7 +15,7 @@ logger = logging.getLogger("app_api")
 
 @login_required(login_url="/accounts/login/")
 def show_vacancies(request):
-    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    current_user = request.user
     query = request.GET.get('q', '')  
     sort_order = request.GET.get('sort', 'newest') 
 
