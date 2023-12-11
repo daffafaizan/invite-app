@@ -49,7 +49,7 @@ class ProfileDetails(models.Model):
 class RegisteredUser(AbstractUser):
     def user_directory_path(self, filename):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-        return f'{settings.MEDIA_URL}/user_{self.username}/{filename}'
+        return f'user_{self.username}/{filename}'
 
     def save(self, *args, **kwargs):
         # Check if profile_details is not set, then create a default ProfileDetails instance

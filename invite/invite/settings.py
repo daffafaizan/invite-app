@@ -142,10 +142,8 @@ STATIC_ROOT = '/static'
 
 # Django serves static files on STATIC_URL
 STATIC_URL = '/static/'
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-
-# Overriden by DEPLOYMENT settings
+# Overriden by DEPLOYMENT settings to GCS
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
@@ -202,7 +200,8 @@ STORAGES = {
 
 # Archived
 if os.getenv("GAE_APPLICATION"):
-    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    # NOTE Already configered in settings.STORAGES.default.BACKEND
+    # DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_BUCKET_NAME = 'rpl-a12-media'
     GS_DEFAULT_ACL = 'publicRead'
     MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'

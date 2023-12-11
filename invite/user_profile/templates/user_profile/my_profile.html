@@ -18,8 +18,11 @@
             <div class="flex flex-row justify-center items-center gap-x-2 md:gap-x-4">
                 <!-- Image -->
                 <div class="relative w-[40px] h-[40px] md:w-[60px] md:h-[60px] rounded-full overflow-hidden">
-                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
-                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                    {% if data.user.foto_profil %}
+                        <img src="{{ data.user.foto_profil }}" alt="Saved Picture">
+                    {% else %}
+                        <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                    {% endif %}
                 </div>
 
                 <div class="flex flex-col items-start">
