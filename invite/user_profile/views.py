@@ -53,6 +53,9 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
             return render(request, self.template_name, context, status=200)
         except Http404 as error:
             logger.error("ProfileDetailError: Object not found: %s" % str(error))
+            return render(request, "404.html", status=404)
+        except:
+            return render(request, "404.html", status=500)
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
