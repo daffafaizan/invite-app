@@ -59,7 +59,7 @@
                 <div class="flex flex-row gap-x-2">
                     
                     <img 
-                        src="{% static 'vacancy.foto_lowongan_regu' %}" 
+                        src="{% get_media_prefix %}{{vacancy.foto_lowongan_regu}}" 
                         class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg"
                     >
                     <div class="flex flex-col gap-y-1">
