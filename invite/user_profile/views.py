@@ -221,7 +221,7 @@ def show_my_vacancies(request):
     else:  # Default to newest
         vacancy_list = vacancy_list.order_by("-created_at")
 
-    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    current_user = request.user
 
     context = {
         "vacancy_list": vacancy_list,
