@@ -173,7 +173,7 @@ class VacancyDeleteView(LoginRequiredMixin, DeleteView):
     model = LowonganRegu
     pk_url_kwarg = 'vacancy_id'
     template_name = "find_members/delete_vacancy.html"
-    success_url = reverse_lazy("find_teams:show_vacancies")
+    success_url = reverse_lazy("profile:show_my_vacancies")
     context_object_name = "vacancy"
 
     def get_object(self, queryset=None) -> LowonganRegu:

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Delete Vacancy Confirmation{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h3>Confirm Deletion</h3>
+                <p>Are you sure you want to delete the vacancy "{{ vacancy.nama_regu }}"?</p>
+                <form action="{% url 'find_members:delete_vacancy' vacancy.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="submit" value="Yes, delete it" class="btn btn-danger">
+                        <a href="{% url 'profile:show_my_vacancies' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

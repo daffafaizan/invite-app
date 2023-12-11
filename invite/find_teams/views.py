@@ -66,6 +66,7 @@ def show_vacancy_details(request, lowongan_id):
     context = {
         "vacancy": False,
         "sosmed": False,  # Pass the user data to the template
+        "current_user": request.user
     }
     try:
         vacancy = LowonganRegu.objects.get(id=lowongan_id)
