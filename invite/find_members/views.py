@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.views.generic import DetailView, ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
+from django.core.exceptions import PermissionDenied
 from find_teams.models import Lamaran
 from authentication.models import RegisteredUser
 from .forms import VacancyCreationForm
@@ -144,11 +145,27 @@ class VacancyDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "vacancy"
 
     def get_object(self, queryset=None) -> LowonganRegu:
+        """ Retrieve the LowonganRegu instance or raise an exception if conditions are not met. """
         try:
-            return self.model.objects.get(ketua=self.request.user, id=self.kwargs["vacancy_id"])
+            res = self.model.objects.get(id=self.kwargs["vacancy_id"])
+            if res.ketua != self.request.user:
+                raise PermissionDenied
+            return res
         except LowonganRegu.DoesNotExist:
-            raise Http404("Vacancy does not exist or you don't have permission to delete it")
-    
+            raise Http404
+
+    def handle_no_permission(self):
+        """ Render custom error page for permission denied. """
+        return render(self.request, 'core/error.html', {"status_code": 403})
+
+    def dispatch(self, *args, **kwargs):
+        """ Handle exceptions and render custom error page. """
+        try:
+            return super().dispatch(*args, **kwargs)
+        except Http404:
+            return render(self.request, 'core/error.html', {"status_code": 404})
+        except PermissionDenied:
+            return render(self.request, 'core/error.html', {"status_code": 403})
     
 def vacancy_applicants(request, vacancy_id):
     current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
