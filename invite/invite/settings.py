@@ -144,9 +144,9 @@ STATIC_ROOT = '/static'
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# Overriden by DEPLOYMENT settings
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 # Default primary key field type
@@ -183,3 +183,14 @@ LOGGING = {
         },
     },
     }
+
+# DEPLOYMENT
+if os.getenv("GAE_APPLICATION"):
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = 'rpl-a12-media'
+    GS_DEFAULT_ACL = 'publicRead'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+else:
+    PROJECT_PATH = os.path.join(os.path.abspath(os.path.split(__file__)[0]), '..')
+    MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+    MEDIA_URL = '/media/'
