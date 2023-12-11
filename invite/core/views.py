@@ -12,3 +12,6 @@ def home(request):
         return render(request, "home.html", context)
     else:
         return redirect(reverse("authentication:login"))
+    
+def error_404(request):
+    return render(request, '404.html')

@@ -9,6 +9,7 @@ services:
     working_dir: /invite
     environment:
       - CLOUDSDK_CONFIG=/creds
+      - DEBUG=0
 
 volumes:
   gcp-creds:
