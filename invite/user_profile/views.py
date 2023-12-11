@@ -100,9 +100,12 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             logger.info(f"Showing {registered_user.get_username()}'s profile")
 
             return render(request, self.template_name, context, status=200)
-        except Http404 as error:
-            logger.error("ProfileDetailError: Object not found: %s" % str(error))
-            return render(request, self.template_name, status=404)
+        except RegisteredUser.DoesNotExist:
+            logger.error("ProfileDetailError: Object not found: %s")
+            return render(request, "404.html", status=404)
+        except:
+            logger.error("ProfileDetailError: Unexpected server error: %s")
+            return render(request, "404.html", status=500)
 
 
 @login_required(login_url="/accounts/login/")

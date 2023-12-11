@@ -52,13 +52,12 @@ class RegisterView(CreateView):
                 logger.error("FAILED, Form invalid")
                 # messages.error(request, error)
 
-                form = self.form_class()
-                context = {
-                    "status": "Refetching form",
-                    "form": form,
-                }
+            context = {
+                "status": "Refetching form",
+                "form": form,
+            }
 
-                return render(request, self.template_name, context, status=200)
+            return render(request, self.template_name, context, status=200)
 
 class LoginView(FormView):
     form_class = RegisteredUserLoginForm
