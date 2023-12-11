@@ -192,6 +192,11 @@ STORAGES = {
         "OPTIONS": {
 
         }
+    },
+    
+    # Fixed conflic with STATICFILES_STORAGE
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
     }
 }
 
