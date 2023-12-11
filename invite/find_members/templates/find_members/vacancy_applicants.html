@@ -30,9 +30,8 @@
             
                     {% for applicant in applicants %}
             
-                        <div class="mb-4 w-full mx-auto overflow-hidden max-w-2xl rounded-lg shadow-md bg-white">
-                            <div class="p-4">
-            
+                        <div class="flex mb-4 w-full mx-auto overflow-hidden max-w-2xl rounded-lg shadow-md bg-white">
+                            <div class="flex flex-col w-2/3 p-4">
                                     <span 
                                         class="py-1 px-3 mr-auto rounded-2xl tracking-wide font-light text-white
                                         {% if applicant.status == 'Denied' %}bg-[#EB6060]
@@ -66,9 +65,13 @@
                                         
                                     
                                     {% endif %}
-
-
-        
+                            </div>
+                            <div class="pt-8 pb-4 pl-8 pr-4 flex-col items-center justify-center">
+                                <!-- Profile Photo -->
+                                <div class="relative w-[60px] h-[60px] md:w-[160px] md:h-[160px] rounded-full overflow-hidden">
+                                    <img src="{% get_media_prefix %}{{ applicant.foto_profil }}" alt="Profile Picture">
+                                </div>
+                                <p>{{ applicant.first_name }} {{ applicant.last_name }}</p>
                             </div>
                         </div>
                     {% endfor %}

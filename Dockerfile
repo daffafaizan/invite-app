@@ -9,8 +9,8 @@ RUN apk add python3 python3-dev python3-venv && \
     /py/bin/pip install --upgrade pip && \
     adduser --disabled-password --no-create-home django-user 
 
-RUN /py/bin/pip install -r /requirements.txt 
-    # && python manage.py makemigrations && python manage.py migrate --noinput
+RUN /py/bin/pip install -r /requirements.txt \
+    && python manage.py createsuperuser
 
 ENV PATH="/py/bin:$PATH"
 
