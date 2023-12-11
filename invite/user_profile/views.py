@@ -162,11 +162,11 @@ def delete_application(request, application_id):
     context = {"id": application_id, "nama": lamaran.lowongan.nama_regu}
 
     if current_user != lamaran.pengirim:
-        return render(request, "user_profile/my_applications.html", status=404)
+        return render(request, "user_profile/profile.html", status=404)
 
     if not lamaran:
         logger.info("Lamaran tidak ditemukan")
-        return render(request, "user_profile/my_applications.html", status=404)
+        return render(request, "user_profile/profile.html", status=404)
 
     if request.method == "POST":
         
@@ -174,7 +174,7 @@ def delete_application(request, application_id):
             lamaran.delete()
             return render(request, "user_profile/delete_success.html")
         else:
-            return render(request, "user_profile/show_my_vacancies_new.html", status=404)
+            return render(request, "user_profile/profile.html", status=404)
 
     return render(request, "user_profile/delete_confirmation.html", context)
 
