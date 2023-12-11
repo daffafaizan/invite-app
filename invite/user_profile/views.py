@@ -104,6 +104,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             logger.error("ProfileDetailError: Object not found: %s" % str(error))
             return render(request, self.template_name, status=404)
 
+
 @login_required(login_url="/accounts/login/")
 def review_profile(request, profile_id):
     diulas = RegisteredUser.objects.get(id=profile_id)
@@ -208,55 +209,41 @@ def show_my_vacancies(request):
 def delete_profile_review(request, profile_id, review_id):
     try:
         current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
-        diulas = get_object_or_404(RegisteredUser, id=profile_id)
-        review = get_object_or_404(UlasanProfil, id=review_id)
+        diulas = RegisteredUser.objects.get(id=profile_id)
+        review = UlasanProfil.objects.get(id=review_id)
     except RegisteredUser.DoesNotExist:
-        # messages.error(request, "User not found.")
-        return redirect(
-            "error_page", message="You do not have permission to delete this review."
-        )
+        return render(request, "404.html", {"status_code": 404})
     except UlasanProfil.DoesNotExist:
-        # messages.error(request, "Review not found.")
-        return redirect(
-            "error_page", message="You do not have permission to delete this review."
-        )
+        return render(request, "404.html", {"status_code": 404})
 
     if review.diulas != diulas:
-        logger.info("You do not have permission to delete this review.")
-        # messages.error(request, "You do not have permission to delete this review.")
-        return redirect("profile:profile", user_id=profile_id)
+        return render(request, "404.html", {"status_code": 403})
 
     if review.pengulas != current_user:
-        logger.info("You do not have permission to delete this review.")
-        # messages.error(request, "You do not have permission to delete this review.")
-        return redirect("profile:profile", user_id=profile_id)
+        return render(request, "404.html", {"status_code": 403})
 
     review.delete()
     logger.info("Review Successfully Deleted")
-    # messages.success(request, "Review successfully deleted.")
 
     return redirect("profile:profile", user_id=profile_id)
 
 
-def error_page(request, message):
-    return render(request, "error.html", {"message": message})
-
-
 @login_required(login_url="/accounts/login/")
 def update_profile_review(request, profile_id, review_id):
-    review = UlasanProfil.objects.get(id=review_id)
-    diulas = RegisteredUser.objects.get(id=profile_id)
-    pengulas = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    try:
+        review = UlasanProfil.objects.get(id=review_id)
+        diulas = RegisteredUser.objects.get(id=profile_id)
+        current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
+    except RegisteredUser.DoesNotExist:
+        return render(request, "404.html", {"status_code": 404})
+    except UlasanProfil.DoesNotExist:
+        return render(request, "404.html", {"status_code": 404})
 
-    if diulas == pengulas:
-        logger.info("Can't review for your own profile")
-        # messages.error(request, "Can't review for your own profile")
-        return redirect("profile:profile", user_id=profile_id)
+    if review.diulas != diulas:
+        return render(request, "404.html", {"status_code": 403})
 
-    if review.pengulas != pengulas:
-        logger.info("You can't update other people reviews")
-        # messages.error(request, "You can't update other people reviews")
-        return redirect("profile:profile", user_id=profile_id)
+    if review.pengulas != current_user:
+        return render(request, "404.html", {"status_code": 403})
 
     if request.method == "POST":
         rating = request.POST.get("rating")
@@ -274,14 +261,16 @@ def update_profile_review(request, profile_id, review_id):
     context = {"review": review, "profile_id": profile_id}
     return render(request, "user_profile/update_review.html", context)
 
+
 @login_required(login_url="/accounts/login/")
 def update_profile(request, profile_id):
-    user = get_object_or_404(RegisteredUser, id=profile_id)
+    try:
+        user = RegisteredUser.objects.get(id=profile_id)
+    except RegisteredUser.DoesNotExist:
+        return render(request, "404.html", {"status_code": 404})
 
-    # Ensure the logged-in user is updating their own profile
     if request.user != user:
-        # Handle unauthorized access
-        return redirect("some_other_page")
+        return render(request, "404.html", {"status_code": 403})
 
     if request.method == "POST":
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
@@ -289,8 +278,6 @@ def update_profile(request, profile_id):
         if profile_form.is_valid() and social_form.is_valid():
             profile_form.save()
             social_form.save()
-            # messages.success(request, "Profile updated successfully.")
-            # Redirect to the My Profile page
             return redirect(reverse("profile:me"))
     else:
         profile_form = ProfileUpdateForm(instance=user)
