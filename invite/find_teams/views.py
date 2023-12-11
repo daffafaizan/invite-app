@@ -26,7 +26,7 @@ def show_vacancies(request):
     # Save the user changes before querying bookmarked_lowongans
     current_user.save()
     
-    vacancy_list = LowonganRegu.objects.all()
+    vacancy_list = LowonganRegu.objects.all().filter(is_active=True)
 
     if query:
         vacancy_list = vacancy_list.filter(
