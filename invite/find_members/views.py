@@ -104,6 +104,7 @@ class VacancyCreateView(CreateView):
             return redirect(reverse('authentication:login'))
         
         form =  self.form_class()
+        form.errors.clear()
         context = {
             "status": "Fetching form",
             "form": form,
@@ -133,9 +134,17 @@ class VacancyCreateView(CreateView):
 
             return redirect(self.success_url)
         else:
+            # Add error messages for each invalid field
             for error in form.errors.values():
                 messages.error(request, error.as_text())
-                return redirect(request.path)
+
+            context = {
+                "form": form,  # Pass the form with submitted data back to the template
+                "status": "Form submission failed due to invalid data",
+            }
+
+            # Re-render the same page with the form containing user's data and errors
+            return render(request, self.template_name, context)
 
 class VacancyUpdateView(LoginRequiredMixin, UpdateView):
     model = LowonganRegu

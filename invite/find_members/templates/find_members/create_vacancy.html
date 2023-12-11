@@ -33,7 +33,6 @@
         </div>
         <div class="mb-4">
           {{ form.bidang_lomba|as_crispy_field }}
-          <div class="text-sm text-gray-500">(Must be after the current time)</div>
         </div>
         <div class="mb-4">
           {{ form.tanggal_lomba|as_crispy_field }}
@@ -41,6 +40,7 @@
         </div>
         <div class="mb-4">
           {{ form.expiry|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Must be after the current time)</div>
         </div>
         <div class="mb-4">
           {{ form.jumlah_anggota_sekarang|as_crispy_field }}
