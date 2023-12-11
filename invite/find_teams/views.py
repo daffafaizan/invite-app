@@ -26,7 +26,7 @@ def show_vacancies(request):
     # Save the user changes before querying bookmarked_lowongans
     current_user.save()
     
-    vacancy_list = LowonganRegu.objects.all()
+    vacancy_list = LowonganRegu.objects.all().filter(is_active=True)
 
     if query:
         vacancy_list = vacancy_list.filter(
@@ -66,6 +66,7 @@ def show_vacancy_details(request, lowongan_id):
     context = {
         "vacancy": False,
         "sosmed": False,  # Pass the user data to the template
+        "current_user": request.user
     }
     try:
         vacancy = LowonganRegu.objects.get(id=lowongan_id)

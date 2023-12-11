@@ -4,6 +4,14 @@
 
 {% block content %}
   <div class="flex flex-grow flex-col items-center">
+    <div class="p-4 sm:p-8 mr-auto">
+      <button onclick="goBack()" style="cursor: pointer;" class="flex items-center justify-center px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white shadow-sm rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+        <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+        </svg>
+        <span class="hidden md:inline">Go back</span>
+      </button>
+    </div>
     <div class="flex justify-center items-center w-full md:w-2/5 p-4 underline decoration-emerald-900 underline-offset-[9px]">
       <span class="text-2xl md:text-3xl font-semibold text-emerald-900 text-center">My Applications</span>
     </div>
@@ -44,4 +52,11 @@
     </div>
     </div>
   </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+  
 {% endblock %}

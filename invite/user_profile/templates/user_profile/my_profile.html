@@ -40,25 +40,25 @@
             <!-- Profile Menu -->
             <div class="flex flex-row md:flex-row items-center gap-x-2 md:gap-x-4">
                 <a 
-                class="max-w-[100px] md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+                class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                 href="{% url 'find_teams:show_bookmarked' %}"">
                     Bookmarks
                 </a>
         
                 <a 
-                    class="max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+                    class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[240px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_vacancies' %}"">
                         Lowongan Terbuat
                 </a>
                 <a 
-                    class="max-w-[100px] md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
+                    class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_applications' %}"">
                         Lamaranku
                 </a>
-                <a class="rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200"
+                <a class="flex items-center justify-center text-xs sm:text-sm h-[45px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200"
                     href="{% url 'profile:update_profile' profile_id=user.id%}">
                     Edit Profile
                 </a>
@@ -172,8 +172,8 @@
             <div class="w-full py-4 text-emerald-900">
                 {% if data.ulasan %}
                     {% for item in data.ulasan %}
-                        <div class="mb-5 mx-auto overflow-hidden">
-                            <div class="shadow-md bg-emerald-50 hover:bg-emerald-100 rounded-2xl p-10 pl-3">
+                        <div class="mb-5 mx-auto overflow-hidden shadow-md bg-white rounded-2xl">
+                            <div class="p-10 pl-3">
                                 
                                 <div><b>Pengulas: </b>{{ item.pengulas.username }}</div>
                                 <div><b>Rating: </b>{{ item.rating }}</div>
@@ -188,9 +188,9 @@
                             </div>
                         </div>      
                     {% endfor %}
-                {% else %}
-                    <div>Belum terdapat Ulasan Profil</div>
-                {% endif %}
+                 {% else %}
+            <div class="text-center text-xl text-gray-500">Belum terdapat Ulasan Profil</div>
+            {% endif %}
             </div>
         </div>
     </div>

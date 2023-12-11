@@ -230,7 +230,7 @@ def show_my_vacancies(request):
         "sort_order": sort_order,
     }
 
-    return render(request, "user_profile/show_my_vacancies.html", context)
+    return render(request, "user_profile/show_my_vacancies_new.html", context)
 
 
 @login_required(login_url="/accounts/login/")
