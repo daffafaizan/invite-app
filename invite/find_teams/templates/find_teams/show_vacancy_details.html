@@ -15,7 +15,6 @@
 
 <div class="flex flex-col justify-center items-center p-8 md:p-16 border-2 rounded-2xl">
   <span class="text-3xl mb-8 md:text-4xl md:mb-10">Vacancy Detail</span>
-  
   {% if vacancy %}
     <div>
       <div class="detail-content"><span class="detail-label">Id:</span> {{ vacancy.id }}</div>
@@ -54,15 +53,22 @@
     <p>The requested vacancy does not exist.</p>
   {% endif %}
 
-  <div class="flex flex-col justify-center items-center">
-    <a href="{% url 'find_teams:show_vacancies' %}" class="border-2 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150">Back</a>
-  </div>
-
-  {% if vacancy.ketua == current_user %}
+  <div class="flex flex-row md:flex-row gap-x-3 md:gap-x-6 justify-between">
     <div class="flex flex-col justify-center items-center">
-      <a href="{% url 'find_members:delete_vacancy' vacancy_id=vacancy.id %}" class="border-2 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150" style="color: red">Delete</a>
+      <a href="{% url 'find_teams:show_vacancies' %}" class="border-2 border-gray-400 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150 opacity-80">Back</a>
     </div>
-  {% endif %}
+  
+    {% if vacancy.ketua == current_user %}
+    <div class="flex flex-row gap-x-1 md:gap-x-1.5">
+      <div class="flex flex-col justify-center items-center">
+        <a href="{% url 'find_members:update_vacancy' vacancy_id=vacancy.id %}" class="border-2 border-gray-400 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150" style="color: black">Update</a>
+      </div>
+      <div class="flex flex-col justify-center items-center">
+        <a href="{% url 'find_members:delete_vacancy' vacancy_id=vacancy.id %}" class="border-2 border-gray-400 py-2 px-4 mt-4 rounded-xl hover:scale-110 duration-150" style="color: red">Delete</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
 
 </div>
 {% endblock %}
