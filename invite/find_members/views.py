@@ -179,7 +179,7 @@ def vacancy_applicants(request, vacancy_id):
             return redirect("core:home")
             
     except LowonganRegu.DoesNotExist:
-        return HttpResponseNotFound("LowonganRegu not found")
+        return render(request, 'core/error.html', {"status_code": 404})
     
     applicants = Lamaran.objects.filter(lowongan=lowongan)
     print(len(applicants))
