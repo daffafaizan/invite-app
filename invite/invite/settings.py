@@ -167,22 +167,6 @@ LOGIN_REDIRECT_URL = "core:home"
 LOGOUT_REDIRECT_URL = "core:home"
 AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend']
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'app_api': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        },
-    },
-    }
-
 # DEPLOYMENT
 if os.getenv("GAE_APPLICATION"):
     # NOTE Already configered in settings.STORAGES.default.BACKEND
@@ -215,4 +199,21 @@ else:
         "staticfiles": {
             "BACKEND": 'django.contrib.staticfiles.storage.StaticFilesStorage',
         }
+    }
+
+    # NOTE: Only for dev
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'app_api': {
+                'handlers': ['console'],
+                'level': 'INFO',
+            },
+        },
     }
