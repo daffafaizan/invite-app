@@ -11,6 +11,7 @@ services:
       # Map src code into container
       - ./invite:/invite
       - ./static:/static
+      - ./media:/media
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DEBUG=1

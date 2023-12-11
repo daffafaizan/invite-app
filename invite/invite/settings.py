@@ -184,28 +184,41 @@ LOGGING = {
     }
 
 # DEPLOYMENT
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-        "OPTIONS": {
-
-        }
-    },
-    
-    # Fixed conflic with STATICFILES_STORAGE
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
-    }
-}
-
-# Archived
 if os.getenv("GAE_APPLICATION"):
     # NOTE Already configered in settings.STORAGES.default.BACKEND
     # DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_BUCKET_NAME = 'rpl-a12-media'
     GS_DEFAULT_ACL = 'publicRead'
     MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+            "OPTIONS": {
+
+            }
+        },
+    
+        # Fixed conflic with STATICFILES_STORAGE
+        "staticfiles": {
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        }
+    }
 else:
     PROJECT_PATH = os.path.join(os.path.abspath(os.path.split(__file__)[0]), '..')
     MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
     MEDIA_URL = '/media/'
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "OPTIONS": {
+
+            }
+        },
+    
+        # Fixed conflic with STATICFILES_STORAGE
+        "staticfiles": {
+            "BACKEND": 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        }
+    }

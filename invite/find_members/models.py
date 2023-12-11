@@ -50,7 +50,7 @@ class LowonganManager(models.Manager):
 class LowonganRegu(models.Model):
     def vacancy_directory_path(self, filename):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-        return f'MEDIA_ROOT/lowongan_{self.pk}/{filename}'
+        return f'/lowongan_{self.pk}/{filename}'
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     
