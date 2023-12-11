@@ -10,8 +10,18 @@ def get_n_days_future(n=180):
     return datetime.datetime.now() + datetime.timedelta(days=n)
 
 class TautanMediaSosialLowongan(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+    def __str__(self) -> str:
+        res = f"\nWebsite id: {self.id}\n"
+        options = ["website", "instagram", "twitter", "linkedin", "github"]
+        values = (self.website, self.instagram, self.twitter, self.linkedin, self.github)
 
+        for i in range(len(options)):
+            res += f"{options[i]}: {values[i]}\n"
+        
+        return res
+            
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+ 
     website = models.CharField(max_length=250, blank=True) # blank=True null=False, avoid redundant NULL and "" default values
     instagram = models.CharField(max_length=250, blank=True)
     twitter = models.CharField(max_length=250, blank=True)

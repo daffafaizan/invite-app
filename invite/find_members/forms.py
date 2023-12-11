@@ -3,14 +3,39 @@ from django.forms import ModelForm
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from find_members.models import LowonganRegu
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
-class LowonganForm(ModelForm):
+VACANCY_FIELDS = (
+    'nama_regu',
+    'deskripsi_lowongan_regu',
+    'foto_lowongan_regu',
+    'nama_lomba', 
+    'bidang_lomba', 
+    'tanggal_lomba', 
+    'expiry',
+    'jumlah_anggota_sekarang', 'total_anggota_dibutuhkan',
+    'website',
+    'instagram', 
+    'twitter', 
+    'linkedin', 
+    'github',
+)
+
+class VacancyCreationForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(VacancyCreationForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+        # Customize error display here
+        self.helper.error_text_inline = False
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
     class Meta:
         model = LowonganRegu
-        fields = ['nama_regu', 'deskripsi_lowongan_regu', 'foto_lowongan_regu',
-                  'nama_lomba', 'bidang_lomba', 'tanggal_lomba', 'expiry',
-                  'jumlah_anggota_sekarang', 'total_anggota_dibutuhkan',
-                  'website', 'instagram', 'twitter', 'linkedin', 'github']
+        fields = VACANCY_FIELDS
 
     foto_lowongan_regu = forms.ImageField(required=False)
     website = forms.CharField(required=False)

@@ -1,80 +1,75 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-    crossorigin="anonymous" />
-  <link rel="shortcut icon" href="#">
-  <title>Create A Vacancy</title>
-</head>
+{% block title %}Create Vacancy{% endblock %}
 
-<body>
-  <style type="text/css">
-    body {
-      background-color: hsl(0, 0%, 96%);
-    }
+{% block content %}
+<div class="flex flex-col justify-center p-8 md:py-16 items-center border-2 rounded-2xl">
+  <div class="max-w-[360px] md:max-w-[600px] flex flex-col">
+    <span class="text-3xl mb-8 md:text-4xl md:mb-10 font-semibold text-center">Create a New Vacancy</span>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
 
-    /* Custom CSS for red alert background */
-    .alert-custom {
-      background-color: red !important;
-      color: white; 
-    }
+      {% for message in messages %}
+      <div class="alert {{ message.tags }}">
+          {{ message }}
+      </div>
+      {% endfor %}
 
-
-  </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-    crossorigin="anonymous"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
-  <section class="">
-    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
-      <div class="container">
-        <div class="row gx-lg-5 align-items-center">
-          <div class="col-lg-6 mx-auto mb-5 mb-lg-0">
-            
-            <div class="text-center">
-              <h2 class="mb-4 fw-bold">Create A Vacancy</h2>
-            </div>
-
-            <div class="container">
-              {% for message in messages %}
-              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-              {% endfor %}
-            </div>            
-            
-            <div class="card">
-              <div class="card-body py-5 px-md-5">
-                <div class="create_vacancy">
-                  <form action="" method="post">
-                    {% csrf_token %}
-  
-                    {% for field in form %}
-                      <div class="mb-3">
-                        {{ field.label_tag }}
-                        {% if field.field.required %}<span style="color: red;"> *</span>{% endif %}
-                        {{ field }}
-                      </div>
-                    {% endfor %}
-                    
-                    <div class="text-center">
-                      <input type="submit" class="btn btn-primary btn-block mb-4">
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Single column layout -->
+      <div class="flex flex-col">
+        <div class="mb-4">
+          {{ form.nama_regu|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.deskripsi_lowongan_regu|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Must have a minimum of 3 characters)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.foto_lowongan_regu|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.nama_lomba|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.bidang_lomba|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Must be after the current time)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.tanggal_lomba|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Must be after the current time)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.expiry|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.jumlah_anggota_sekarang|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.total_anggota_dibutuhkan|as_crispy_field }}
+          <div class="text-sm text-gray-500">(Total members needed must be greater than current members)</div>
+        </div>
+        <div class="mb-4">
+          {{ form.website|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.instagram|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.twitter|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.linkedin|as_crispy_field }}
+        </div>
+        <div class="mb-4">
+          {{ form.github|as_crispy_field }}
         </div>
       </div>
-    </div>
-  </section>
+
+      <div class="flex flex-col justify-center items-center">
+        <button type="submit" class="border border-gray-600 py-2 px-4 mt-4 rounded-xl hover:bg-gray-100 duration-200">Create Vacancy</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

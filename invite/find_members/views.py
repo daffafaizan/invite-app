@@ -1,4 +1,5 @@
 from typing import Any
+import datetime, logging
 from django.conf import settings
 from django.db import models
 from django.forms.models import BaseModelForm
@@ -7,13 +8,15 @@ from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.generic import DetailView, ListView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from find_teams.models import Lamaran
 from authentication.models import RegisteredUser
-from .forms import LowonganForm
+from .forms import VacancyCreationForm
 from .models import LowonganRegu, TautanMediaSosialLowongan
+
+logger = logging.getLogger('app_api')
 
 class VacancyDetailView(DetailView):
     model = LowonganRegu
@@ -48,19 +51,73 @@ class MyVacanciesDetailView(LoginRequiredMixin, ListView):
         return self.model.objects.owned_by_user(self.request.user)
         # return LowonganRegu.objects.filter(is_active=True, ketua=self.request.user)
 
-@login_required(login_url=settings.LOGIN_URL)
-def create_vacancy(request):
+# @login_required(login_url=settings.LOGIN_URL)
+# def create_vacancy(request):
 
-    form = LowonganForm()
+#     form = LowonganForm()
 
-    if request.method == 'POST':
-        form = LowonganForm(request.POST)
+#     if request.method == 'POST':
+#         form = LowonganForm(request.POST)
         
-        if form.is_valid():
-            lowongan = form.save(commit=False)
+#         if form.is_valid():
+#             lowongan = form.save(commit=False)
 
-            lowongan.ketua = request.user
-            lowongan.is_active = True
+#             lowongan.ketua = request.user
+#             lowongan.is_active = True
+            
+#             tautan_medsos_regu = TautanMediaSosialLowongan(
+#                 website = request.POST.get('website'),
+#                 instagram = request.POST.get('instagram'),
+#                 twitter = request.POST.get('twitter'),
+#                 linkedin = request.POST.get('linkedin'), 
+#                 github = request.POST.get('github'),
+#             )
+#             tautan_medsos_regu.save()
+#             lowongan.tautan_medsos_regu = tautan_medsos_regu
+
+#             lowongan.save()
+
+#             # if succesful, redirect to melihat daftar lowongan
+#             return redirect('find_teams:show_vacancies')
+        
+#     context = {
+#         'form': form
+#     }
+
+#     # if unsuccesful, reload form and display inputted values
+#     for field, errors in form.errors.items():
+#                 for error in errors:
+#                     messages.error(request, f'{error}')
+
+#     return render(request, 'find_members/create_vacancy.html', context)
+
+class VacancyCreateView(CreateView):
+    form_class = VacancyCreationForm
+    success_url = reverse_lazy('find_teams:show_vacancies')
+    template_name = 'find_members/create_vacancy.html'
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        return super().form_valid(form)
+    
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect(reverse('authentication:login'))
+        
+        form =  self.form_class()
+        context = {
+            "status": "Fetching form",
+            "form": form,
+        }
+
+        return render(request, self.template_name, context, status=200)
+    
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            vacancy = form.save(commit=False)
+
+            vacancy.ketua = request.user
+            vacancy.is_active = True
             
             tautan_medsos_regu = TautanMediaSosialLowongan(
                 website = request.POST.get('website'),
@@ -70,23 +127,15 @@ def create_vacancy(request):
                 github = request.POST.get('github'),
             )
             tautan_medsos_regu.save()
-            lowongan.tautan_medsos_regu = tautan_medsos_regu
+            vacancy.tautan_medsos_regu = tautan_medsos_regu
+            vacancy.save()
+            messages.success(request, f"Vacancy created!")
 
-            lowongan.save()
-
-            # if succesful, redirect to melihat daftar lowongan
-            return redirect('find_teams:show_vacancies')
-        
-    context = {
-        'form': form
-    }
-
-    # if unsuccesful, reload form and display inputted values
-    for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{error}')
-
-    return render(request, 'find_members/create_vacancy.html', context)
+            return redirect(self.success_url)
+        else:
+            for error in form.errors.values():
+                messages.error(request, error.as_text())
+                return redirect(request.path)
 
 class VacancyUpdateView(LoginRequiredMixin, UpdateView):
     model = LowonganRegu
