@@ -44,14 +44,21 @@ class RegisterView(CreateView):
             # Create user but don't save to db just yet
             user = form.save(commit=False)
             user.save()
-            messages.success(request, f"Registered {user.username}!")
+            # messages.success(request, f"Registered {user.username}!")
 
             return redirect(self.success_url)
         else:
             for error in form.errors:
                 logger.error("FAILED, Form invalid")
-                messages.error(request, error)
-                return redirect(request.path)
+                # messages.error(request, error)
+
+                form = self.form_class()
+                context = {
+                    "status": "Refetching form",
+                    "form": form,
+                }
+
+                return render(request, self.template_name, context, status=200)
 
 class LoginView(FormView):
     form_class = RegisteredUserLoginForm
@@ -102,7 +109,7 @@ class LoginView(FormView):
                     registered_user = RegisteredUser.objects.get(username=form.cleaned_data["username_email"])
 
                 logger.info(f"LOGGED IN AS {user.get_username()}")
-                messages.success(request, f"Logged in as {user.username}!")
+                # messages.success(request, f"Logged in as {user.username}!")
 
                 res = redirect(reverse("core:home"))
                 res.set_cookie("last_login", datetime.datetime.now())
@@ -116,14 +123,20 @@ class LoginView(FormView):
                 }
                 logger.error("USER:", user)   
                 logger.error("LOGIN FAILED")
-                messages.error(request, "Invalid username or password")
+                # messages.error(request, "Invalid username or password")
 
-                return render(request, self.template_name, context, status=500)
+                return render(request, self.template_name, context, status=404)
         else:
             for error in form.errors:
                 logger.error("FAILED, Form invalid")
-                messages.error(request, error)
-                return redirect(request.path)
+                # messages.error(request, error)
+            
+            context = {
+                "status": "Invalid username or password",
+                "form": form,
+            }
+
+            return render(request, self.template_name, context, status=400)
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):

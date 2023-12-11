@@ -72,15 +72,15 @@ def show_vacancy_details(request, lowongan_id):
         vacancy = LowonganRegu.objects.get(id=lowongan_id)
         context["vacancy"] = vacancy
     except (LowonganRegu.DoesNotExist, ValueError):
-        return render(request, "show_vacancy_details.html", context)
+        return render(request, "find_teams/show_vacancy_details.html", context)
 
     try:
         sosmed = vacancy.tautan_medsos_regu
         context["sosmed"] = sosmed
     except (LowonganRegu.DoesNotExist, ValueError):
-        return render(request, "show_vacancy_details.html", context)
+        return render(request, "find_teams/show_vacancy_details.html", context)
 
-    return render(request, "show_vacancy_details.html", context)
+    return render(request, "find_teams/show_vacancy_details.html", context)
 
 @login_required(login_url=settings.LOGIN_URL)
 def apply_vacancy_first(request, lowongan_id):

@@ -16,10 +16,9 @@
         >
             <!-- Profile Headers -->
             <div class="flex flex-row justify-center items-center gap-x-2 md:gap-x-4">
-                <!-- Image -->
+                <!-- Profile Photo -->
                 <div class="relative w-[40px] h-[40px] md:w-[60px] md:h-[60px] rounded-full overflow-hidden">
-                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
-                    <img src="{% static 'invite/default-user.jpg' %}" alt="Profile Picture">
+                    <img src="{% get_media_prefix %}{{ data.user.foto_profil }}" alt="Profile Picture">
                 </div>
 
                 <div class="flex flex-col items-start">
@@ -50,13 +49,13 @@
                     class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[240px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_vacancies' %}"">
-                        Lowongan Terbuat
+                        Lowonganku
                 </a>
                 <a 
                     class="flex items-center justify-center text-xs sm:text-sm h-[45px] max-w-[100px] md:text-md md:max-w-[240px] rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200" 
 
                     href="{% url 'profile:show_my_applications' %}"">
-                        Lamaranku
+                        Lamaran
                 </a>
                 <a class="flex items-center justify-center text-xs sm:text-sm h-[45px] md:text-md rounded-md text-white bg-emerald-600 font-semibold p-2 hover:cursor-pointer hover:bg-opacity-80 duration-200"
                     href="{% url 'profile:update_profile' profile_id=user.id%}">

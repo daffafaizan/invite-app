@@ -9,6 +9,6 @@ def home(request):
         context = {
             "user": request.user,
         }
-    return render(request, "home.html", context)
-    # else:
-    #     return redirect(reverse("authentication:login"))
+        return render(request, "home.html", context)
+    else:
+        return redirect(reverse("authentication:login"))

@@ -24,51 +24,45 @@
             {% if bookmarked_lowongans %}
             <div class="w-full p-4 gap-y-2 md:grid md:grid-cols-3 md:gap-4">
                 {% for lowongan in bookmarked_lowongans %}
-                <div>
-                    <div class="rounded-2xl bg-white p-4 shadow-md min-h-max flex flex-col gap-y-4 md:gap-y-6 justify-between hover:cursor-pointer">
-                        <div>
-                            <img 
-                                src="{% static lowongan.foto_lowongan_regu %}" 
-                                class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg"
-                            >
-                            <h1 class="text-lg font-semibold">{{ lowongan.nama_lomba }}</h1>
-                            <p class="text-sm">Posted by <strong>{{ lowongan.ketua }}</strong> from team <strong>{{ lowongan.nama_regu }}</strong></p>
-                            <p class="text-sm">Field: {{ lowongan.bidang_lomba }}</p>
-                            <p class="text-sm">Recruiting until {{ lowongan.expiry }}</p>
-                            <p class="text-sm">Current members {{ lowongan.jumlah_anggota_sekarang }}/{{ lowongan.total_anggota_dibutuhkan }}</p>
+                    <div class="rounded-2xl bg-white p-4 shadow-md min-h-max min-w-full md:min-w-[320px] flex flex-col gap-y-4 md:gap-y-6 justify-between hover:bg-gray-100 hover:duration-200 hover:cursor-pointer">
+                        <a href="{% url 'find_teams:show_vacancy_details' lowongan_id=lowongan.id %}">
                             <div>
-                                <a href="{% url 'find_teams:show_vacancy_details' lowongan_id=lowongan.id %}" class="text-blue-500 no-underline hover:underline cursor-pointer">
-                                    Klik disini untuk melihat detail lowongan
+                                <img 
+                                    src="{% static lowongan.foto_lowongan_regu %}" 
+                                    class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg"
+                                >
+                                <h1 class="text-lg font-semibold">{{ lowongan.nama_lomba }}</h1>
+                                <p class="text-sm">Posted by <strong>{{ lowongan.ketua }}</strong> from team <strong>{{ lowongan.nama_regu }}</strong></p>
+                                <p class="text-sm">Field: {{ lowongan.bidang_lomba }}</p>
+                                <p class="text-sm">Recruiting until {{ lowongan.expiry }}</p>
+                                <p class="text-sm">Current members {{ lowongan.jumlah_anggota_sekarang }}/{{ lowongan.total_anggota_dibutuhkan }}</p>
+                            </div>
+                            <div class="flex flex-row items-start justify-start gap-x-2 md:gap-x-4">
+                                {% if lowongan.id in sent_application_ids %}
+                                <button 
+                                class="px-5 py-2 mr-auto text-white font-bold bg-gray-400 shadow-md rounded-lg text-center"
+                                disabled
+                                >
+                                    Applied
+                                </button>
+                                {% else %}
+                                <a 
+                                href="{% url 'find_teams:apply_vacancy_first' lowongan_id=lowongan.id %}" 
+                                class="px-5 py-2 text-white font-bold bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
+                                >
+                                    Apply
                                 </a>
+                                {% endif %}
+                                <div class="bg-red-500 hover:bg-red-600 text-white font-bold px-5 py-2 rounded-lg focus:outline-none focus:shadow-outline">
+                                    <form method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="lowongan_id" value="{{ lowongan.id }}">
+                                        <input type="submit" value="Remove">
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            {% if lowongan.id in sent_application_ids %}
-                            <button 
-                            class="px-5 py-2 mr-auto text-white font-bold bg-gray-400 shadow-md rounded-lg text-center"
-                            disabled
-                            >
-                                Applied
-                            </button>
-                            {% else %}
-                            <a 
-                            href="{% url 'find_teams:apply_vacancy_first' lowongan_id=lowongan.id %}" 
-                            class="px-5 py-2 text-white font-bold bg-emerald-700 hover:bg-emerald-800 shadow-md rounded-lg justify-center text-center"
-                            >
-                                Apply
-                            </a>
-                            {% endif %}
-                            <div class="bg-red-500 hover:bg-red-600 text-white font-bold px-5 py-2 rounded-lg focus:outline-none focus:shadow-outline">
-                                <form method="post" style="display: inline;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="lowongan_id" value="{{ lowongan.id }}">
-                                    <input type="submit" value="Remove">
-                                </form>
-                            </div>
-                        </div>
+                        </a>
                     </div>
-                    
-                </div>
                 {% endfor %}
             </div>
             {% else %}

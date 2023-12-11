@@ -49,7 +49,7 @@ class ProfileDetails(models.Model):
 class RegisteredUser(AbstractUser):
     def user_directory_path(self, filename):
         # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-        return f'{settings.MEDIA_URL}/user_{self.username}/{filename}'
+        return f'user_{self.id}/{filename}'
 
     def save(self, *args, **kwargs):
         # Check if profile_details is not set, then create a default ProfileDetails instance
@@ -74,7 +74,7 @@ class RegisteredUser(AbstractUser):
     jurusan = models.CharField(max_length=100, blank=True)
     keahlian = ArrayField(models.CharField(max_length=30, blank=True), blank=True, null=True)
     
-    foto_profil = models.ImageField(null=True, blank=True, upload_to=user_directory_path) # FOR LATER USAGE see https://stackoverflow.com/questions/64592126/how-get-image-from-images-model-to-home-page-in-django
+    foto_profil = models.ImageField(null=True, blank=True, upload_to=user_directory_path) 
     tautan_portfolio = models.CharField(max_length=250, blank=True)
 
     tautan_media_sosial = models.OneToOneField(TautanMediaSosial, on_delete=models.SET_NULL, blank=True, null=True)

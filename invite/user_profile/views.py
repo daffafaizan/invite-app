@@ -47,7 +47,7 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
                 },
             }
 
-            messages.success(request, "Success fetching user profile.")
+            # messages.success(request, "Success fetching user profile.")
             logger.info(f"Showing {registered_user.get_username()}'s profile")
 
             return render(request, self.template_name, context, status=200)
@@ -96,42 +96,13 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
                 },
             }
 
-            messages.success(request, "Success fetching user profile.")
+            # messages.success(request, "Success fetching user profile.")
             logger.info(f"Showing {registered_user.get_username()}'s profile")
 
             return render(request, self.template_name, context, status=200)
         except Http404 as error:
             logger.error("ProfileDetailError: Object not found: %s" % str(error))
             return render(request, self.template_name, status=404)
-
-        # registered_user = get_object_or_404(RegisteredUser, id=user_id)
-
-        # filtered_user = {
-        #     "id": registered_user.id,
-        #     "username": registered_user.username,
-        #     "first_name": registered_user.first_name,
-        #     "last_name": registered_user.last_name,
-        #     "universitas": registered_user.universitas,
-        #     "jurusan": registered_user.jurusan,
-        #     "keahlian": registered_user.keahlian,
-        #     "tautan_portfolio": registered_user.tautan_portfolio,
-        #     "tautan_media_sosial": registered_user.tautan_media_sosial,
-        #     "profile_details": registered_user.profile_details,
-        #     "foto_profil": registered_user.foto_profil,
-        # }
-
-        # ulasan = UlasanProfil.objects.filter(diulas=registered_user)
-        # # Return certain fields only
-        # context = {
-        #     "status": "Success fetching user profile",
-        #     "data": {"user": filtered_user, "ulasan": ulasan},
-        # }
-
-        # logger.info(f"Showing {registered_user.get_username()}'s profile")
-        # logger.info(f"Registered user: {registered_user}\n")
-
-        # return render(request, self.template_name, context, status=200)
-
 
 @login_required(login_url="/accounts/login/")
 def review_profile(request, profile_id):
@@ -140,7 +111,7 @@ def review_profile(request, profile_id):
 
     if diulas == pengulas:
         logger.info("Can't review for your own profile")
-        messages.error(request, "Can't review for your own profile")
+        # messages.error(request, "Can't review for your own profile")
         return redirect("profile:profile", user_id=profile_id)
 
     if request.method == "POST":
@@ -240,29 +211,29 @@ def delete_profile_review(request, profile_id, review_id):
         diulas = get_object_or_404(RegisteredUser, id=profile_id)
         review = get_object_or_404(UlasanProfil, id=review_id)
     except RegisteredUser.DoesNotExist:
-        messages.error(request, "User not found.")
+        # messages.error(request, "User not found.")
         return redirect(
             "error_page", message="You do not have permission to delete this review."
         )
     except UlasanProfil.DoesNotExist:
-        messages.error(request, "Review not found.")
+        # messages.error(request, "Review not found.")
         return redirect(
             "error_page", message="You do not have permission to delete this review."
         )
 
     if review.diulas != diulas:
         logger.info("You do not have permission to delete this review.")
-        messages.error(request, "You do not have permission to delete this review.")
+        # messages.error(request, "You do not have permission to delete this review.")
         return redirect("profile:profile", user_id=profile_id)
 
     if review.pengulas != current_user:
         logger.info("You do not have permission to delete this review.")
-        messages.error(request, "You do not have permission to delete this review.")
+        # messages.error(request, "You do not have permission to delete this review.")
         return redirect("profile:profile", user_id=profile_id)
 
     review.delete()
     logger.info("Review Successfully Deleted")
-    messages.success(request, "Review successfully deleted.")
+    # messages.success(request, "Review successfully deleted.")
 
     return redirect("profile:profile", user_id=profile_id)
 
@@ -279,12 +250,12 @@ def update_profile_review(request, profile_id, review_id):
 
     if diulas == pengulas:
         logger.info("Can't review for your own profile")
-        messages.error(request, "Can't review for your own profile")
+        # messages.error(request, "Can't review for your own profile")
         return redirect("profile:profile", user_id=profile_id)
 
     if review.pengulas != pengulas:
         logger.info("You can't update other people reviews")
-        messages.error(request, "You can't update other people reviews")
+        # messages.error(request, "You can't update other people reviews")
         return redirect("profile:profile", user_id=profile_id)
 
     if request.method == "POST":
@@ -318,7 +289,7 @@ def update_profile(request, profile_id):
         if profile_form.is_valid() and social_form.is_valid():
             profile_form.save()
             social_form.save()
-            messages.success(request, "Profile updated successfully.")
+            # messages.success(request, "Profile updated successfully.")
             # Redirect to the My Profile page
             return redirect(reverse("profile:me"))
     else:
@@ -327,6 +298,6 @@ def update_profile(request, profile_id):
 
     return render(
         request,
-        "update_profile.html",
+        "user_profile/update_profile.html",
         {"profile_form": profile_form, "social_form": social_form},
     )

@@ -79,6 +79,9 @@ class VacancyCreationForm(ModelForm):
         jumlah_anggota_sekarang = cleaned_data.get('jumlah_anggota_sekarang')
         total_anggota_dibutuhkan = cleaned_data.get('total_anggota_dibutuhkan')
 
+        if jumlah_anggota_sekarang is None:
+            raise ValidationError("Current members field is required (at least yourself are included).")
+
         if jumlah_anggota_sekarang is not None and total_anggota_dibutuhkan is not None:
             if total_anggota_dibutuhkan <= jumlah_anggota_sekarang:
                 raise ValidationError("Total members needed must be greater than current members.")
