@@ -194,14 +194,11 @@ if os.getenv("GAE_APPLICATION"):
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-            "OPTIONS": {
-
-            }
         },
     
         # Fixed conflic with STATICFILES_STORAGE
         "staticfiles": {
-            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         }
     }
 else:
@@ -212,9 +209,6 @@ else:
     STORAGES = {
         "default": {
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-            "OPTIONS": {
-
-            }
         },
     
         # Fixed conflic with STATICFILES_STORAGE
