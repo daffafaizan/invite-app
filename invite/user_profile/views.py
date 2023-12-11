@@ -157,16 +157,21 @@ def show_my_applications(request):
 @login_required(login_url="/accounts/login/")
 def delete_application(request, application_id):
     lamaran = Lamaran.objects.get(id=application_id)
+    current_user = RegisteredUser.objects.get(id=request.COOKIES.get("user_id"))
 
     context = {"id": application_id, "nama": lamaran.lowongan.nama_regu}
 
     if not lamaran:
         logger.info("Lamaran tidak ditemukan")
-        return render(request, "vacancies.html", status=404)
+        return render(request, "user_profile/show_my_vacancies_new.html", status=404)
 
     if request.method == "POST":
-        lamaran.delete()
-        return render(request, "user_profile/delete_success.html")
+        
+        if current_user == lamaran.pengirim:
+            lamaran.delete()
+            return render(request, "user_profile/delete_success.html")
+        else:
+            return render(request, "user_profile/show_my_vacancies_new.html", status=404)
 
     return render(request, "user_profile/delete_confirmation.html", context)
 
