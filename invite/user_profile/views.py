@@ -168,22 +168,29 @@ def delete_application(request, application_id):
 
     context = {"id": application_id, "nama": lamaran.lowongan.nama_regu}
 
-    if current_user != lamaran.pengirim:
-        return render(request, "user_profile/profile.html", status=404)
+    try:
 
-    if not lamaran:
-        logger.info("Lamaran tidak ditemukan")
-        return render(request, "user_profile/profile.html", status=404)
-
-    if request.method == "POST":
-        
-        if current_user == lamaran.pengirim:
-            lamaran.delete()
-            return render(request, "user_profile/delete_success.html")
-        else:
+        if current_user != lamaran.pengirim:
             return render(request, "user_profile/profile.html", status=404)
 
-    return render(request, "user_profile/delete_confirmation.html", context)
+        if not lamaran:
+            logger.info("Lamaran tidak ditemukan")
+            return render(request, "user_profile/profile.html", status=404)
+
+        if request.method == "POST":
+            
+            if current_user == lamaran.pengirim:
+                lamaran.delete()
+                return render(request, "user_profile/delete_success.html")
+            else:
+                return render(request, "user_profile/profile.html", status=404)
+
+        return render(request, "user_profile/delete_confirmation.html", context)
+    
+    except:
+        return render(request, "user_profile/profile.html", status=404)
+    
+
 
 
 @login_required(login_url="/accounts/login/")
